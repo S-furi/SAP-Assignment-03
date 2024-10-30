@@ -2,10 +2,9 @@ package it.unibo.sap.ass02.demo.controller;
 
 import it.unibo.sap.ass02.demo.domain.EBikeImpl;
 import it.unibo.sap.ass02.demo.repositories.EBikeRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -29,4 +28,11 @@ public class EBikeController {
         }
         return Optional.empty();
     }
+
+    @PostMapping("/create")
+    public EBikeImpl createEBike(@RequestBody EBikeImpl ebike) {
+        return this.repository.save(ebike);
+    }
+
+
 }
