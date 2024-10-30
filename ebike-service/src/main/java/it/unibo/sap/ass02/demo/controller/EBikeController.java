@@ -30,9 +30,15 @@ public class EBikeController {
     }
 
     @PostMapping("/create")
-    public EBikeImpl createEBike(@RequestBody EBikeImpl ebike) {
+    public EBikeImpl postEBike(@RequestBody EBikeImpl ebike) {
         return this.repository.save(ebike);
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<EBikeImpl> putEBike(final @PathVariable String id, final @RequestBody EBikeImpl ebike) {
+        return this.repository.existsById(id) ?
+                new ResponseEntity<EBikeImpl>(this.repository.save(ebike), HttpStatus.OK) :
+                new ResponseEntity<EBikeImpl>(this.postEBike(ebike), HttpStatus.CREATED);
+    }
 
 }
