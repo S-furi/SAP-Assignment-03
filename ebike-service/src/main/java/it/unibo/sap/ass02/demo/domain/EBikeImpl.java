@@ -1,12 +1,18 @@
 package it.unibo.sap.ass02.demo.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Objects;
 
+@Entity
+@NoArgsConstructor
 public class EBikeImpl implements EBike<String>{
-    private final String id;
+    @Id
+    @UuidGenerator
+    private String id;
     private EBikeState state;
     private P2d loc;
     private V2d direction;
