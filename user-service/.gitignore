@@ -7,3 +7,5 @@ build
 kls_database.db
 
 .vscode/
+
+.idea
