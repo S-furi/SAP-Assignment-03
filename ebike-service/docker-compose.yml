@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:10.6
+    environment:
+      - MARIADB_ROOT_PASSWORD=EBikePassword
+      - MARIADB_DATABASE=ebikedb
+      - MARIADB_USER=EBikeApplication
+      - MARIADB_PASSWORD=EBikePassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - ebike-network
+
+networks:
+  ebike-network:
+    driver: bridge
+
+volumes:
+  mariadb_data:
