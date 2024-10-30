@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Objects;
 import java.util.Optional;
 
+@RestController
 @RequestMapping("/ebike")
 public class EBikeController {
     private final EBikeRepository repository;
