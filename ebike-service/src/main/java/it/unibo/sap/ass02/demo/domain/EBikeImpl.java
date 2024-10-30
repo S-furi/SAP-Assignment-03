@@ -1,5 +1,8 @@
 package it.unibo.sap.ass02.demo.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.NoArgsConstructor;
@@ -9,15 +12,21 @@ import java.util.Objects;
 
 @Entity
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EBikeImpl implements EBike<String>{
     @Id
     @UuidGenerator
     private String id;
+    @JsonProperty("state")
     private EBikeState state;
+    @JsonProperty("location")
     private P2d loc;
+    @JsonIgnore()
     private V2d direction;
+    @JsonProperty("speed")
     private double speed;
-    private int batteryLevel;
+    @JsonProperty("battery")
+    private int batteryLevel;  /* 0..100 */
 
     public EBikeImpl(String id) {
         this(id, EBikeState.AVAILABLE, new P2d(0, 0), 0, 100);
