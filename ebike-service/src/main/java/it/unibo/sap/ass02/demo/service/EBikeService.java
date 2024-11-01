@@ -7,6 +7,8 @@ import it.unibo.sap.ass02.demo.repositories.P2dRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class EBikeService {
     private final EBikeRepository eBikeRepository;
@@ -29,5 +31,9 @@ public class EBikeService {
 
     public Iterable<EBikeImpl> getAllEBike() {
         return this.eBikeRepository.findAll();
+    }
+
+    public Optional<EBikeImpl> getEBikeById(final String id) {
+        return this.eBikeRepository.findById(id);
     }
 }
