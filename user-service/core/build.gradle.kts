@@ -8,6 +8,7 @@ dependencies {
     implementation(libs.kotlinx.coroutine)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.bundles.ktor.server)
+    testImplementation(libs.bundles.test.kotest)
 }
 
 application {
