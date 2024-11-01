@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
@@ -28,6 +30,8 @@ public class EBikeImpl implements EBike<String>{
     @JsonProperty("speed")
     private double speed;
     @JsonProperty("battery")
+    @Min(0)
+    @Max(100)
     private int batteryLevel;  /* 0..100 */
 
     public EBikeImpl(String id) {
