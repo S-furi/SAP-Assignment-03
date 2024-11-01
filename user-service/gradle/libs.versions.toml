@@ -4,8 +4,11 @@ kotlin = "2.0"
 ktor = "3.0.0"
 kotlinx-serialization = "1.7.3"
 kotlinx-coroutine = "1.9.0"
+kotest = "5.9.1"
+logback = "1.4.12"
 
 [libraries]
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin-gradle-plugin" }
 ktor-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor"}
 ktor-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor"}
@@ -14,6 +17,13 @@ ktor-cors = { module = "io.ktor:ktor-server-cors-jvm", version.ref = "ktor" }
 ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor" }
 kotlinx-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutine"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
+kotest-assertions-core = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+kotest-framework-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
+kotest-runner = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
+
+
 
 [bundles]
 ktor-server = [
@@ -22,6 +32,14 @@ ktor-server = [
     "ktor-cors",
     "ktor-serialization-jackson",
     "ktor-websockets",
+]
+
+test-kotest = [
+    "kotest-assertions",
+    "kotest-assertions-core",
+    "kotest-framework-datatest",
+    "kotest-framework-engine",
+    "kotest-runner",
 ]
 
 [plugins]
