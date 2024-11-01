@@ -36,4 +36,8 @@ public class EBikeService {
     public Optional<EBikeImpl> getEBikeById(final String id) {
         return this.eBikeRepository.findById(id);
     }
+
+    public boolean existsById(final String id) {
+        return this.eBikeRepository.existsById(id);
+    }
 }
