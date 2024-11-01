@@ -5,8 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Transient;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.UuidGenerator;
 
 import java.util.Objects;
 
@@ -15,13 +16,14 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EBikeImpl implements EBike<String>{
     @Id
-    @UuidGenerator
     private String id;
     @JsonProperty("state")
     private EBikeState state;
     @JsonProperty("location")
-    private P2d loc;
+    @ManyToOne
+    private P2d loc = null;
     @JsonIgnore()
+    @Transient
     private V2d direction;
     @JsonProperty("speed")
     private double speed;
@@ -43,11 +45,6 @@ public class EBikeImpl implements EBike<String>{
         this.direction = new V2d(1,0);;
         this.speed = speed;
         this.batteryLevel = batteryLevel;
-    }
-
-    @Override
-    public String getId() {
-        return id;
     }
 
     @Override
