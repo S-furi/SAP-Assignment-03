@@ -6,6 +6,8 @@ kotlinx-serialization = "1.7.3"
 kotlinx-coroutine = "1.9.0"
 kotest = "5.9.1"
 logback = "1.4.12"
+exposed = "0.56.0"
+postgres = "42.7.4"
 
 [libraries]
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
@@ -22,7 +24,9 @@ kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref =
 kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
 kotest-framework-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
 kotest-runner = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
-
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
+postgres = { module = "org.postgresql:postgresql", version.ref = "postgres" }
 
 
 [bundles]
@@ -40,6 +44,11 @@ test-kotest = [
     "kotest-framework-datatest",
     "kotest-framework-engine",
     "kotest-runner",
+]
+
+exposed = [
+    "exposed-core",
+    "exposed-jdbc",
 ]
 
 [plugins]
