@@ -21,12 +21,17 @@ public class EBikeService {
     }
 
     public EBikeImpl createNewEBike(EBikeImpl eBike) {
-        final P2d location = eBike.getLocation();
-        final P2d savedLocation = this.p2dRepository
-                .findByXAndY(location.x(), location.y())
-                .orElseGet(() -> this.p2dRepository.save(location));
-        eBike.updateLocation(savedLocation);
-        return this.eBikeRepository.save(eBike);
+        try {
+            this.validateEBike(eBike);
+            final P2d location = eBike.getLocation();
+            final P2d savedLocation = this.p2dRepository
+                    .findByXAndY(location.x(), location.y())
+                    .orElseGet(() -> this.p2dRepository.save(location));
+            eBike.updateLocation(savedLocation);
+            return this.eBikeRepository.save(eBike);
+        } catch (IllegalArgumentException exception) {
+            throw exception;
+        }
     }
 
     public Iterable<EBikeImpl> getAllEBike() {
@@ -39,5 +44,11 @@ public class EBikeService {
 
     public boolean existsById(final String id) {
         return this.eBikeRepository.existsById(id);
+    }
+
+    private void validateEBike(final EBikeImpl inputEBike) {
+        if (inputEBike.getBatteryLevel() < 0 || inputEBike.getBatteryLevel() > 100) {
+            throw new IllegalArgumentException("The battery level must be positive and lower than 100");
+        }
     }
 }
