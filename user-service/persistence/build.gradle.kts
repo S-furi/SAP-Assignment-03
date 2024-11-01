@@ -9,4 +9,5 @@ dependencies {
     implementation(libs.bundles.test.kotest)
     implementation(libs.bundles.exposed)
     implementation(libs.postgres)
+    implementation(project(":core"))
 }
