@@ -1,6 +1,5 @@
 package it.unibo.sap.ass02.persistence
 
-import io.kotest.matchers.nulls.shouldNotBeNull
 import it.unibo.sap.ass02.domain.User
 import it.unibo.sap.ass02.domain.UserImpl
 import it.unibo.sap.ass02.persistence.utils.DatabaseUtils.dbQuery
@@ -38,7 +37,6 @@ class UserRepository(database: Database): DatabaseRepository<Int, User>(database
             null
         }
     }
-
 
     override suspend fun findById(id: Int): User? = dbQuery {
         Users.selectAll().where { Users.id eq id }
