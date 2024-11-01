@@ -25,9 +25,9 @@ public class EBikeController {
     }
 
     @GetMapping("/{id}")
-    public Optional<EBikeImpl> getEBikeByID(@PathVariable String id) {
+    public Optional<EBikeImpl> getEBikeById(@PathVariable String id) {
         if (Objects.nonNull(id)) {
-            return Optional.empty();
+            return this.eBikeService.getEBikeById(id);
         }
         return Optional.empty();
     }
