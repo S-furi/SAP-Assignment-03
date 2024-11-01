@@ -10,13 +10,16 @@ package it.unibo.sap.ass02.demo.domain;
  *
  */
 
+import lombok.Data;
+
 /**
  *
  * 2-dimensional vector
  * objects are completely state-less
  *
  */
-public class V2d implements java.io.Serializable {
+@Data
+public class V2d {
     private final double x;
     private final double y;
     public V2d(double x, double y){
