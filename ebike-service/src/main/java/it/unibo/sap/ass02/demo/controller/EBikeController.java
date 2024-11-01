@@ -3,6 +3,7 @@ package it.unibo.sap.ass02.demo.controller;
 import it.unibo.sap.ass02.demo.domain.EBikeImpl;
 import it.unibo.sap.ass02.demo.repositories.EBikeRepository;
 import it.unibo.sap.ass02.demo.service.EBikeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +34,11 @@ public class EBikeController {
     }
 
     @PostMapping("/create")
-    public EBikeImpl postEBike(@RequestBody EBikeImpl ebike) {
+    public EBikeImpl postEBike(@Valid @RequestBody EBikeImpl ebike) {
         return this.eBikeService.createNewEBike(ebike);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<EBikeImpl> putEBike(final @PathVariable String id, final @RequestBody EBikeImpl ebike) {
         return this.eBikeService.existsById(id) ?
                 new ResponseEntity<EBikeImpl>(this.eBikeService.createNewEBike(ebike), HttpStatus.OK) :
