@@ -26,4 +26,8 @@ public class EBikeService {
         eBike.updateLocation(savedLocation);
         return this.eBikeRepository.save(eBike);
     }
+
+    public Iterable<EBikeImpl> getAllEBike() {
+        return this.eBikeRepository.findAll();
+    }
 }
