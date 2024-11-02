@@ -1,7 +1,11 @@
 plugins {
-    id("buildlogic.kotlin-common-conventions")
+    id("buildlogic.kotlin-application-conventions")
     alias(libs.plugins.ktor.plugin)
     alias(libs.plugins.kotlinx.serialization)
+}
+
+application {
+    mainClass.set("it.unibo.sap.ass02.service.ServerKt")
 }
 
 dependencies {
