@@ -12,4 +12,4 @@ plugins {
 
 rootProject.name = "user-service"
 
-include("core", "persistence")
+include("core", "persistence", "service")

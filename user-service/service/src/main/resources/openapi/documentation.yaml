@@ -1,0 +1,190 @@
+openapi: "3.0.3"
+info:
+  title: "user_service API"
+  description: "user_service API"
+  version: "1.0.0"
+servers:
+- url: "https://user_service"
+paths:
+  /user/all:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+  /user/find/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Please specify a valid userId"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/RoutingContext"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Specified id does not correspond to a user"
+components:
+  schemas:
+    PipelineCall:
+      type: "object"
+      properties: {}
+    RouteSelector:
+      type: "object"
+      properties: {}
+    ApplicationEnvironment:
+      type: "object"
+      properties: {}
+    Attributes:
+      type: "object"
+      properties: {}
+    ApplicationReceivePipeline:
+      type: "object"
+      properties:
+        developmentMode:
+          type: "boolean"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+    ApplicationSendPipeline:
+      type: "object"
+      properties:
+        developmentMode:
+          type: "boolean"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+    RoutingNode:
+      type: "object"
+      properties:
+        parent:
+          $ref: "#/components/schemas/RoutingNode"
+        selector:
+          $ref: "#/components/schemas/RouteSelector"
+        developmentMode:
+          type: "boolean"
+        environment:
+          $ref: "#/components/schemas/ApplicationEnvironment"
+        receivePipeline:
+          $ref: "#/components/schemas/ApplicationReceivePipeline"
+        sendPipeline:
+          $ref: "#/components/schemas/ApplicationSendPipeline"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+    CoroutineContext:
+      type: "object"
+      properties: {}
+    Parameters:
+      type: "object"
+      properties: {}
+    PipelineRequest:
+      type: "object"
+      properties: {}
+    RoutingPipelineRequest:
+      type: "object"
+      properties:
+        call:
+          $ref: "#/components/schemas/RoutingPipelineCall"
+        pipeline:
+          $ref: "#/components/schemas/ApplicationReceivePipeline"
+        engineRequest:
+          $ref: "#/components/schemas/PipelineRequest"
+    PipelineResponse:
+      type: "object"
+      properties: {}
+    RoutingPipelineResponse:
+      type: "object"
+      properties:
+        call:
+          $ref: "#/components/schemas/RoutingPipelineCall"
+        pipeline:
+          $ref: "#/components/schemas/ApplicationSendPipeline"
+        engineResponse:
+          $ref: "#/components/schemas/PipelineResponse"
+    RoutingPipelineCall:
+      type: "object"
+      properties:
+        engineCall:
+          $ref: "#/components/schemas/PipelineCall"
+        route:
+          $ref: "#/components/schemas/RoutingNode"
+        coroutineContext:
+          $ref: "#/components/schemas/CoroutineContext"
+        pathParameters:
+          $ref: "#/components/schemas/Parameters"
+        request:
+          $ref: "#/components/schemas/RoutingPipelineRequest"
+        response:
+          $ref: "#/components/schemas/RoutingPipelineResponse"
+    Events:
+      type: "object"
+      properties: {}
+    Application:
+      type: "object"
+      properties:
+        rootPath:
+          type: "string"
+        monitor:
+          $ref: "#/components/schemas/Events"
+        parentCoroutineContext:
+          $ref: "#/components/schemas/CoroutineContext"
+        coroutineContext:
+          $ref: "#/components/schemas/CoroutineContext"
+        developmentMode:
+          type: "boolean"
+        environment:
+          $ref: "#/components/schemas/ApplicationEnvironment"
+        receivePipeline:
+          $ref: "#/components/schemas/ApplicationReceivePipeline"
+        sendPipeline:
+          $ref: "#/components/schemas/ApplicationSendPipeline"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+    RoutingCall:
+      type: "object"
+      properties:
+        pipelineCall:
+          $ref: "#/components/schemas/RoutingPipelineCall"
+        attributes:
+          $ref: "#/components/schemas/Attributes"
+        application:
+          $ref: "#/components/schemas/Application"
+        parameters:
+          $ref: "#/components/schemas/Parameters"
+        pathParameters:
+          $ref: "#/components/schemas/Parameters"
+        queryParameters:
+          $ref: "#/components/schemas/Parameters"
+        route:
+          $ref: "#/components/schemas/RoutingNode"
+    RoutingContext:
+      type: "object"
+      properties:
+        call:
+          $ref: "#/components/schemas/RoutingCall"
