@@ -2,6 +2,7 @@ package it.unibo.sap.ass02.persistence
 
 import it.unibo.sap.ass02.domain.User
 import it.unibo.sap.ass02.domain.UserImpl
+import it.unibo.sap.ass02.persistence.utils.DatabaseUtils
 import it.unibo.sap.ass02.persistence.utils.DatabaseUtils.dbQuery
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -13,7 +14,7 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
-class UserRepository(database: Database): DatabaseRepository<Int, User>(database) {
+class UserRepository(database: Database = DatabaseUtils.database): DatabaseRepository<Int, User>(database) {
     object Users : Table() {
         val id = integer("id")
         val credit = integer("credit")
