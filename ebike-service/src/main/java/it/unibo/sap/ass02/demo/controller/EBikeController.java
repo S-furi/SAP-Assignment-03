@@ -1,20 +1,19 @@
 package it.unibo.sap.ass02.demo.controller;
 
 import it.unibo.sap.ass02.demo.domain.EBikeImpl;
-import it.unibo.sap.ass02.demo.repositories.EBikeRepository;
 import it.unibo.sap.ass02.demo.service.EBikeService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/ebike")
 public class EBikeController {
+    @NotNull
     private final EBikeService eBikeService;
     public EBikeController(final EBikeService eBikeService) {
         this.eBikeService = eBikeService;
@@ -44,5 +43,4 @@ public class EBikeController {
                 new ResponseEntity<EBikeImpl>(this.eBikeService.createNewEBike(ebike), HttpStatus.OK) :
                 new ResponseEntity<EBikeImpl>(this.postEBike(ebike), HttpStatus.CREATED);
     }
-
 }
