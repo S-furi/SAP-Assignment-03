@@ -1,8 +1,10 @@
-FROM mariadb:10.6
+FROM gradle:jdk21 as build
+WORKDIR /workspace
+COPY . /workspace/
+RUN gradle clean bootJar
 
-ENV MARIADB_ROOT_PASSWORD=EBikePassword
-ENV MARIADB_DATABASE=ebikedb
-ENV MARIADB_USER=EBikeApplication
-ENV MARIADB_PASSWORD=EBikePassword
-
-EXPOSE 3306
+FROM openjdk:21-jdk
+WORKDIR /app
+COPY --from=build /workspace/build/libs/*.jar app.jar
+EXPOSE 1926
+CMD ["java", "-jar", "app.jar"]
