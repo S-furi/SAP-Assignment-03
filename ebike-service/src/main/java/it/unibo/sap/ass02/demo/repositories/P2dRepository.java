@@ -2,7 +2,6 @@ package it.unibo.sap.ass02.demo.repositories;
 
 import it.unibo.sap.ass02.demo.domain.P2d;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
