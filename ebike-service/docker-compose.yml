@@ -12,28 +12,13 @@ services:
       - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
-    networks:
-      - ebike-network
 
-  mariadb_test:
-    image: mariadb:10.6
-    environment:
-      - MARIADB_ROOT_PASSWORD=EBikePassword
-      - MARIADB_DATABASE=ebike_test
-      - MARIADB_USER=EBikeApplication
-      - MARIADB_PASSWORD=EBikePassword
+  ebike-service:
+    image: matteoiorio/ebike-service:1.0.2
     ports:
-      - "65000:3306"
-    volumes:
-      - mariadb_test:/var/lib/mysql
-    networks:
-      - ebike-network-test
+      - "1926:1926"
+    depends_on:
+     - mariadb
 
-networks:
-  ebike-network:
-    driver: bridge
-  ebike-network-test:
-    driver: bridge
 volumes:
   mariadb_data:
-  mariadb_test:
