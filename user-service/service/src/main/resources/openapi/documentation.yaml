@@ -6,44 +6,7 @@ info:
 servers:
 - url: "https://user_service"
 paths:
-  /user/all:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  type: "string"
-  /user/find/{id}:
-    get:
-      description: ""
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Specified id does not correspond to a user"
-  /user/user/{id}:
+  /api/users/{id}:
     delete:
       description: ""
       parameters:
@@ -68,13 +31,50 @@ paths:
             '*/*':
               schema:
                 type: "object"
-  /user/user/decrease-credit:
+  /api/users/all:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+  /api/users/decrease-credit:
     post:
       description: ""
-  /user/user/increase-credit:
+  /api/users/find/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Specified id does not correspond to a user"
+  /api/users/increase-credit:
     post:
       description: ""
-  /user/user/new:
+  /api/users/new:
     post:
       description: ""
       responses:
