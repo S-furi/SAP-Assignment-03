@@ -45,6 +45,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api
 	implementation("jakarta.validation:jakarta.validation-api:3.0.2")
 
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
+
+
 }
 
 tasks.withType<Test> {
