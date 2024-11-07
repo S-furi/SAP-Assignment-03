@@ -46,7 +46,7 @@ public class EBikeController {
 
     @Operation(summary = "Add a new ebike into the service")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Everything went ok, all the input values were good"),
+            @ApiResponse(responseCode = "201", description = "Everything went ok, all the input values were good"),
             @ApiResponse(responseCode = "400", description = "If one of the parameters Its not correct")
     })
     @PostMapping("/create")
