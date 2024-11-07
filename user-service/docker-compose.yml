@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres
+    hostname: pg-db
     restart: always
     shm_size: 128mb
     environment:
@@ -13,8 +14,27 @@ services:
     ports:
       - 5432:5432
 
+    networks:
+      - user-service-net
+
+  user-service:
+    build: .
+    ports:
+      - 11000:11000
+    environment:
+      PORT: 11000
+      POSTGRES_HOST: pg-db
+
+    networks:
+      - user-service-net
+
+    depends_on:
+      - db
   adminer:
     image: adminer
     restart: always
     ports:
       - 8080:8080
+
+networks:
+  user-service-net:
