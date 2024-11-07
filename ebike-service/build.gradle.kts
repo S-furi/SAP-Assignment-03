@@ -1,8 +1,13 @@
+import org.gradle.internal.impldep.it.unimi.dsi.fastutil.objects.ObjectLists.UnmodifiableList
+import java.sql.SQLException
+
 plugins {
 	java
 	id("org.springframework.boot") version "3.3.5"
 	id("io.spring.dependency-management") version "1.1.6"
+	id("com.avast.gradle.docker-compose") version "0.16.12"
 }
+
 
 group = "it.unibo.sap.ass02"
 version = "0.0.1-SNAPSHOT"
@@ -52,4 +57,27 @@ dependencies {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+
+
+tasks.register("composeDownaa") {
+	group = "docker"
+	description = "Stop Docker containers after testing"
+	doLast {
+		exec {
+			commandLine("docker-compose", "-f", "docker-compose.test.yml", "down")
+		}
+	}
+}
+
+
+tasks.named("bootTestRun") {
+	doFirst {
+		dockerCompose {
+			useComposeFiles = listOf("docker-compose.test.yml")
+			checkContainersRunning = true
+		}
+	}
+	finalizedBy("composeDown")
 }
