@@ -21,4 +21,17 @@ data class UserImpl(
         require(amount <= this.credit) { "The requested amount $amount is too much for credit: ${this.credit}" }
         this.credit -= amount
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as UserImpl
+
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id
+    }
 }
