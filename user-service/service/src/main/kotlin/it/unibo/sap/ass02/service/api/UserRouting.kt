@@ -9,6 +9,7 @@ import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import it.unibo.sap.ass02.domain.User
+import it.unibo.sap.ass02.domain.UserImpl
 import it.unibo.sap.ass02.service.api.UsersRoutes.USERS
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_ADD
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_BY_ID
@@ -16,8 +17,10 @@ import it.unibo.sap.ass02.service.api.UsersRoutes.USER_DECREASE_CREDIT
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_DELETE
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_INCREASE_CREDIT
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.lang.IllegalArgumentException
 
 object UserRouting {
     fun Route.userRouting() {
@@ -37,7 +40,7 @@ object UserRouting {
         post(USER_ADD) {
             val request = call.receiveText()
             runCatching {
-                val user: User = Json.decodeFromString<User>(request)
+                val user: User = Json.decodeFromString<UserImpl>(request)
                 if (UserResolver.createUser(user) != user.id) {
                     call.respond(HttpStatusCode.BadRequest, "The provided userId (${user.id}) is already present!")
                     return@post
@@ -92,8 +95,10 @@ object UserRouting {
             } else {
                 call.respond(HttpStatusCode.BadRequest, "The provided id does not match to any user")
             }
-        }.getOrElse {
-            call.respond(HttpStatusCode.BadRequest, "An error occurred parsing request body: $request")
+        }.onFailure { e -> when(e) {
+                is SerializationException -> call.respond(HttpStatusCode.BadRequest, "An error occurred parsing request body: $request")
+                else -> call.respond(HttpStatusCode.BadRequest, e.message ?: "Unknown Error...")
+            }
         }
     }
 

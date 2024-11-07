@@ -8,9 +8,9 @@ import kotlinx.serialization.json.Json
 object UserResolver {
     private val repository = UserRepository()
 
-    suspend fun getAllUsers() = repository.findAll().map { it.jsonEncode() }
+    suspend fun getAllUsers(): List<User> = repository.findAll().toList()
 
-    suspend fun getUserById(id: Int) = repository.findById(id)?.jsonEncode()
+    suspend fun getUserById(id: Int) = repository.findById(id)
 
     suspend fun createUser(user: User) = repository.create(user)
 
@@ -31,6 +31,4 @@ object UserResolver {
         it.rechargeCredit(amount)
         repository.update(it)
     }
-
-    private fun User.jsonEncode() = Json.encodeToString(this)
 }
