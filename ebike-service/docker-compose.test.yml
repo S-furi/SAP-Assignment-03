@@ -8,6 +8,8 @@ services:
       - MARIADB_PASSWORD=EBikePassword
     ports:
       - "9999:3306"
+    healthcheck:
+      test:  ["CMD", "healthcheck.sh", "--su-mysql", "--connect"]
     volumes:
       - mariadb_test:/var/lib/mysql
 
