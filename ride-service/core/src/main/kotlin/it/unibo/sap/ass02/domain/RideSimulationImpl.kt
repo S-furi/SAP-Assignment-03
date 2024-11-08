@@ -58,6 +58,10 @@ class RideSimulationImpl(
     }
 
     override fun stopSimulation() {
-        TODO("Not yet implemented")
+        stopped = true
+        ride.end()
+        // update model for one last time
+        // February every four days: can you give one more day?
+        interrupt()
     }
 }

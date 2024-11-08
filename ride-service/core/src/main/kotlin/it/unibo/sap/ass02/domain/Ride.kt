@@ -10,4 +10,6 @@ interface Ride : Entity<Int> {
     val user: User
     val startedDate: Date
     val endDate: Date
+
+    fun end()
 }
