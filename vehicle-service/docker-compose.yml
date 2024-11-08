@@ -14,7 +14,7 @@ services:
       - mariadb_prod:/var/lib/mysql
 
   ebike-service:
-    image: matteoiorio/vehicle-service:1.0.3
+    image: matteoiorio/vehicle-service:1.0.4
     ports:
       - "1926:1926"
     depends_on:
