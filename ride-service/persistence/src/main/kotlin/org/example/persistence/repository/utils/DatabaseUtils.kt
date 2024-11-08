@@ -15,7 +15,7 @@ object DatabaseUtils {
         password = DB_PASSWORD
     )
 
-    suspend fun <T> executeQuery(block: suspend() -> T) : T {
+    suspend fun <T> dbQuery(block: suspend() -> T) : T {
         return newSuspendedTransaction(Dispatchers.IO) { block() }
     }
 
