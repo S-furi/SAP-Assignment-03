@@ -1,5 +1,5 @@
 package it.unibo.sap.ass02.domain
 
-interface EBike {
+import it.unibo.sap.ass02.domain.ddd.Entity
 
-}
+interface EBike : Entity<Int>

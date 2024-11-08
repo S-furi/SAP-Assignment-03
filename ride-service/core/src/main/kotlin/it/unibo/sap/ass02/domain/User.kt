@@ -1,5 +1,5 @@
 package it.unibo.sap.ass02.domain
 
-interface User {
+import it.unibo.sap.ass02.domain.ddd.Entity
 
-}
+interface User : Entity<Int>
