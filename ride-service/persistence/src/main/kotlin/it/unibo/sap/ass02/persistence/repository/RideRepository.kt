@@ -32,8 +32,8 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
         if (this.findByID(entity.id) == null) {
             Rides.insert {
                 it[id] = entity.id
-                it[ebike] = ""
-                it[user] = 0
+                it[ebike] = entity.ebike.id
+                it[user] = entity.user.id
                 it[startDate] = LocalDate.now()
                 it[endingDate] = LocalDate.now()
             }[Rides.id]
