@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class EbikeServiceApplicationTests {
+class VehicleServiceApplicationTests {
 
 	@LocalServerPort
 	private int port;
