@@ -1,4 +1,4 @@
-package org.example.persistence.repository.utils
+package it.unibo.sap.ass02.persistence.repository.utils
 
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.Database

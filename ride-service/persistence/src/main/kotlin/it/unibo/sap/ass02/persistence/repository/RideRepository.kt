@@ -1,10 +1,9 @@
-package org.example.persistence.repository
+package it.unibo.sap.ass02.persistence.repository
 
 
-import kotlinx.serialization.json.internal.decodeByReader
-import org.example.app.Ride
-import org.example.persistence.repository.utils.DatabaseUtils
-import org.example.persistence.repository.utils.DatabaseUtils.dbQuery
+import it.unibo.sap.ass02.domain.Ride
+import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils
+import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils.dbQuery
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.Table
@@ -30,9 +29,9 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
     }
 
     override suspend fun save(entity: Ride): Int? = dbQuery {
-        if (this.findByID(entity.getId()) == null) {
+        if (this.findByID(entity.id) == null) {
             Rides.insert {
-                it[id] = entity.getId()
+                it[id] = entity.id
                 it[ebike] = ""
                 it[user] = 0
                 it[startDate] = LocalDate.now()

@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "ride-service"
-include("app", "persistence", "core")
+include("core", "persistence", "service")
