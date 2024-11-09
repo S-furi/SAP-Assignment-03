@@ -4,10 +4,7 @@ package it.unibo.sap.ass02.persistence.repository
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils.dbQuery
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
@@ -42,7 +39,11 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
     }
 
     override suspend fun update(entity: Ride): Int {
-        TODO("Not yet implemented")
+        return dbQuery {
+                Rides.update({ Rides.id eq entity.id }) {
+                    it[endingDate] = entity.endDate
+                }
+        }
     }
 
     override suspend fun findAll(): Iterable<Ride> {
