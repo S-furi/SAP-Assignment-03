@@ -18,7 +18,7 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
         val ebike = varchar("ebike_id", length = 100)
         val user = integer("user_id")
         val startDate = date("starting_date")
-        val endingDate = date("ending_date")
+        val endingDate = date("ending_date").nullable()
         override val primaryKey = PrimaryKey(id)
     }
 
@@ -34,8 +34,7 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
                 it[id] = entity.id
                 it[ebike] = entity.ebike.id
                 it[user] = entity.user.id
-                it[startDate] = LocalDate.now()
-                it[endingDate] = LocalDate.now()
+                it[startDate] = entity.startedDate
             }[Rides.id]
         }else{
             null
