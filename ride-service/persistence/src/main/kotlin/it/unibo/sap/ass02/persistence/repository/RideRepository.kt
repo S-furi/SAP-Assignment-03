@@ -8,7 +8,6 @@ import it.unibo.sap.ass02.domain.model.stub.UserImpl
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils.dbQuery
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -61,7 +60,7 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
             Rides.selectAll()
                 .where {Rides.id eq id }
                 .map { RideImpl(EBikeImpl(it[Rides.ebike]), UserImpl(it[Rides.user]), it[Rides.startDate], it[Rides.endingDate], it[Rides.id]) }
-                .first()
+                .singleOrNull()
         }
     }
 }
