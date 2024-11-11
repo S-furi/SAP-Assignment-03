@@ -13,7 +13,7 @@ services:
     volumes:
       - mariadb_prod:/var/lib/mysql
 
-  ebike-service:
+  vehicle-service:
     image: matteoiorio/vehicle-service:1.0.4
     ports:
       - "1926:1926"
