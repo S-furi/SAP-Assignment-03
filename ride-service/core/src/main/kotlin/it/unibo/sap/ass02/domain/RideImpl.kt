@@ -8,7 +8,7 @@ class RideImpl(
     override val ebike: EBike,
     override val user: User,
     override val startedDate: LocalDate,
-    override val endDate: LocalDate,
+    override val endDate: LocalDate?,
     override val id: Int
 ) : Ride{
     override fun end() {

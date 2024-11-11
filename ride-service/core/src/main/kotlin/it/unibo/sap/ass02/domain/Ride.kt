@@ -10,7 +10,7 @@ interface Ride : Entity<Int> {
     val ebike: EBike
     val user: User
     val startedDate: LocalDate
-    val endDate: LocalDate
+    val endDate: LocalDate?
 
     fun end()
 }
