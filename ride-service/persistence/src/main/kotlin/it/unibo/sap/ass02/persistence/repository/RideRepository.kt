@@ -2,12 +2,15 @@ package it.unibo.sap.ass02.persistence.repository
 
 
 import it.unibo.sap.ass02.domain.Ride
+import it.unibo.sap.ass02.domain.RideImpl
+import it.unibo.sap.ass02.domain.model.stub.EBikeImpl
+import it.unibo.sap.ass02.domain.model.stub.UserImpl
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils.dbQuery
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.time.LocalDate
 
 class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepository<Int, Ride>(database){
     object Rides: Table() {
@@ -47,10 +50,18 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
     }
 
     override suspend fun findAll(): Iterable<Ride> {
-        TODO("Not yet implemented")
+        return dbQuery {
+            Rides.selectAll()
+                .map { RideImpl(EBikeImpl(it[Rides.ebike]), UserImpl(it[Rides.user]), it[Rides.startDate], it[Rides.endingDate], it[Rides.id]) }
+        }
     }
 
     override suspend fun findByID(id: Int): Ride? {
-        TODO("Not yet implemented")
+        return dbQuery {
+            Rides.selectAll()
+                .where {Rides.id eq id }
+                .map { RideImpl(EBikeImpl(it[Rides.ebike]), UserImpl(it[Rides.user]), it[Rides.startDate], it[Rides.endingDate], it[Rides.id]) }
+                .first()
+        }
     }
 }
