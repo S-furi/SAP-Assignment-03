@@ -56,9 +56,13 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
         }
     }
 
-    override suspend fun delete(id: Int): Int {
+    override suspend fun delete(id: Int): Int? {
         return dbQuery {
-            Rides.deleteWhere { Rides.id eq id }
+            if (this.findByID(id) != null) {
+                Rides.deleteWhere { Rides.id eq id }
+            }else {
+                null
+            }
         }
     }
 

@@ -8,5 +8,5 @@ interface Repository<K : Any, E : Entity<K>> {
     suspend fun findAll() : Iterable<E>
     suspend fun findByID(id : K) : E?
 
-    suspend fun delete(id: K): Int
+    suspend fun delete(id: K): Int?
 }
