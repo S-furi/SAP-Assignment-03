@@ -1,8 +1,6 @@
 package it.unibo.sap.ass02.domain.model.stub
 
-import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -15,25 +13,22 @@ import it.unibo.sap.ass02.domain.model.stub.EBikeStub.EBikeDTO.Companion.toDTO
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 
-object EBikeStub {
-    private val GATEWAY_HOST = System.getenv("GATEWAY_HOST") ?: "localhost"
-    private val GATEWAY_PORT = System.getenv("GATEWAY_PORT") ?: 1926
-
+data object EBikeStub : Stub() {
     private val VEHICLE_ENDPOINT = "http://$GATEWAY_HOST:$GATEWAY_PORT/ebike"
 
     private val UPDATE_EBIKE_ENDPOINT = "$VEHICLE_ENDPOINT/update/"
 
     private val GET_EBIKE_BY_ID = "$VEHICLE_ENDPOINT/"
 
-    private val client = HttpClient(CIO)
-
-    private suspend fun getEBike(id: String): EBikeDTO? {
+    private suspend fun retrieveEBike(id: String): EBikeDTO? {
         val res = client.get(GET_EBIKE_BY_ID + id)
         if (res.status.value in 200..299) {
             return res.body()
         }
         return null
     }
+
+    fun getEBike(id: String): EBike? = runBlocking { retrieveEBike(id)?.toEBike() }
 
     fun updateBike(bike: EBike): Boolean =
         runBlocking {
@@ -47,7 +42,7 @@ object EBikeStub {
 
     fun location(id: String): P2d? =
         runBlocking {
-            getEBike(id)?.location?.let {
+            retrieveEBike(id)?.location?.let {
                 P2d.fromCoord(it.x, it.y)
             }
         }
@@ -56,26 +51,26 @@ object EBikeStub {
 
     fun speed(id: String): Double? =
         runBlocking {
-            getEBike(id)?.speed
+            retrieveEBike(id)?.speed
         }
 
     fun state(id: String): String? =
         runBlocking {
-            getEBike(id)?.state
+            retrieveEBike(id)?.state
         }
 
     fun isAvailable(id: String): Boolean? =
         runBlocking {
-            getEBike(id)?.available
+            retrieveEBike(id)?.available
         }
 
     fun battery(id: String): Int? =
         runBlocking {
-            getEBike(id)?.battery
+            retrieveEBike(id)?.battery
         }
 
     @Serializable
-    private data class EBikeDTO(
+    data class EBikeDTO(
         val id: String,
         val location: P2dDTO,
         val available: Boolean,
@@ -83,6 +78,15 @@ object EBikeStub {
         val speed: Double,
         val battery: Int,
     ) {
+        fun toEBike(): EBike =
+            EBikeImpl(this.id).also {
+                it.location = P2d.fromCoord(this.location.x, this.location.y)
+                it.available = this.available
+                it.state = this.state
+                it.speed = this.speed
+                it.battery = this.battery
+            }
+
         companion object {
             fun EBike.toDTO() =
                 EBikeDTO(
@@ -97,7 +101,7 @@ object EBikeStub {
     }
 
     @Serializable
-    private data class P2dDTO(
+    data class P2dDTO(
         val x: Int,
         val y: Int,
     )
