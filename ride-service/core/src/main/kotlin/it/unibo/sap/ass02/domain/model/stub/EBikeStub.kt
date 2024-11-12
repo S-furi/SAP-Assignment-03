@@ -7,13 +7,16 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import it.unibo.sap.ass02.domain.model.EBike
+import it.unibo.sap.ass02.domain.model.EBikeImpl
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.V2d
 import it.unibo.sap.ass02.domain.model.stub.EBikeStub.EBikeDTO.Companion.toDTO
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 
-data object EBikeStub : Stub() {
+data object EBikeStub : Stub(
+    HEALTHCHECK_URL = "ebike/healthcheck",
+) {
     private val VEHICLE_ENDPOINT = "http://$GATEWAY_HOST:$GATEWAY_PORT/ebike"
 
     private val UPDATE_EBIKE_ENDPOINT = "$VEHICLE_ENDPOINT/update/"
