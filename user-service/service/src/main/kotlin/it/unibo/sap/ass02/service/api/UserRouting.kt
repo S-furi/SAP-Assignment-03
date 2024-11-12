@@ -16,11 +16,7 @@ import it.unibo.sap.ass02.service.api.UsersRoutes.USER_BY_ID
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_DECREASE_CREDIT
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_DELETE
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_INCREASE_CREDIT
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import java.lang.IllegalArgumentException
 
 object UserRouting {
     fun Route.userRouting() {
@@ -86,25 +82,28 @@ object UserRouting {
         call: RoutingCall,
         func: suspend (Int, Int) -> Boolean?,
     ) {
-        val request = call.receiveText()
         runCatching {
-            val creditOp = Json.decodeFromString<IncomingUserCreditOp>(request)
-            val res = func(creditOp.id, creditOp.amount)
+            val id = call.request.queryParameters["id"]?.toInt()
+            val amount = call.request.queryParameters["amount"]?.toInt()
+
+            if (id == null || amount == null) {
+                call.respond(
+                    HttpStatusCode.BadRequest,
+                    "Cannot parse query parameters: Given id: $id, amount $amount",
+                )
+                return@runCatching
+            }
+
+            val res = func(id, amount)
             if (res != null && res) {
                 call.respond(HttpStatusCode.OK)
             } else {
                 call.respond(HttpStatusCode.BadRequest, "The provided id does not match to any user")
             }
-        }.onFailure { e -> when(e) {
-                is SerializationException -> call.respond(HttpStatusCode.BadRequest, "An error occurred parsing request body: $request")
+        }.onFailure { e ->
+            when (e) {
                 else -> call.respond(HttpStatusCode.BadRequest, e.message ?: "Unknown Error...")
             }
         }
     }
-
-    @Serializable
-    private data class IncomingUserCreditOp(
-        val id: Int,
-        val amount: Int,
-    )
 }
