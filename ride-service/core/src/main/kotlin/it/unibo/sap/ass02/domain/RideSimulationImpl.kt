@@ -42,18 +42,18 @@ class RideSimulationImpl(
     private fun updateBike(bike: EBike) {
         val direction = bike.direction
         val speed = bike.speed
-        var pos = bike.position
-        bike.updatePosition(pos + (direction * speed.toInt()))
-        pos = bike.position
+        var pos = bike.location
+        bike.updateLocation(pos + (direction * speed.toInt()))
+        pos = bike.location
 
         if (pos.x > 200 || pos.x < -200) {
             bike.updateDirection(V2d.fromCoord(-direction.x, direction.y))
-            bike.updatePosition(P2d.fromCoord(if (pos.x > 200) 200 else -200, pos.y))
+            bike.updateLocation(P2d.fromCoord(if (pos.x > 200) 200 else -200, pos.y))
         }
 
         if (pos.y > 200 || pos.y < -200) {
             bike.updateDirection(V2d.fromCoord(direction.x, -direction.y))
-            bike.updatePosition(P2d.fromCoord(pos.x, if (pos.y > 200) 200 else -200))
+            bike.updateLocation(P2d.fromCoord(pos.x, if (pos.y > 200) 200 else -200))
         }
     }
 

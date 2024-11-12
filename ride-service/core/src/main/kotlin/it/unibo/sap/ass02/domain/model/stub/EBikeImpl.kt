@@ -7,7 +7,7 @@ import it.unibo.sap.ass02.domain.model.V2d
 class EBikeImpl(
     override val id: String,
 ) : EBike {
-    override val position: P2d
+    override val location: P2d
         get() = TODO("Not yet implemented")
     override val direction: V2d
         get() = TODO("Not yet implemented")
@@ -18,7 +18,7 @@ class EBikeImpl(
         TODO("Not yet implemented")
     }
 
-    override fun updatePosition(pos: P2d) {
+    override fun updateLocation(pos: P2d) {
         TODO("Not yet implemented")
     }
 
