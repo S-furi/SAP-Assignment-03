@@ -1,8 +1,11 @@
 package it.unibo.sap.ass02.service.api
 
 import io.ktor.http.*
+import kotlinx.serialization.json.Json
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import it.unibo.sap.ass02.domain.RideImpl
 import it.unibo.sap.ass02.service.api.RideRoutes.ALL_RIDES
 import it.unibo.sap.ass02.service.api.RideRoutes.CREATE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.DELETE_RIDE
@@ -26,11 +29,28 @@ object RideRouting {
         }
 
         post(CREATE_RIDE) {
-
+            val rideText = call.receiveText()
+            runCatching {
+                val inputRide = Json.decodeFromString<RideImpl>(rideText)
+                if (RideResolver.addNewRide(inputRide) != null) {
+                    call.respond(HttpStatusCode.Conflict, "This ride already exists")
+                    return@post
+                }else {
+                    call.respond(HttpStatusCode.Created)
+                }
+            }.getOrNull()?:call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing.")
         }
 
         put(UPDATE_RIDE) {
-
+            val rideText = call.receiveText()
+            runCatching {
+                val inputRide = Json.decodeFromString<RideImpl>(rideText)
+                if (RideResolver.updateRide(inputRide) != null) {
+                    call.respond(HttpStatusCode.OK)
+                }else{
+                    call.respond(HttpStatusCode.BadRequest, "The Input Ride does not exist")
+                }
+            }.getOrNull()?:call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing")
         }
 
         delete(DELETE_RIDE) {
