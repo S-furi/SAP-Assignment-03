@@ -11,7 +11,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class RideSimulationImpl(
+class CoroutineRideSimulation(
     override val ride: Ride,
     override val user: User,
 ) : RideSimulation {
