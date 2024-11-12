@@ -6,9 +6,13 @@ data class UserImpl(
     override val id: Int,
 ) : User {
     override val credit: Int
-        get() = TODO("Not yet implemented")
+        get() = UserStub.getUser(this.id)?.credit ?: -1
+
+    override fun increaseCredit(amount: Int) {
+        UserStub.increaseCredit(this.id, amount)
+    }
 
     override fun decreaseCredit(amount: Int) {
-        TODO("Not yet implemented")
+        UserStub.decreaseCredit(this.id, amount)
     }
 }
