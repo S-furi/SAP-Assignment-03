@@ -4,39 +4,47 @@ import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.User
 import it.unibo.sap.ass02.domain.model.V2d
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
 class RideSimulationImpl(
     override val ride: Ride,
     override val user: User,
-) : Thread(),
-    RideSimulation {
-    private var stopped: Boolean = false
+) : RideSimulation {
+    private val coroutineScope = CoroutineScope(Dispatchers.Default)
 
-    override fun startSimulation() = super.start()
+    private lateinit var simulation: Job
 
-    override fun run() {
-        val bike = ride.ebike
-        bike.updateSpeed(1.0)
-        user.decreaseCredit(1)
-
-        var lastTimeChangeDir = System.currentTimeMillis()
-        var lastTimeDecreasedCredit = System.currentTimeMillis()
-
-        while (!stopped) {
-            updateBike(bike)
-            if (System.currentTimeMillis() - lastTimeChangeDir > 500) {
-                bike.updateDirection(bike.direction.rotate(Math.random() * 60 - 30))
-                lastTimeChangeDir = System.currentTimeMillis()
-            }
-
-            if (System.currentTimeMillis() - lastTimeDecreasedCredit > 1000) {
+    override fun startSimulation() {
+        this.simulation =
+            this.coroutineScope.launch {
+                val bike = ride.ebike
+                bike.updateSpeed(1.0)
                 user.decreaseCredit(1)
-                lastTimeDecreasedCredit = System.currentTimeMillis()
-            }
-        }
 
-        // update stuff here like observers
-        sleep(20)
+                var lastTimeChangeDir = System.currentTimeMillis()
+                var lastTimeDecreasedCredit = System.currentTimeMillis()
+
+                while (isActive) {
+                    updateBike(bike)
+                    if (System.currentTimeMillis() - lastTimeChangeDir > 500) {
+                        bike.updateDirection(bike.direction.rotate(Math.random() * 60 - 30))
+                        lastTimeChangeDir = System.currentTimeMillis()
+                    }
+
+                    if (System.currentTimeMillis() - lastTimeDecreasedCredit > 1000) {
+                        user.decreaseCredit(1)
+                        lastTimeDecreasedCredit = System.currentTimeMillis()
+                    }
+                }
+
+                // update stuff here like observers
+                delay(20)
+            }
     }
 
     private fun updateBike(bike: EBike) {
@@ -58,10 +66,9 @@ class RideSimulationImpl(
     }
 
     override fun stopSimulation() {
-        stopped = true
+        this.simulation.cancel()
         ride.end()
         // update model for one last time
         // February every four years: can you give one more day?
-        interrupt()
     }
 }
