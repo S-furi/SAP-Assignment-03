@@ -1,8 +1,6 @@
-package it.unibo.sap.ass02.domain.model.stub
+package it.unibo.sap.ass02.domain.model
 
-import it.unibo.sap.ass02.domain.model.EBike
-import it.unibo.sap.ass02.domain.model.P2d
-import it.unibo.sap.ass02.domain.model.V2d
+import it.unibo.sap.ass02.domain.model.stub.EBikeStub
 
 /**
  * TODO: implement here circuit breaker in case BikeAPI doesn't work and no results are yielded (do not use`!!`)
