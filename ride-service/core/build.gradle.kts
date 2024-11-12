@@ -1,3 +1,10 @@
 plugins {
     id("buildlogic.kotlin-common-conventions")
+    alias(libs.plugins.kotlinx.serialization)
+}
+
+dependencies {
+    implementation(libs.bundles.ktor.client)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutine)
 }
