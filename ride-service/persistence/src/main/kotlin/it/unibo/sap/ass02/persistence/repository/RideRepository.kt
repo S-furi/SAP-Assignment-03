@@ -8,6 +8,7 @@ import it.unibo.sap.ass02.domain.model.stub.UserImpl
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils.dbQuery
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.javatime.date
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -55,6 +56,12 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
         }
     }
 
+    override suspend fun delete(id: Int): Int {
+        return dbQuery {
+            Rides.deleteWhere { Rides.id eq id }
+        }
+    }
+
     override suspend fun findByID(id: Int): Ride? {
         return dbQuery {
             Rides.selectAll()
@@ -63,4 +70,6 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
                 .singleOrNull()
         }
     }
+
+
 }
