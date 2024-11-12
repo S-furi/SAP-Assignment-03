@@ -3,8 +3,8 @@ package it.unibo.sap.ass02.persistence.repository
 
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideImpl
-import it.unibo.sap.ass02.domain.model.stub.EBikeImpl
-import it.unibo.sap.ass02.domain.model.stub.UserImpl
+import it.unibo.sap.ass02.domain.model.EBikeImpl
+import it.unibo.sap.ass02.domain.model.UserImpl
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils
 import it.unibo.sap.ass02.persistence.repository.utils.DatabaseUtils.dbQuery
 import org.jetbrains.exposed.sql.*
