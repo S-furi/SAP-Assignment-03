@@ -10,11 +10,4 @@ interface RideSimulation : ValueObject {
     fun startSimulation()
 
     fun stopSimulation()
-
-    companion object {
-        fun newSimulation(
-            ride: Ride,
-            user: User,
-        ) = RideSimulationImpl(ride, user)
-    }
 }
