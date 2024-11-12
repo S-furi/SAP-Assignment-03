@@ -10,6 +10,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import it.unibo.sap.ass02.domain.User
 import it.unibo.sap.ass02.domain.UserImpl
+import it.unibo.sap.ass02.service.api.UsersRoutes.HEALTHCHECK
 import it.unibo.sap.ass02.service.api.UsersRoutes.USERS
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_ADD
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_BY_ID
@@ -20,6 +21,10 @@ import kotlinx.serialization.json.Json
 
 object UserRouting {
     fun Route.userRouting() {
+        get(HEALTHCHECK) {
+            call.respond(HttpStatusCode.OK, "Service healthy")
+        }
+
         get(USERS) {
             call.respond(UserResolver.getAllUsers())
         }

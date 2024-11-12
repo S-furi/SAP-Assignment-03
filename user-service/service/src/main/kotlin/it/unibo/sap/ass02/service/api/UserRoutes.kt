@@ -4,6 +4,7 @@ package it.unibo.sap.ass02.service.api
 
 object UsersRoutes {
     private const val BASE_PATH: String = "api/users"
+    const val HEALTHCHECK: String = "$BASE_PATH/healthcheck"
     const val USERS: String = "$BASE_PATH/all"
     const val USER_BY_ID: String = "$BASE_PATH/find/{id}"
     const val USER_ADD: String = "$BASE_PATH/new"
