@@ -41,11 +41,15 @@ class RideRepository(database: Database = DatabaseUtils.database): DatabaseRepos
         }
     }
 
-    override suspend fun update(entity: Ride): Int {
+    override suspend fun update(entity: Ride): Int? {
         return dbQuery {
+            if (this.findByID(entity.id) != null) {
                 Rides.update({ Rides.id eq entity.id }) {
                     it[endingDate] = entity.endDate
                 }
+            }else{
+                null
+            }
         }
     }
 
