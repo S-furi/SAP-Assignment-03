@@ -1,7 +1,6 @@
 package it.unibo.sap.ass02.service.api
 
 import io.ktor.http.*
-import kotlinx.serialization.json.Json
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -11,6 +10,7 @@ import it.unibo.sap.ass02.service.api.RideRoutes.CREATE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.DELETE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.RIDE_BY_ID
 import it.unibo.sap.ass02.service.api.RideRoutes.UPDATE_RIDE
+import kotlinx.serialization.json.Json
 
 object RideRouting {
     fun Route.rideRouting() {
@@ -21,11 +21,12 @@ object RideRouting {
         get(RIDE_BY_ID) {
 //            handleGetRideByID(call)
             handleClientRequest(
-                parameter = {call.parameters["id"]?.toInt()},
-                handler = {id -> RideResolver.getRideByID(id) },
-                handleOK = {obj -> call.respond(HttpStatusCode.OK, obj)},
+                parameter = { call.parameters["id"]?.toInt() },
+                handler = { id -> RideResolver.getRideByID(id) },
+                handleOK = { obj -> call.respond(HttpStatusCode.OK, obj) },
                 errorQuery = { call.respond(HttpStatusCode.BadRequest, "The input ID does not exist.") },
-                errorNotFound = {call.respond(HttpStatusCode.BadRequest, "The input parameter is null.")})
+                errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null.") },
+            )
         }
 
         post(CREATE_RIDE) {
@@ -35,10 +36,10 @@ object RideRouting {
                 if (RideResolver.addNewRide(inputRide) != null) {
                     call.respond(HttpStatusCode.Conflict, "This ride already exists")
                     return@post
-                }else {
+                } else {
                     call.respond(HttpStatusCode.Created)
                 }
-            }.getOrNull()?:call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing.")
+            }.getOrNull() ?: call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing.")
         }
 
         put(UPDATE_RIDE) {
@@ -47,19 +48,20 @@ object RideRouting {
                 val inputRide = Json.decodeFromString<RideImpl>(rideText)
                 if (RideResolver.updateRide(inputRide) != null) {
                     call.respond(HttpStatusCode.OK)
-                }else{
+                } else {
                     call.respond(HttpStatusCode.BadRequest, "The Input Ride does not exist")
                 }
-            }.getOrNull()?:call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing")
+            }.getOrNull() ?: call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing")
         }
 
         delete(DELETE_RIDE) {
             handleClientRequest(
                 parameter = { call.parameters["id"]?.toInt() },
-                handler = {id -> RideResolver.deleteRide(id) },
-                handleOK = {obj -> call.respond(HttpStatusCode.OK, obj)},
+                handler = { id -> RideResolver.deleteRide(id) },
+                handleOK = { obj -> call.respond(HttpStatusCode.OK, obj) },
                 errorQuery = { call.respond(HttpStatusCode.BadRequest, "The input ID does not exist.") },
-                errorNotFound = {call.respond(HttpStatusCode.BadRequest, "The input parameter is null")})
+                errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null") },
+            )
         }
     }
 /*
@@ -78,15 +80,17 @@ object RideRouting {
     }
 */
 
-    private suspend fun <K, T>handleClientRequest(parameter: () -> K?,
-                                                  handler: suspend (K) -> T?,
-                                                  handleOK: suspend (T) -> Unit,
-                                                  errorQuery: suspend () -> Unit,
-                                                  errorNotFound: suspend () -> Unit) {
-        parameter()?.let {p ->
-            handler(p)?.let {obj ->
+    private suspend fun <K, T> handleClientRequest(
+        parameter: () -> K?,
+        handler: suspend (K) -> T?,
+        handleOK: suspend (T) -> Unit,
+        errorQuery: suspend () -> Unit,
+        errorNotFound: suspend () -> Unit,
+    ) {
+        parameter()?.let { p ->
+            handler(p)?.let { obj ->
                 handleOK(obj)
-            }?:errorQuery()
-        }?:errorNotFound()
+            } ?: errorQuery()
+        } ?: errorNotFound()
     }
 }
