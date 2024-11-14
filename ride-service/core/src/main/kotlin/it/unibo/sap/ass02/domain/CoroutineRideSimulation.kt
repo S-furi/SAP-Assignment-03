@@ -1,6 +1,5 @@
 package it.unibo.sap.ass02.domain
 
-import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.User
 import it.unibo.sap.ass02.domain.model.V2d
@@ -30,9 +29,10 @@ class CoroutineRideSimulation(
                 var lastTimeDecreasedCredit = System.currentTimeMillis()
 
                 while (isActive) {
-                    updateBike(bike)
+                    updateBike()
                     if (System.currentTimeMillis() - lastTimeChangeDir > 500) {
                         bike.updateDirection(bike.direction.rotate(Math.random() * 60 - 30))
+                        bike.battery -= 100
                         lastTimeChangeDir = System.currentTimeMillis()
                     }
 
@@ -40,14 +40,14 @@ class CoroutineRideSimulation(
                         user.decreaseCredit(1)
                         lastTimeDecreasedCredit = System.currentTimeMillis()
                     }
+                    // update stuff here like observers
+                    delay(20)
                 }
-
-                // update stuff here like observers
-                delay(20)
             }
     }
 
-    private fun updateBike(bike: EBike) {
+    private fun updateBike() {
+        val bike = this.ride.ebike
         val direction = bike.direction
         val speed = bike.speed
         var pos = bike.location
@@ -67,7 +67,6 @@ class CoroutineRideSimulation(
 
     override fun stopSimulation() {
         this.simulation.cancel()
-        ride.end()
         // update model for one last time
         // February every four years: can you give one more day?
     }

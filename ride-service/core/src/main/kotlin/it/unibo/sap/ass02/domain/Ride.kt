@@ -8,8 +8,10 @@ import java.time.LocalDate
 interface Ride : Entity<Int> {
     val ebike: EBike
     val user: User
-    val startedDate: LocalDate
-    val endDate: LocalDate?
+    var endDate: LocalDate?
+    var startedDate: LocalDate?
+
+    fun start()
 
     fun end()
 }
