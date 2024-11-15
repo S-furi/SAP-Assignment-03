@@ -18,11 +18,14 @@ import it.unibo.sap.ass02.service.api.UsersRoutes.USER_DECREASE_CREDIT
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_DELETE
 import it.unibo.sap.ass02.service.api.UsersRoutes.USER_INCREASE_CREDIT
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 object UserRouting {
     fun Route.userRouting() {
         get(HEALTHCHECK) {
-            call.respond(HttpStatusCode.OK, "Service healthy")
+            val res = JsonObject(mapOf("status" to JsonPrimitive("UP")))
+            call.respond(HttpStatusCode.OK, res.toString())
         }
 
         get(USERS) {

@@ -7,7 +7,7 @@ import it.unibo.sap.ass02.domain.model.User
 import kotlinx.coroutines.runBlocking
 
 data object UserStub : Stub(
-    HEALTHCHECK_URL = "users/healthcheck",
+    HEALTHCHECK_URL = "users/health",
 ) {
     private val USER_ENDPOINT = "http://$GATEWAY_HOST:$GATEWAY_PORT/api/users"
     private val GET_USER_BY_ID = "$USER_ENDPOINT/find/"
