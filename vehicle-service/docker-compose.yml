@@ -19,6 +19,13 @@ services:
       - "1926:1926"
     depends_on:
      - mariadb
+    healthcheck:
+      test: curl --fail http://vehicle-service:1926/actuator/health/ping || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
 
 volumes:
   mariadb_prod:
