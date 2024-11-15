@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "api-gateway"
-include("app", "list", "utilities")
+include("app")

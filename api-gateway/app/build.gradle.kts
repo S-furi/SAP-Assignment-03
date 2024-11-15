@@ -7,9 +7,8 @@ plugins {
 }
 
 dependencies {
-    implementation("org.apache.commons:commons-text")
-    implementation(project(":utilities"))
-    implementation("io.github.resilience4j:resilience4j-circuitbreaker:1.7.1")
+    implementation(libs.resilience4j.circuitbreaker)
+    implementation(libs.bundles.ktor.server)
 }
 
 application {
