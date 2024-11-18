@@ -24,6 +24,7 @@ In particular:
     - Mandatory: Externalized Configuration
   - Testing patterns
     - Mandatory: One test for each level of the Test Pyramid
+- At the implementation level, at least one microservice (but not necessarily all) should be implemented using one of the existing frameworks/platforms available from the community
 - A strategy for validating the proposed architecture should be devised and enacted, given the requirements and the quality attributes defined in the analysis stage.  
     
 **Deliverable**
