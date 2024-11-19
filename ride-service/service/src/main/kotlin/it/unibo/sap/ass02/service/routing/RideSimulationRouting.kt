@@ -9,16 +9,17 @@ import io.ktor.server.routing.post
 import io.ktor.server.websocket.webSocket
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
+import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.service.routing.Routes.CREATE_SIMULATION
 import it.unibo.sap.ass02.service.routing.Routes.DELETE_SIMULATION
 import it.unibo.sap.ass02.service.routing.Routes.SUBSCRIBE_TO_SIMULATION
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import org.slf4j.LoggerFactory
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 object RideSimulationRouting {
     private val messageResponseFlow = MutableSharedFlow<String>()
@@ -28,7 +29,7 @@ object RideSimulationRouting {
     fun Route.rideSimulation() {
         post(CREATE_SIMULATION) {
             val userId = call.queryParameters["userId"]?.toInt()
-            val bikeId = call.queryParameters["bikeId"]?.toInt()
+            val bikeId = call.queryParameters["bikeId"]
             if (userId == null || bikeId == null) {
                 call.respond(HttpStatusCode.BadRequest, "An error occurred with provided ids: (bikeId: $bikeId, userId: $userId")
                 return@post
@@ -55,10 +56,12 @@ object RideSimulationRouting {
                     }
                     else -> {}
                 }
-                val res = Json.encodeToString(RideSimulationResolver.findRide(id))
-                messageResponseFlow.emit(res)
-                logger.info("Got $command for ride id $id")
-                logger.info("Sending $res")
+                RideSimulationResolver.findRide(id)?.let {
+                    val res = it.toJson().toString()
+                    messageResponseFlow.emit(res)
+                    logger.info("Got $command for ride id $id")
+                    logger.info("Sending $res")
+                }
             }
         }
     }
@@ -101,4 +104,22 @@ enum class RideCommand(
     STOP("stop"),
 }
 
-fun String.toRideCommand() = if (this == "start") RideCommand.START else if (this == "stop") RideCommand.STOP else null
+fun String.toRideCommand() =
+    if (this == "start") {
+        RideCommand.START
+    } else if (this == "stop") {
+        RideCommand.STOP
+    } else {
+        null
+    }
+
+fun Ride.toJson() =
+    JsonObject(
+        mapOf(
+            "rideId" to JsonPrimitive(this.id),
+            "ebikeId" to JsonPrimitive(this.ebike.id),
+            "userId" to JsonPrimitive(this.user.id),
+            "endDate" to JsonPrimitive(this.endDate.toString()),
+            "startedDate" to JsonPrimitive(this.startedDate.toString()),
+        ),
+    )
