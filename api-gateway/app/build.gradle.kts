@@ -4,14 +4,23 @@
 
 plugins {
     id("buildlogic.kotlin-application-conventions")
+    alias(libs.plugins.ktor.plugin)
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 dependencies {
     implementation(libs.resilience4j.circuitbreaker)
     implementation(libs.bundles.ktor.server)
+    implementation(libs.bundles.ktor.client)
+    implementation(libs.logback)
 }
 
 application {
-    // Define the main class for the application.
-    mainClass = "org.example.app.AppKt"
+    mainClass.set("it.unibo.sap.ass02.ServerKt")
 }
+
