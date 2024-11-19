@@ -9,8 +9,6 @@ import it.unibo.sap.ass02.service.api.RideRoutes.ALL_RIDES
 import it.unibo.sap.ass02.service.api.RideRoutes.CREATE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.DELETE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.RIDE_BY_ID
-import it.unibo.sap.ass02.service.api.RideRoutes.START_RIDE
-import it.unibo.sap.ass02.service.api.RideRoutes.STOP_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.UPDATE_RIDE
 import kotlinx.serialization.json.Json
 
@@ -64,26 +62,7 @@ object RideRouting {
                 errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null") },
             )
         }
-
-        post(START_RIDE) {
-            manipulateRideSimulation(call, RideResolver::startRide)
-        }
-
-        post(STOP_RIDE) {
-            manipulateRideSimulation(call, RideResolver::stopRide)
-        }
     }
-
-    private suspend fun manipulateRideSimulation(
-        call: RoutingCall,
-        op: suspend (Int) -> Any?,
-    ) = handleClientRequest(
-        parameter = call.parameters["id"]?.toInt(),
-        handler = { id -> op(id) },
-        handleOK = { _ -> call.respond(HttpStatusCode.OK) },
-        errorQuery = { call.respond(HttpStatusCode.BadRequest, "Given ride does not exist!") },
-        errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null") },
-    )
 
     private suspend fun <K, T> handleClientRequest(
         parameter: K?,
