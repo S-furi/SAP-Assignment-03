@@ -2,15 +2,25 @@ package it.unibo.sap.ass02.domain.model.stub
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
 
 sealed class Stub(
     val HEALTHCHECK_URL: String,
+    val GATEWAY_HOST: String = System.getenv("GATEWAY_HOST") ?: "localhost",
+    val GATEWAY_PORT: String = System.getenv("GATEWAY_PORT") ?: "1926",
 ) {
-    val GATEWAY_HOST = System.getenv("GATEWAY_HOST") ?: "localhost"
-    val GATEWAY_PORT = System.getenv("GATEWAY_PORT") ?: 1926
-    val client = HttpClient(CIO)
+    protected val logger = LoggerFactory.getLogger(Stub::class.java)
+
+    val client =
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
 
     init {
         runBlocking {

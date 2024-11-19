@@ -56,12 +56,12 @@ class CoroutineRideSimulation(
 
         if (pos.x > 200 || pos.x < -200) {
             bike.updateDirection(V2d.fromCoord(-direction.x, direction.y))
-            bike.updateLocation(P2d.fromCoord(if (pos.x > 200) 200 else -200, pos.y))
+            bike.updateLocation(P2d.fromCoord(if (pos.x > 200.0) 200.0 else -200.0, pos.y))
         }
 
         if (pos.y > 200 || pos.y < -200) {
             bike.updateDirection(V2d.fromCoord(direction.x, -direction.y))
-            bike.updateLocation(P2d.fromCoord(pos.x, if (pos.y > 200) 200 else -200))
+            bike.updateLocation(P2d.fromCoord(pos.x, if (pos.y > 200.0) 200.0 else -200.0))
         }
     }
 

@@ -2,7 +2,7 @@ package it.unibo.sap.ass02.domain.model.stub
 
 import io.ktor.client.call.body
 import io.ktor.client.request.get
-import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
@@ -36,11 +36,13 @@ data object EBikeStub : Stub(
     fun updateBike(bike: EBike): Boolean =
         runBlocking {
             val res =
-                client.post(UPDATE_EBIKE_ENDPOINT + bike.id) {
+                client.put(UPDATE_EBIKE_ENDPOINT + bike.id) {
                     contentType(ContentType.Application.Json)
                     setBody(bike.toDTO())
                 }
-            res.status.value in 200..299
+            (res.status.value in 200..299).also {
+                if (!it) logger.warn("cannot retrieve ebike apparently...")
+            }
         }
 
     fun location(id: String): P2d? =
@@ -50,7 +52,7 @@ data object EBikeStub : Stub(
             }
         }
 
-    fun direction(id: String): V2d? = null
+    fun direction(id: String): V2d? = V2d.fromCoord(1.0, 0.0)
 
     fun speed(id: String): Double? =
         runBlocking {
@@ -94,7 +96,7 @@ data object EBikeStub : Stub(
             fun EBike.toDTO() =
                 EBikeDTO(
                     this.id,
-                    P2dDTO(this.location.x, this.location.y),
+                    P2dDTO(1, this.location.x, this.location.y),
                     this.available,
                     this.state,
                     this.speed,
@@ -105,7 +107,8 @@ data object EBikeStub : Stub(
 
     @Serializable
     data class P2dDTO(
-        val x: Int,
-        val y: Int,
+        val id: Int,
+        val x: Double,
+        val y: Double,
     )
 }
