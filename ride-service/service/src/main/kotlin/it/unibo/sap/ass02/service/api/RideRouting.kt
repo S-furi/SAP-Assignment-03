@@ -9,6 +9,8 @@ import it.unibo.sap.ass02.service.api.RideRoutes.ALL_RIDES
 import it.unibo.sap.ass02.service.api.RideRoutes.CREATE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.DELETE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.RIDE_BY_ID
+import it.unibo.sap.ass02.service.api.RideRoutes.START_RIDE
+import it.unibo.sap.ass02.service.api.RideRoutes.STOP_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.UPDATE_RIDE
 import kotlinx.serialization.json.Json
 
@@ -19,9 +21,8 @@ object RideRouting {
         }
 
         get(RIDE_BY_ID) {
-//            handleGetRideByID(call)
             handleClientRequest(
-                parameter = { call.parameters["id"]?.toInt() },
+                parameter = call.parameters["id"]?.toInt(),
                 handler = { id -> RideResolver.getRideByID(id) },
                 handleOK = { obj -> call.respond(HttpStatusCode.OK, obj) },
                 errorQuery = { call.respond(HttpStatusCode.BadRequest, "The input ID does not exist.") },
@@ -56,38 +57,42 @@ object RideRouting {
 
         delete(DELETE_RIDE) {
             handleClientRequest(
-                parameter = { call.parameters["id"]?.toInt() },
+                parameter = call.parameters["id"]?.toInt(),
                 handler = { id -> RideResolver.deleteRide(id) },
                 handleOK = { obj -> call.respond(HttpStatusCode.OK, obj) },
                 errorQuery = { call.respond(HttpStatusCode.BadRequest, "The input ID does not exist.") },
                 errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null") },
             )
         }
-    }
-/*
 
-    private suspend fun handleGetRideByID(call: RoutingCall) {
-        val rideID = call.parameters["id"]?.toInt()
-        val message = "Error: the input Ride id does not exist or It is null."
-        if (rideID == null) {
-            call.respond(HttpStatusCode.BadRequest, message)
-            return
-        }else {
-            RideResolver.getRideByID(rideID)?.let {
-                call.respond(HttpStatusCode.OK, it)
-            } ?: call.respond(HttpStatusCode.NotFound, message)
+        post(START_RIDE) {
+            manipulateRideSimulation(call, RideResolver::startRide)
+        }
+
+        post(STOP_RIDE) {
+            manipulateRideSimulation(call, RideResolver::stopRide)
         }
     }
-*/
+
+    private suspend fun manipulateRideSimulation(
+        call: RoutingCall,
+        op: suspend (Int) -> Any?,
+    ) = handleClientRequest(
+        parameter = call.parameters["id"]?.toInt(),
+        handler = { id -> op(id) },
+        handleOK = { _ -> call.respond(HttpStatusCode.OK) },
+        errorQuery = { call.respond(HttpStatusCode.BadRequest, "Given ride does not exist!") },
+        errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null") },
+    )
 
     private suspend fun <K, T> handleClientRequest(
-        parameter: () -> K?,
+        parameter: K?,
         handler: suspend (K) -> T?,
         handleOK: suspend (T) -> Unit,
         errorQuery: suspend () -> Unit,
         errorNotFound: suspend () -> Unit,
     ) {
-        parameter()?.let { p ->
+        parameter?.let { p ->
             handler(p)?.let { obj ->
                 handleOK(obj)
             } ?: errorQuery()
