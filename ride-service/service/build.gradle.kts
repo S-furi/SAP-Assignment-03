@@ -1,6 +1,7 @@
 plugins {
     id("buildlogic.kotlin-application-conventions")
     alias(libs.plugins.ktor.plugin)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 dependencies {
