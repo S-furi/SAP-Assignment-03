@@ -1,14 +1,14 @@
-package it.unibolsap.ass02.domain
+package it.unibo.sap.ass02.domain
 
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.ints.shouldBeLessThan
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldNotBe
-import it.unibo.sap.ass02.domain.RideImpl
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.User
+import it.unibo.sap.ass02.domain.model.V2d
 import kotlinx.coroutines.delay
 
 class RideTest :
@@ -59,7 +59,7 @@ data class DumbUser(
 data class DumbEBike(
     override val id: String,
 ) : EBike {
-    override var location: P2d = P2d.fromCoord(50, 50)
+    override var location: P2d = P2d.fromCoord(50.0, 50.0)
     override var direction: V2d = V2d.fromCoord(1.0, 1.0)
     override var speed: Double = 0.0
     override var state: String = "AVAILABLE"
