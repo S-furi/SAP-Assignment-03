@@ -11,11 +11,15 @@ class RideImpl(
     override var endDate: LocalDate? = null,
     override val id: Int,
 ) : Ride {
+    private val simulation: RideSimulation = CoroutineRideSimulation(this, user)
+
     override fun start() {
+        this.simulation.startSimulation()
         this.startedDate = LocalDate.now()
     }
 
     override fun end() {
+        this.simulation.stopSimulation()
         this.endDate = LocalDate.now()
     }
 }

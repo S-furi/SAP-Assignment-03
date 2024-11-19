@@ -9,7 +9,6 @@ import it.unibo.sap.ass02.domain.RideImpl
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.User
-import it.unibo.sap.ass02.domain.model.V2d
 import kotlinx.coroutines.delay
 
 class RideTest :
