@@ -11,3 +11,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":persistence"))
 }
+
+application {
+    mainClass.set("it.unibo.sap.ass02.service.ServerKt")
+}
