@@ -1,5 +1,7 @@
 package it.unibo.sap.ass02.domain.model
 
 import it.unibo.sap.ass02.domain.ddd.Entity
+import kotlinx.serialization.Serializable
 
-interface User : Entity<Int>
+@Serializable
+sealed interface User : Entity<Int>
