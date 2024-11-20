@@ -19,5 +19,4 @@ fun Application.installModule() {
     install(ContentNegotiation) {
         json()
     }
-
 }
