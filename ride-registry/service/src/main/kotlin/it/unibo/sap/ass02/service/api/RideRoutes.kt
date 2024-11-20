@@ -7,4 +7,6 @@ object RideRoutes {
     const val CREATE_RIDE = "$BASE_PATH/create"
     const val UPDATE_RIDE = "$BASE_PATH/{id}"
     const val DELETE_RIDE = "$BASE_PATH/{id}"
+    const val START_RIDE = "$BASE_PATH/{id}/start"
+    const val END_RIDE = "$BASE_PATH/{id}/stop"
 }
