@@ -3,9 +3,9 @@ package it.unibo.sap.ass02.service.routing
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideImpl
 import it.unibo.sap.ass02.domain.model.EBike
-import it.unibo.sap.ass02.domain.model.EBikeImpl
+import it.unibo.sap.ass02.infrastructure.stub.impl.EBikeImpl
 import it.unibo.sap.ass02.domain.model.User
-import it.unibo.sap.ass02.domain.model.UserImpl
+import it.unibo.sap.ass02.infrastructure.stub.impl.UserImpl
 
 object RideSimulationResolver {
     private val registry = mutableMapOf<Int, Ride>()

@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.domain.model.stub
+package it.unibo.sap.ass02.infrastructure.stub
 
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -7,10 +7,10 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import it.unibo.sap.ass02.domain.model.EBike
-import it.unibo.sap.ass02.domain.model.EBikeImpl
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.V2d
-import it.unibo.sap.ass02.domain.model.stub.EBikeStub.EBikeDTO.Companion.toDTO
+import it.unibo.sap.ass02.infrastructure.stub.EBikeStub.EBikeDTO.Companion.toDTO
+import it.unibo.sap.ass02.infrastructure.stub.impl.EBikeImpl
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 

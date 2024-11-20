@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.domain.model.stub
+package it.unibo.sap.ass02.infrastructure.stub
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
