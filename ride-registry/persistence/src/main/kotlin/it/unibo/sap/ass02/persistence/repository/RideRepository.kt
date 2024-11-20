@@ -18,7 +18,7 @@ class RideRepository(
         val id = integer("id")
         val ebike = varchar("ebike_id", length = 100)
         val user = integer("user_id")
-        val startDate = date("starting_date")
+        val startDate = date("starting_date").nullable()
         val endingDate = date("ending_date").nullable()
         override val primaryKey = PrimaryKey(id)
     }
@@ -46,6 +46,7 @@ class RideRepository(
         dbQuery {
             if (this.findByID(entity.id) != null) {
                 Rides.update({ Rides.id eq entity.id }) {
+                    it[startDate] = entity.startedDate
                     it[endingDate] = entity.endDate
                 }
             } else {
@@ -91,5 +92,15 @@ class RideRepository(
                         it[Rides.id],
                     )
                 }.singleOrNull()
+        }
+
+    suspend fun getLastId(): Int =
+        dbQuery {
+            Rides
+                .select(Rides.id)
+                .sortedByDescending { Rides.id }
+                .map {
+                    it[Rides.id]
+                }.firstOrNull() ?: 0
         }
 }
