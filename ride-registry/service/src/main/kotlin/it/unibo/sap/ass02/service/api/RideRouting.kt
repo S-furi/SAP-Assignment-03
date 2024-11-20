@@ -66,7 +66,7 @@ object RideRouting {
 
         post(START_RIDE) {
             rideDateUpdate(call) {
-                it.end()
+                it.start()
                 it
             }
         }
