@@ -5,9 +5,9 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 object DatabaseUtils {
-    private const val DB_NAME = "ANAME"
-    private const val DB_USER = "AUSER"
-    private const val DB_PASSWORD = "APASSWORD"
+    private const val DB_NAME = "ride-repo"
+    private const val DB_USER = "postgres"
+    private const val DB_PASSWORD = "postgres"
 
     val database =
         Database.connect(
