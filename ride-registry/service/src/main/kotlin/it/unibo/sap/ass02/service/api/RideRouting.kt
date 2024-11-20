@@ -4,11 +4,14 @@ import io.ktor.http.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideImpl
 import it.unibo.sap.ass02.service.api.RideRoutes.ALL_RIDES
 import it.unibo.sap.ass02.service.api.RideRoutes.CREATE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.DELETE_RIDE
+import it.unibo.sap.ass02.service.api.RideRoutes.END_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.RIDE_BY_ID
+import it.unibo.sap.ass02.service.api.RideRoutes.START_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.UPDATE_RIDE
 import kotlinx.serialization.json.Json
 
@@ -60,6 +63,40 @@ object RideRouting {
                 errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null") },
             )
         }
+
+        post(START_RIDE) {
+            rideDateUpdate(call) {
+                it.end()
+                it
+            }
+        }
+
+        post(END_RIDE) {
+            rideDateUpdate(call) {
+                it.end()
+                it
+            }
+        }
+    }
+
+    private suspend fun rideDateUpdate(
+        call: RoutingCall,
+        dateFunc: (Ride) -> Ride,
+    ) {
+        val id = call.parameters["id"]?.toInt()
+
+        if (id == null) {
+            call.respond(HttpStatusCode.BadRequest, "Provided rideId is null")
+            return
+        }
+
+        RideResolver.getRideByID(id)?.let {
+            dateFunc(it).let { ride ->
+                RideResolver.updateRide(ride)?.let { stat ->
+                    call.respond(HttpStatusCode.OK, stat)
+                } ?: call.respond(HttpStatusCode.InternalServerError, "Something went wrong during update")
+            }
+        } ?: call.respond(HttpStatusCode.NotFound, "Provided id does not correspond to an existing ride")
     }
 
     private suspend fun <K, T> handleClientRequest(
