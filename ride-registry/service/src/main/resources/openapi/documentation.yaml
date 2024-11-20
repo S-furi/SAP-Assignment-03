@@ -1,0 +1,154 @@
+openapi: "3.0.3"
+info:
+  title: "ride_registry API"
+  description: "ride_registry API"
+  version: "1.0.0"
+servers:
+- url: "https://ride_registry"
+paths:
+  /api/rides/{id}:
+    delete:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "integer"
+                format: "int32"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "The input parameter is null"
+                Example#2:
+                  value: "The input ID does not exist."
+    put:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Error during the Ride parsing"
+                Example#2:
+                  value: "The Input Ride does not exist"
+  /api/rides/all:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+  /api/rides/create:
+    post:
+      description: ""
+      responses:
+        "409":
+          description: "Conflict"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "This ride already exists"
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Error during the Ride parsing."
+  /api/rides/find/{id}:
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "integer"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Ride"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "The input parameter is null."
+                Example#2:
+                  value: "The input ID does not exist."
+components:
+  schemas:
+    EBike:
+      type: object
+      properties:
+        id:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+    Ride:
+      type: "object"
+      properties:
+        id:
+          type: string
+        ebike:
+          $ref: "#/components/schemas/EBike"
+        user:
+          $ref: "#/components/schemas/User"
+        startedDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
