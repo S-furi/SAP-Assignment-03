@@ -15,14 +15,18 @@ import it.unibo.sap.ass02.api.ServiceName.RIDE_SERVICE
 import it.unibo.sap.ass02.api.ServiceName.USER_SERVICE
 import it.unibo.sap.ass02.api.ServiceName.VEHICLE_SERVICE
 import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
 
 object ApiGateway {
+    private val logger = LoggerFactory.getLogger(ApiGateway::class.java)
+
     fun Route.apiGateway() {
         get(VEHICLE_ROUTES) {
-            call.callWithCircuitBreaker(VEHICLE_SERVICE + VEHICLE_ROUTES, HttpMethod.Get)
+            call
+                .callWithCircuitBreaker(VEHICLE_SERVICE + VEHICLE_ROUTES, HttpMethod.Get)
                 ?.let {
                     call.respond(it.status, it.body())
-                }?:call.respond(HttpStatusCode.BadRequest, "")
+                } ?: call.respond(HttpStatusCode.BadRequest, "")
         }
         get(USER_ROUTES) {
             call.callWithCircuitBreaker(USER_SERVICE + USER_ROUTES + call.parameters["param"], HttpMethod.Get)
@@ -33,22 +37,25 @@ object ApiGateway {
         post(VEHICLE_ROUTES) {
             call.callWithCircuitBreaker(VEHICLE_SERVICE + VEHICLE_ROUTES, HttpMethod.Post)
         }
-        post(USER_ROUTES){
+        post(USER_ROUTES) {
             call.callWithCircuitBreaker(USER_SERVICE + USER_ROUTES, HttpMethod.Post)
         }
         post(RIDE_ROUTES) {
             call.callWithCircuitBreaker(RIDE_SERVICE + RIDE_ROUTES, HttpMethod.Post)
         }
     }
-   private fun RoutingCall.callWithCircuitBreaker(endpoint: String, method: HttpMethod): HttpResponse? = runCatching {
-           CircuitBreakerConfiguration.circuitBreaker.executeCallable {
-               print(CircuitBreakerConfiguration.circuitBreaker)
-               runBlocking {
-                   CircuitBreakerConfiguration.client.request(endpoint) {
-                       this.method = method
-                   }
-               }
-           }
-       }.getOrNull()
 
+    private fun RoutingCall.callWithCircuitBreaker(
+        endpoint: String,
+        method: HttpMethod,
+    ): HttpResponse? =
+        runCatching {
+            CircuitBreakerConfiguration.circuitBreaker.executeCallable {
+                runBlocking {
+                    CircuitBreakerConfiguration.client.request(endpoint) {
+                        this.method = method
+                    }
+                }
+            }
+        }.getOrNull()
 }
