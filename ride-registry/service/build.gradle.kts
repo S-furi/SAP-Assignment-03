@@ -1,5 +1,6 @@
 plugins {
     id("buildlogic.kotlin-application-conventions")
+    alias(libs.plugins.ktor.plugin)
 }
 
 dependencies {
