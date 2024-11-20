@@ -29,27 +29,25 @@ object RideRouting {
         }
 
         post(CREATE_RIDE) {
-            val rideText = call.receiveText()
-            runCatching {
-                val inputRide = Json.decodeFromString<RideImpl>(rideText)
-                if (RideResolver.addNewRide(inputRide) != null) {
-                    call.respond(HttpStatusCode.Conflict, "This ride already exists")
-                    return@post
-                } else {
-                    call.respond(HttpStatusCode.Created)
-                }
-            }.getOrNull() ?: call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing.")
+            val ebikeId = call.queryParameters["ebikeId"]
+            val userId = call.queryParameters["userId"]?.toInt()
+
+            if (ebikeId == null || userId == null) {
+                call.respond(HttpStatusCode.BadRequest, "Error with provided ids: {ebike: $ebikeId, user: $userId}")
+                return@post
+            }
+            RideResolver.addNewRide(ebikeId, userId)?.let {
+                call.respond(HttpStatusCode.Created, it)
+            } ?: call.respond(HttpStatusCode.Conflict, "This ride already exists")
         }
 
         put(UPDATE_RIDE) {
             val rideText = call.receiveText()
             runCatching {
                 val inputRide = Json.decodeFromString<RideImpl>(rideText)
-                if (RideResolver.updateRide(inputRide) != null) {
-                    call.respond(HttpStatusCode.OK)
-                } else {
-                    call.respond(HttpStatusCode.BadRequest, "The Input Ride does not exist")
-                }
+                RideResolver.updateRide(inputRide)?.let {
+                    call.respond(HttpStatusCode.OK, it)
+                } ?: call.respond(HttpStatusCode.BadRequest, "The Input Ride does not exist")
             }.getOrNull() ?: call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing")
         }
 

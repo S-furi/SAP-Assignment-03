@@ -36,6 +36,12 @@ paths:
                   value: "The input ID does not exist."
     put:
       description: ""
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Ride"
       parameters:
       - name: "id"
         in: "path"
@@ -69,11 +75,33 @@ paths:
           content:
             '*/*':
               schema:
-                type: "object"
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Ride"
   /api/rides/create:
     post:
       description: ""
+      parameters:
+      - name: "ebikeId"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      - name: "userId"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
       responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
         "409":
           description: "Conflict"
           content:
@@ -88,16 +116,9 @@ paths:
           content:
             '*/*':
               schema:
-                type: "object"
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
                 type: "string"
-              examples:
-                Example#1:
-                  value: "Error during the Ride parsing."
+                format: number
+
   /api/rides/find/{id}:
     get:
       description: ""
