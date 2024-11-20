@@ -1,6 +1,7 @@
-package it.unibo.sap.ass02.domain.model
+package it.unibo.sap.ass02.infrastructure.stub.impl
 
-import it.unibo.sap.ass02.domain.model.stub.UserStub
+import it.unibo.sap.ass02.domain.model.User
+import it.unibo.sap.ass02.infrastructure.stub.UserStub
 
 data class UserImpl(
     override val id: Int,
