@@ -9,3 +9,5 @@ kls_database.db
 .vscode/
 
 .idea
+
+./pg_data
