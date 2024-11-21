@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.logback)
     implementation(libs.bundles.ktor.client)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutine)
