@@ -65,4 +65,12 @@ public class EBikeController {
                 new ResponseEntity<EBikeImpl>(this.eBikeService.createNewEBike(ebike), HttpStatus.OK) :
                 new ResponseEntity<EBikeImpl>(this.postEBike(ebike), HttpStatus.CREATED);
     }
+
+    @PutMapping("/update/location/{id}?x={xPos}&y={yPos}")
+    public ResponseEntity<EBikeImpl> updateLocation(final @PathVariable String id,
+                                                    final @PathVariable double xPos,
+                                                    final @PathVariable double yPos) {
+
+        return null;
+    }
 }
