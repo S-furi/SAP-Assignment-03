@@ -67,7 +67,7 @@ class RideRepository(
                         it[Rides.id],
                     )
                 }
-        }
+        } ?: listOf()
 
     override suspend fun delete(id: Int): Int? =
         dbQuery {
@@ -101,6 +101,6 @@ class RideRepository(
                 .sortedByDescending { Rides.id }
                 .map {
                     it[Rides.id]
-                }.firstOrNull() ?: 0
-        }
+                }.firstOrNull()
+        } ?: 0
 }
