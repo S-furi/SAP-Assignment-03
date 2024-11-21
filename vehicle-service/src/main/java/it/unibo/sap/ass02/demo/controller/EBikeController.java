@@ -67,6 +67,11 @@ public class EBikeController {
     }
 
     @PutMapping("/update/location/{id}")
+    @Operation(summary = "Update an ebike location using the input parameters.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything went ok, all the input values were good"),
+            @ApiResponse(responseCode = "400", description = "If one of the parameters Its not correct")
+    })
     public ResponseEntity<Void> updateLocation(final @PathVariable String id,
                                                     final @RequestParam Double x,
                                                     final @RequestParam Double y) {
