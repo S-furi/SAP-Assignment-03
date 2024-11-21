@@ -14,7 +14,7 @@ services:
       - mariadb_prod:/var/lib/mysql
 
   vehicle-service:
-    image: matteoiorio/vehicle-service:1.0.4
+    image: matteoiorio/vehicle-service:1.0.5
     ports:
       - "1926:1926"
     depends_on:
