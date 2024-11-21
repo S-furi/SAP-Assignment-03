@@ -67,10 +67,10 @@ public class EBikeController {
     }
 
     @PutMapping("/update/location/{id}?x={xPos}&y={yPos}")
-    public ResponseEntity<EBikeImpl> updateLocation(final @PathVariable String id,
-                                                    final @PathVariable double xPos,
-                                                    final @PathVariable double yPos) {
-
-        return null;
+    public ResponseEntity<Void> updateLocation(final @PathVariable String id,
+                                                    final @PathVariable Double xPos,
+                                                    final @PathVariable Double yPos) {
+        this.eBikeService.updateLocation(id, xPos, yPos);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }
