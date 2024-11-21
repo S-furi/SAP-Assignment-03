@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.infrastructure.stub.impl
+package it.unibo.sap.ass02.infrastructure.impl
 
 import it.unibo.sap.ass02.domain.model.User
 import it.unibo.sap.ass02.infrastructure.stub.UserStub

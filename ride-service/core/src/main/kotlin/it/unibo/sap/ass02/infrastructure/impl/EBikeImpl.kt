@@ -1,13 +1,10 @@
-package it.unibo.sap.ass02.infrastructure.stub.impl
+package it.unibo.sap.ass02.infrastructure.impl
 
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.V2d
 import it.unibo.sap.ass02.infrastructure.stub.EBikeStub
 
-/**
- * TODO: implement here circuit breaker in case BikeAPI doesn't work and no results are yielded (do not use`!!`)
- */
 class EBikeImpl(
     override val id: String,
 ) : EBike {
@@ -31,7 +28,7 @@ class EBikeImpl(
     }
 
     override fun updateLocation(pos: P2d) {
-        if (EBikeStub.updateBike(this.copy(location = pos))) {
+        if (EBikeStub.updateLocation(this.id, pos)) {
             this.location = pos
         }
     }

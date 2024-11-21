@@ -4,25 +4,24 @@ import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.V2d
+import it.unibo.sap.ass02.infrastructure.impl.EBikeImpl
+import it.unibo.sap.ass02.infrastructure.stub.EBikeRoutes.GET_EBIKE_BY_ID
+import it.unibo.sap.ass02.infrastructure.stub.EBikeRoutes.UPDATE_EBIKE_ENDPOINT
+import it.unibo.sap.ass02.infrastructure.stub.EBikeRoutes.UPDATE_LOCATION_ENDPOINT
+import it.unibo.sap.ass02.infrastructure.stub.EBikeRoutes.VEHICLE_HEALTHCHECK
 import it.unibo.sap.ass02.infrastructure.stub.EBikeStub.EBikeDTO.Companion.toDTO
-import it.unibo.sap.ass02.infrastructure.stub.impl.EBikeImpl
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 
 data object EBikeStub : Stub(
-    HEALTHCHECK_URL = "ebike/healthcheck",
+    HEALTHCHECK_URL = VEHICLE_HEALTHCHECK,
 ) {
-    private val VEHICLE_ENDPOINT = "http://$GATEWAY_HOST:$GATEWAY_PORT/ebike"
-
-    private val UPDATE_EBIKE_ENDPOINT = "$VEHICLE_ENDPOINT/update/"
-
-    private val GET_EBIKE_BY_ID = "$VEHICLE_ENDPOINT/"
-
     private suspend fun retrieveEBike(id: String): EBikeDTO? {
         val res = client.get(GET_EBIKE_BY_ID + id)
         if (res.status.value in 200..299) {
@@ -35,15 +34,25 @@ data object EBikeStub : Stub(
 
     fun updateBike(bike: EBike): Boolean =
         runBlocking {
-            val res =
-                client.put(UPDATE_EBIKE_ENDPOINT + bike.id) {
+            client
+                .put(UPDATE_EBIKE_ENDPOINT + bike.id) {
                     contentType(ContentType.Application.Json)
                     setBody(bike.toDTO())
-                }
-            (res.status.value in 200..299).also {
-                if (!it) logger.warn("cannot retrieve ebike apparently...")
-            }
+                }.checkStatusCode()
         }
+
+    fun updateLocation(
+        id: String,
+        p: P2d,
+    ) = runBlocking {
+        client
+            .put(UPDATE_LOCATION_ENDPOINT + id) {
+                url {
+                    parameters.append("x", p.x.toString())
+                    parameters.append("x", p.y.toString())
+                }
+            }.checkStatusCode()
+    }
 
     fun location(id: String): P2d? =
         runBlocking {
@@ -72,6 +81,11 @@ data object EBikeStub : Stub(
     fun battery(id: String): Int? =
         runBlocking {
             retrieveEBike(id)?.battery
+        }
+
+    private fun HttpResponse.checkStatusCode() =
+        (this.status.value in 200..299).also {
+            if (!it) logger.warn("An error occurred, got status code: $it")
         }
 
     @Serializable
@@ -111,4 +125,12 @@ data object EBikeStub : Stub(
         val x: Double,
         val y: Double,
     )
+}
+
+object EBikeRoutes {
+    private val VEHICLE_ENDPOINT = "http://${EBikeStub.GATEWAY_HOST}:${EBikeStub.GATEWAY_PORT}/ebike"
+    const val VEHICLE_HEALTHCHECK = "actuator/health"
+    val UPDATE_EBIKE_ENDPOINT = "$VEHICLE_ENDPOINT/update/"
+    val UPDATE_LOCATION_ENDPOINT = "$VEHICLE_ENDPOINT/update/location"
+    val GET_EBIKE_BY_ID = "$VEHICLE_ENDPOINT/"
 }
