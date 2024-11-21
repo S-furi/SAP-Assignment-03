@@ -21,6 +21,7 @@ import kotlinx.serialization.Serializable
 
 data object EBikeStub : Stub(
     HEALTHCHECK_URL = VEHICLE_HEALTHCHECK,
+    GATEWAY_PORT = "1926",
 ) {
     private suspend fun retrieveEBike(id: String): EBikeDTO? {
         val res = client.get(GET_EBIKE_BY_ID + id)
