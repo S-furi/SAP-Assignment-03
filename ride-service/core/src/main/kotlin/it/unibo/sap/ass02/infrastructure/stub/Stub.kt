@@ -6,6 +6,7 @@ import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.runBlocking
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 sealed class Stub(
@@ -13,7 +14,7 @@ sealed class Stub(
     val GATEWAY_HOST: String = System.getenv("GATEWAY_HOST") ?: "localhost",
     val GATEWAY_PORT: String = System.getenv("GATEWAY_PORT") ?: "1926",
 ) {
-    protected val logger = LoggerFactory.getLogger(Stub::class.java)
+    protected val logger: Logger = LoggerFactory.getLogger(Stub::class.java)
 
     val client =
         HttpClient(CIO) {
