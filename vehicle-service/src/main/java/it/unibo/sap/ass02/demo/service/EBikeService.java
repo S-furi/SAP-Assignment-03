@@ -30,6 +30,17 @@ public class EBikeService {
         return this.eBikeRepository.save(eBike);
     }
 
+    public void updateLocation(final String ebikeId, final Double xPos, final Double yPos) {
+        this.eBikeRepository.findById(ebikeId)
+                .ifPresent((ebike) -> {
+                    final P2d newPosition = this.p2dRepository
+                                    .findByXAndY(xPos, yPos)
+                                            .orElseGet(() -> this.p2dRepository.save(new P2d(xPos, yPos)));
+                    ebike.updateLocation(newPosition);
+                    this.eBikeRepository.save(ebike);
+                });
+    }
+
     public Iterable<EBikeImpl> getAllEBike() {
         return this.eBikeRepository.findAll();
     }
