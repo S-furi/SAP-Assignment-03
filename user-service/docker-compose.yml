@@ -11,11 +11,18 @@ services:
     volumes:
       - ./pg_data/init_db.sql:/docker-entrypoint-initdb.d/init.sql
 
-    ports:
-      - 5432:5432
+    # ports:
+    #   - 5432:5432
 
     networks:
       - user-service-net
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
 
   user-service:
     build: .
@@ -29,12 +36,7 @@ services:
       - user-service-net
 
     depends_on:
-      - db
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
+      db:
+        condition: service_healthy
 networks:
   user-service-net:
