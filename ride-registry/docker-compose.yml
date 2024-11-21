@@ -1,7 +1,7 @@
 services:
-  db:
+  pg-ride:
     image: postgres
-    hostname: pg-db
+    hostname: ${PG_HOST}
     restart: always
     shm_size: 128mb
     environment:
@@ -9,10 +9,10 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
       PG_USER: ${PG_USER}
-    ports:
-      - 5432:5432
     networks:
-      - ride-registry-net
+      - service-net
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
       interval: 30s
@@ -26,19 +26,12 @@ services:
       - 9991:9991
     environment:
       PORT: 9991
-      POSTGRES_HOST: pg-db
-
+      POSTGRES_HOST: ${PG_HOST}
     networks:
-      - ride-registry-net
+      - service-net
     depends_on:
-      db:
+      pg-ride:
         condition: service_healthy
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
 networks:
-  ride-registry-net:
+  service-net:
