@@ -22,7 +22,7 @@ public class EBikeService {
 
     public EBikeImpl createNewEBike(EBikeImpl eBike) {
         this.validateEBike(eBike);
-        if (this.existsById(eBike.getID())) {
+        if (!this.existsById(eBike.getID())) {
             final P2d location = eBike.getLocation();
             final P2d savedLocation = this.p2dRepository
                     .findByXAndY(location.x(), location.y())
