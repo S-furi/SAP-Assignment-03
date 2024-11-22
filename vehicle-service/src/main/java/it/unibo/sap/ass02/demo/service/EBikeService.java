@@ -49,7 +49,7 @@ public class EBikeService {
                         this.eBikeRepository.save(vehicle);
                     }
                     else{
-                        throw new IllegalArgumentException("The delta is lower than 0 or greather than 100");
+                        throw new IllegalArgumentException("The delta is lower than 0 or greater than 100");
                     }
                 });
     }
