@@ -22,12 +22,16 @@ public class EBikeService {
 
     public EBikeImpl createNewEBike(EBikeImpl eBike) {
         this.validateEBike(eBike);
-        final P2d location = eBike.getLocation();
-        final P2d savedLocation = this.p2dRepository
+        if (this.existsById(eBike.getID())) {
+            final P2d location = eBike.getLocation();
+            final P2d savedLocation = this.p2dRepository
                     .findByXAndY(location.x(), location.y())
                     .orElseGet(() -> this.p2dRepository.save(location));
-        eBike.updateLocation(savedLocation);
-        return this.eBikeRepository.save(eBike);
+            eBike.updateLocation(savedLocation);
+            return this.eBikeRepository.save(eBike);
+        }else{
+            throw new IllegalArgumentException("The input ebike ID already exists");
+        }
     }
 
     public void updateLocation(final String ebikeId, final Double xPos, final Double yPos) {
