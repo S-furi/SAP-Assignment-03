@@ -1,0 +1,8 @@
+services:
+  api-gateway:
+    build: .
+    ports:
+      - 4001:4001
+    environment:
+      PORT: 4001
+
