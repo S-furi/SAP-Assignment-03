@@ -41,6 +41,19 @@ public class EBikeService {
                 });
     }
 
+    public void updateBattery(final String ebikeId, final Integer delta) {
+        this.eBikeRepository.findById(ebikeId)
+                .ifPresent((vehicle) -> {
+                    if (delta >= 0 && delta <= 100) {
+                        vehicle.decreaseBatteryLevel(delta);
+                        this.eBikeRepository.save(vehicle);
+                    }
+                    else{
+                        throw new IllegalArgumentException("The delta is lower than 0 or greather than 100");
+                    }
+                });
+    }
+
     public Iterable<EBikeImpl> getAllEBike() {
         return this.eBikeRepository.findAll();
     }
