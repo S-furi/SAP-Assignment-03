@@ -6,7 +6,7 @@ info:
 servers:
 - url: "https://user_service"
 paths:
-  /api/users/{id}:
+  /users/{id}:
     delete:
       description: ""
       parameters:
@@ -31,22 +31,6 @@ paths:
             '*/*':
               schema:
                 type: "object"
-  /api/users/all:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  type: "string"
-  /api/users/decrease-credit:
-    post:
-      description: ""
-  /api/users/find/{id}:
     get:
       description: ""
       parameters:
@@ -61,7 +45,7 @@ paths:
           content:
             '*/*':
               schema:
-                type: "string"
+                $ref: "#/components/schemas/User"
         "404":
           description: "Not Found"
           content:
@@ -71,10 +55,59 @@ paths:
               examples:
                 Example#1:
                   value: "Specified id does not correspond to a user"
-  /api/users/increase-credit:
+  /users/all:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+  /users/decrease-credit:
     post:
       description: ""
-  /api/users/new:
+    parameters:
+      - name: "id"
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: "amount"
+        in: query
+        required: true
+        schema:
+          type: integer
+
+
+  /users/health:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /users/increase-credit:
+    post:
+      description: ""
+    parameters:
+      - name: "id"
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: "amount"
+        in: query
+        required: true
+        schema:
+          type: integer
+  /users/new:
     post:
       description: ""
       responses:
@@ -95,3 +128,12 @@ paths:
             '*/*':
               schema:
                 type: "object"
+components:
+  schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: integer
+        credit:
+          type: integer
