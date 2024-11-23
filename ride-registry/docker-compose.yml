@@ -27,6 +27,8 @@ services:
     environment:
       PORT: 9991
       POSTGRES_HOST: ${PG_HOST}
+    env_file:
+      ./.env
     networks:
       - service-net
     depends_on:
@@ -35,3 +37,4 @@ services:
 
 networks:
   service-net:
+    external: true
