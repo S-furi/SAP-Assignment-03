@@ -31,6 +31,16 @@ object RideRouting {
             )
         }
 
+        delete(DELETE_RIDE) {
+            handleClientRequest(
+                parameter = call.parameters["id"]?.toInt(),
+                handler = { id -> RideResolver.deleteRide(id) },
+                handleOK = { obj -> call.respond(HttpStatusCode.OK, obj) },
+                errorQuery = { call.respond(HttpStatusCode.BadRequest, "The input ID does not exist.") },
+                errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null") },
+            )
+        }
+
         post(CREATE_RIDE) {
             val ebikeId = call.queryParameters["ebikeId"]
             val userId = call.queryParameters["userId"]?.toInt()
@@ -52,16 +62,6 @@ object RideRouting {
                     call.respond(HttpStatusCode.OK, it)
                 } ?: call.respond(HttpStatusCode.BadRequest, "The Input Ride does not exist")
             }.getOrNull() ?: call.respond(HttpStatusCode.BadRequest, "Error during the Ride parsing")
-        }
-
-        delete(DELETE_RIDE) {
-            handleClientRequest(
-                parameter = call.parameters["id"]?.toInt(),
-                handler = { id -> RideResolver.deleteRide(id) },
-                handleOK = { obj -> call.respond(HttpStatusCode.OK, obj) },
-                errorQuery = { call.respond(HttpStatusCode.BadRequest, "The input ID does not exist.") },
-                errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null") },
-            )
         }
 
         post(START_RIDE) {
