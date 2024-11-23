@@ -7,7 +7,7 @@ data class UserImpl(
     override val id: Int,
 ) : User {
     init {
-        require(HttpRemoteEntity.checkId("http://localhost:11000/api/users/$id")) {
+        require(HttpRemoteEntity.checkId("users/$id")) {
             "Remote User with id: $id does not exists..."
         }
     }
