@@ -9,12 +9,12 @@ import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-sealed class Stub(
-    val HEALTHCHECK_URL: String,
-    val GATEWAY_HOST: String = System.getenv("GATEWAY_HOST") ?: "localhost",
-    val GATEWAY_PORT: String = System.getenv("GATEWAY_PORT") ?: "1926",
+sealed class Proxy(
+    val healthcheckUri: String,
+    val gatewayHost: String = System.getenv("GATEWAY_HOST") ?: "localhost",
+    val gatewayPort: String = System.getenv("GATEWAY_PORT") ?: "4001",
 ) {
-    protected val logger: Logger = LoggerFactory.getLogger(Stub::class.java)
+    protected val logger: Logger = LoggerFactory.getLogger(Proxy::class.java)
 
     val client =
         HttpClient(CIO) {
@@ -25,7 +25,7 @@ sealed class Stub(
 
     init {
         runBlocking {
-            val url = "http://$GATEWAY_HOST:$GATEWAY_PORT/$HEALTHCHECK_URL"
+            val url = "http://$gatewayHost:$gatewayPort/$healthcheckUri"
             val res = client.get(url)
             require(res.status.value in 200..299) {
                 "Cannot establish connection to \"$url\""

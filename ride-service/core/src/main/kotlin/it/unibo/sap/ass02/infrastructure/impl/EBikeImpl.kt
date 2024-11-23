@@ -3,38 +3,39 @@ package it.unibo.sap.ass02.infrastructure.impl
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.V2d
-import it.unibo.sap.ass02.infrastructure.stub.EBikeStub
+import it.unibo.sap.ass02.infrastructure.stub.EbikeProxy
 
 class EBikeImpl(
     override val id: String,
 ) : EBike {
-    override var location: P2d = EBikeStub.location(this.id)!!
-        get() = EBikeStub.location(this.id)!!
-    override var direction: V2d = EBikeStub.direction(this.id)!!
-        get() = EBikeStub.direction(this.id)!!
-    override var speed: Double = EBikeStub.speed(this.id)!!
-        get() = EBikeStub.speed(this.id)!!
-    override var state: String = EBikeStub.state(this.id)!!
-        get() = EBikeStub.state(this.id)!!
-    override var available: Boolean = EBikeStub.isAvailable(this.id)!!
-        get() = EBikeStub.isAvailable(this.id)!!
-    override var battery: Int = EBikeStub.battery(this.id)!!
-        get() = EBikeStub.battery(this.id)!!
+    override var location: P2d = EbikeProxy.location(this.id)!!
+        get() = EbikeProxy.location(this.id)!!
+
+    override var direction: V2d = EbikeProxy.direction(this.id)!!
+
+    override var speed: Double = EbikeProxy.speed(this.id)!!
+        get() = EbikeProxy.speed(this.id)!!
+    override var state: String = EbikeProxy.state(this.id)!!
+        get() = EbikeProxy.state(this.id)!!
+    override var available: Boolean = EbikeProxy.isAvailable(this.id)!!
+        get() = EbikeProxy.isAvailable(this.id)!!
+    override var battery: Int = EbikeProxy.battery(this.id)!!
+        get() = EbikeProxy.battery(this.id)!!
 
     override fun updateSpeed(speed: Double) {
-        if (EBikeStub.updateBike(this.copy(speed = speed))) {
+        if (EbikeProxy.updateBike(this.copy(speed = speed))) {
             this.speed = speed
         }
     }
 
     override fun updateLocation(pos: P2d) {
-        if (EBikeStub.updateLocation(this.id, pos)) {
+        if (EbikeProxy.updateLocation(this.id, pos)) {
             this.location = pos
         }
     }
 
     override fun updateDirection(dir: V2d) {
-        if (EBikeStub.updateBike(this.copy(direction = dir))) {
+        if (EbikeProxy.updateBike(this.copy(direction = dir))) {
             this.direction = dir
         }
     }

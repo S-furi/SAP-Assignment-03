@@ -15,13 +15,12 @@ import it.unibo.sap.ass02.infrastructure.stub.EBikeRoutes.GET_EBIKE_BY_ID
 import it.unibo.sap.ass02.infrastructure.stub.EBikeRoutes.UPDATE_EBIKE_ENDPOINT
 import it.unibo.sap.ass02.infrastructure.stub.EBikeRoutes.UPDATE_LOCATION_ENDPOINT
 import it.unibo.sap.ass02.infrastructure.stub.EBikeRoutes.VEHICLE_HEALTHCHECK
-import it.unibo.sap.ass02.infrastructure.stub.EBikeStub.EBikeDTO.Companion.toDTO
+import it.unibo.sap.ass02.infrastructure.stub.EbikeProxy.EBikeDTO.Companion.toDTO
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 
-data object EBikeStub : Stub(
-    HEALTHCHECK_URL = VEHICLE_HEALTHCHECK,
-    GATEWAY_PORT = "1926",
+data object EbikeProxy : Proxy(
+    healthcheckUri = VEHICLE_HEALTHCHECK,
 ) {
     private suspend fun retrieveEBike(id: String): EBikeDTO? {
         val res = client.get(GET_EBIKE_BY_ID + id)
@@ -129,7 +128,7 @@ data object EBikeStub : Stub(
 }
 
 object EBikeRoutes {
-    private val VEHICLE_ENDPOINT = "http://${EBikeStub.GATEWAY_HOST}:${EBikeStub.GATEWAY_PORT}/ebike"
+    private val VEHICLE_ENDPOINT = "http://${EbikeProxy.gatewayHost}:${EbikeProxy.gatewayPort}/ebike"
     const val VEHICLE_HEALTHCHECK = "actuator/health"
     val UPDATE_EBIKE_ENDPOINT = "$VEHICLE_ENDPOINT/update/"
     val UPDATE_LOCATION_ENDPOINT = "$VEHICLE_ENDPOINT/update/location"
