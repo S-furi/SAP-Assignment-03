@@ -20,7 +20,7 @@ object ApiGateway {
             call.handleBasicGet(USER_SERVICE, "users")
         }
         get(RIDE_ROUTES) {
-            call.handleBasicGet(RIDE_REGISTRY)
+            call.handleBasicGet(RIDE_REGISTRY, "rides")
         }
         post(VEHICLE_ROUTES) {
             call.callWithCircuitBreaker(VEHICLE_SERVICE + VEHICLE_ROUTES, HttpMethod.Post)
