@@ -24,7 +24,7 @@ services:
       start_period: 80s
 
   user-service:
-    image: sfuri/user-service:0.1.0
+    image: sfuri/user-service:0.1.1
     ports:
       - 11000:11000
     environment:
