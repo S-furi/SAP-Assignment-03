@@ -39,3 +39,5 @@ services:
         condition: service_healthy
 networks:
   service-net:
+    external:
+      true

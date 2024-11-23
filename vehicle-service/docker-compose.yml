@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mariadb:
     image: mariadb:10.6
@@ -12,11 +10,15 @@ services:
       - "3306:3306"
     volumes:
       - mariadb_prod:/var/lib/mysql
+    networks:
+      service-net:
 
   vehicle-service:
     image: matteoiorio/vehicle-service:1.0.5
     ports:
       - "1926:1926"
+    networks:
+      service-net:
     depends_on:
      - mariadb
     healthcheck:
@@ -30,3 +32,7 @@ services:
 volumes:
   mariadb_prod:
   ebike-service:
+
+networks:
+  service-net:
+    external: true
