@@ -44,14 +44,12 @@ class RideRepository(
 
     override suspend fun update(entity: Ride): Int? =
         dbQuery {
-            if (this.findByID(entity.id) != null) {
+            this.findByID(entity.id)?.let { _ -> 
                 Rides.update({ Rides.id eq entity.id }) {
                     it[startDate] = entity.startedDate
                     it[endingDate] = entity.endDate
                 }
-            } else {
-                null
-            }
+            } 
         }
 
     override suspend fun findAll(): Iterable<Ride> =
@@ -71,10 +69,8 @@ class RideRepository(
 
     override suspend fun delete(id: Int): Int? =
         dbQuery {
-            if (this.findByID(id) != null) {
+            this.findByID(id)?.let { _ ->
                 Rides.deleteWhere { Rides.id eq id }
-            } else {
-                null
             }
         }
 
