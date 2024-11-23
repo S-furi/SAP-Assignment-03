@@ -17,7 +17,7 @@ object ApiGateway {
             call.handleBasicGet(VEHICLE_SERVICE)
         }
         get(USER_ROUTES) {
-            call.handleBasicGet(USER_SERVICE)
+            call.handleBasicGet(USER_SERVICE, "users")
         }
         get(RIDE_ROUTES) {
             call.handleBasicGet(RIDE_SERVICE)

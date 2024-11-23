@@ -13,8 +13,12 @@ import java.nio.charset.StandardCharsets
 object RoutingCallExtensions {
     private val logger = LoggerFactory.getLogger(ApiGateway::class.java)
 
-    suspend fun RoutingCall.handleBasicGet(serviceUri: String) {
-        val uri = this.extractAndConcatenateURI(serviceUri)
+    suspend fun RoutingCall.handleBasicGet(
+        serviceUri: String,
+        prefix: String? = null,
+    ) {
+        val uri = this.extractAndConcatenateURI(serviceUri, prefix)
+        logger.debug(uri)
         this
             .callWithCircuitBreaker(uri, HttpMethod.Get)
             .onSuccess {
@@ -26,8 +30,16 @@ object RoutingCallExtensions {
             }
     }
 
-    private fun RoutingCall.extractAndConcatenateURI(servicePath: String) =
-        "$servicePath/${this.parameters.getAll("param")?.joinToString("/") ?: ""}"
+    private fun RoutingCall.extractAndConcatenateURI(
+        servicePath: String,
+        prefix: String?,
+    ): String {
+        val apiRoute =
+            this.parameters.getAll("param")?.joinToString("/")?.let {
+                if (prefix != null) "$prefix/$it" else it
+            } ?: ""
+        return "$servicePath/$apiRoute"
+    }
 
     fun RoutingCall.callWithCircuitBreaker(
         endpoint: String,
