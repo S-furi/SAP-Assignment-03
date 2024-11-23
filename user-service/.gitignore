@@ -10,4 +10,4 @@ kls_database.db
 
 .idea
 
-./pg_data/
+pg_data/
