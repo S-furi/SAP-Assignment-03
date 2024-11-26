@@ -1,5 +1,3 @@
-import org.gradle.internal.impldep.it.unimi.dsi.fastutil.objects.ObjectLists.UnmodifiableList
-import java.sql.SQLException
 
 plugins {
 	java
@@ -49,7 +47,7 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	// https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api
 	implementation("jakarta.validation:jakarta.validation-api:3.0.2")
-
+	implementation("io.micrometer:micrometer-registry-prometheus")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
 
 
