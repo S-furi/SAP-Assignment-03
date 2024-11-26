@@ -4,14 +4,16 @@ import io.github.resilience4j.circuitbreaker.CircuitBreaker
 import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
 import io.github.resilience4j.kotlin.circuitbreaker.executeSuspendFunction
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.request
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.HttpMethod
 import org.slf4j.LoggerFactory
 
-object CircuitBreakerConfiguration {
+object GatewayCircuitBreaker {
     private val logger = LoggerFactory.getLogger(CircuitBreakerConfig::class.java)
-    private val client = HttpClient()
+    private val client = HttpClient(CIO)
 
     val circuitBreaker = CircuitBreaker.ofDefaults("API-Gateway")
 
@@ -24,6 +26,8 @@ object CircuitBreakerConfiguration {
                 this.method = method
             }
         }
+
+    suspend fun createWebSocketSession(uri: String) = this.client.webSocketSession(uri)
 
     fun CircuitBreaker.logMetrics() {
         logger.debug(

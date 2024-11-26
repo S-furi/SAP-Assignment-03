@@ -4,11 +4,21 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingCall
-import it.unibo.sap.ass02.CircuitBreakerConfiguration
-import it.unibo.sap.ass02.CircuitBreakerConfiguration.handleRequest
-import it.unibo.sap.ass02.CircuitBreakerConfiguration.logMetrics
+import io.ktor.server.websocket.DefaultWebSocketServerSession
+import io.ktor.websocket.Frame
+import io.ktor.websocket.WebSocketSession
+import io.ktor.websocket.close
+import io.ktor.websocket.readReason
+import io.ktor.websocket.readText
+import it.unibo.sap.ass02.GatewayCircuitBreaker
+import it.unibo.sap.ass02.GatewayCircuitBreaker.handleRequest
+import it.unibo.sap.ass02.GatewayCircuitBreaker.logMetrics
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
@@ -33,7 +43,7 @@ object RoutingCallExtensions {
             }
     }
 
-    private fun RoutingCall.extractAndConcatenateURI(
+    private fun ApplicationCall.extractAndConcatenateURI(
         servicePath: String,
         prefix: String?,
     ): String {
@@ -51,8 +61,33 @@ object RoutingCallExtensions {
         runCatching {
             runBlocking {
                 handleRequest(endpoint, method).also {
-                    CircuitBreakerConfiguration.circuitBreaker.logMetrics()
+                    GatewayCircuitBreaker.circuitBreaker.logMetrics()
                 }
+            }
+        }
+
+    suspend fun proxyWSRequest(
+        clientSession: DefaultWebSocketServerSession,
+        backendWSUri: String,
+    ): Result<Any> =
+        runCatching {
+            val backendSession = GatewayCircuitBreaker.createWebSocketSession(backendWSUri)
+            coroutineScope {
+                launch { backendSession.forwardFrames(clientSession) }
+                launch { clientSession.forwardFrames(backendSession) }
+            }
+        }.onFailure {
+            logger.error(it.message)
+            clientSession.close()
+        }
+
+    private suspend fun WebSocketSession.forwardFrames(dest: WebSocketSession) =
+        this.incoming.consumeEach {
+            when (it) {
+                is Frame.Text -> dest.send(Frame.Text(it.readText()))
+                is Frame.Binary -> dest.send(Frame.Binary(true, it.data))
+                is Frame.Close -> dest.send(it.readReason()?.let { reason -> Frame.Close(reason) } ?: Frame.Close())
+                else -> logger.warn("WS frame not recognized, got $it")
             }
         }
 }

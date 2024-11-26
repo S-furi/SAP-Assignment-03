@@ -18,8 +18,9 @@ dependencies {
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)
     implementation(libs.logback)
-    implementation(libs.prometheus)
-    implementation(libs.metrics)
+    implementation(libs.registry.prometheus)
+    implementation(libs.ktor.metrics)
+    implementation(libs.kotlinx.coroutine)
 }
 
 application {
