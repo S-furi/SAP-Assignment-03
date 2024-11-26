@@ -14,7 +14,7 @@ java {
 }
 
 dependencies {
-    implementation(libs.resilience4j.circuitbreaker)
+    implementation(libs.bundles.circuitbreaker)
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.ktor.client)
     implementation(libs.logback)
@@ -23,4 +23,3 @@ dependencies {
 application {
     mainClass.set("it.unibo.sap.ass02.ServerKt")
 }
-

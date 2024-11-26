@@ -1,7 +1,9 @@
 package it.unibo.sap.ass02.api
 
-import io.ktor.http.*
-import io.ktor.server.routing.*
+import io.ktor.http.HttpMethod
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import it.unibo.sap.ass02.api.ApiRoutes.RIDE_ROUTES
 import it.unibo.sap.ass02.api.ApiRoutes.USER_ROUTES
 import it.unibo.sap.ass02.api.ApiRoutes.VEHICLE_ROUTES

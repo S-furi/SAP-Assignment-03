@@ -1,11 +1,14 @@
 package it.unibo.sap.ass02.api
 
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.response.respond
+import io.ktor.server.routing.RoutingCall
 import it.unibo.sap.ass02.CircuitBreakerConfiguration
+import it.unibo.sap.ass02.CircuitBreakerConfiguration.handleRequest
+import it.unibo.sap.ass02.CircuitBreakerConfiguration.logMetrics
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
@@ -46,11 +49,9 @@ object RoutingCallExtensions {
         method: HttpMethod,
     ): Result<HttpResponse> =
         runCatching {
-            CircuitBreakerConfiguration.circuitBreaker.executeCallable {
-                runBlocking {
-                    CircuitBreakerConfiguration.client.request(endpoint) {
-                        this.method = method
-                    }
+            runBlocking {
+                handleRequest(endpoint, method).also {
+                    CircuitBreakerConfiguration.circuitBreaker.logMetrics()
                 }
             }
         }
