@@ -2,6 +2,7 @@ package it.unibo.sap.ass02.service.routing
 
 import io.ktor.server.routing.Route
 import io.ktor.server.websocket.webSocket
+import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import io.ktor.websocket.readText
@@ -22,25 +23,33 @@ object RideSimulationRouting {
         webSocket(SUBSCRIBE_TO_SIMULATION) {
             incoming.consumeEach { frame ->
                 val id = call.parameters["id"]?.toInt() ?: return@consumeEach
-                when ((frame as Frame.Text).readText().toRideCommand()) {
-                    RideCommand.START -> {
-                        RideSimulationResolver.startRide(id)
-                    }
-                    RideCommand.STOP -> {
-                        RideSimulationResolver.stopRide(id)
-                        close()
-                    }
-                    RideCommand.STATUS -> {
-                        RideSimulationResolver.findRide(id)?.let {
-                            val res = it.toJson().toString()
-                            messageResponseFlow.emit(res)
-                            logger.info("Sending $res")
+                runCatching {
+                    when ((frame as Frame.Text).readText().toRideCommand()) {
+                        RideCommand.START -> {
+                            RideSimulationResolver.startRide(id)
+                        }
+
+                        RideCommand.STOP -> {
+                            RideSimulationResolver.stopRide(id)
+                            close()
+                        }
+
+                        RideCommand.STATUS -> {
+                            RideSimulationResolver.findRide(id)?.let {
+                                val res = it.toJson().toString()
+                                messageResponseFlow.emit(res)
+                                logger.debug("Sending $res")
+                            }
+                        }
+
+                        else -> {
+                            logger.warn("cannot parse unknown command: ${frame.readText()}")
+                            close()
                         }
                     }
-                    else -> {
-                        logger.warn("cannot parse unknown command: ${frame.readText()}")
-                        close()
-                    }
+                }.onFailure {
+                    logger.error("An error occurred: ${it.message}")
+                    close(CloseReason(CloseReason.Codes.INTERNAL_ERROR, "Something went wrong in the backend: ${it.message}"))
                 }
             }
         }
@@ -48,7 +57,7 @@ object RideSimulationRouting {
 }
 
 object Routes {
-    private const val BASE_PATH = "api/ride-service"
+    private const val BASE_PATH = "ride-service"
     const val SUBSCRIBE_TO_SIMULATION = "$BASE_PATH/{id}"
 }
 
