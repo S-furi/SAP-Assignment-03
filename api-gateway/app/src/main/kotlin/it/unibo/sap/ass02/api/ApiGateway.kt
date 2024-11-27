@@ -1,6 +1,7 @@
 package it.unibo.sap.ass02.api
 
-import io.ktor.server.response.respondText
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
@@ -28,7 +29,9 @@ object ApiGateway {
             call.handleBasicGet(RIDE_REGISTRY, Prefixes.RIDE.prefix)
         }
         webSocket(RIDE_ROUTES) {
-            proxyWSRequest(this, RIDE_SERVICE)
+            call.parameters.getAll("param")?.joinToString("")?.let {
+                proxyWSRequest(this, "$RIDE_SERVICE/$it")
+            } ?: call.respond(HttpStatusCode.BadRequest, "Provided Ride Id was null...")
         }
         post(VEHICLE_ROUTES) {
             call.handleBasicPost(VEHICLE_SERVICE)
@@ -37,7 +40,7 @@ object ApiGateway {
             call.handleBasicPost(USER_SERVICE, Prefixes.USER.prefix)
         }
         post(RIDE_ROUTES) {
-            call.respondText { "TODO: Not yet implemented" }
+            call.handleBasicPost(RIDE_REGISTRY, Prefixes.RIDE.prefix)
         }
     }
 

@@ -22,10 +22,11 @@ object ServicesURIs {
     private fun buildUri(
         host: String,
         port: Int,
-    ) = "http://$host:$port"
+        protocol: String = "http",
+    ) = "$protocol://$host:$port"
 
     val VEHICLE_SERVICE = buildUri(serviceHostnames["v"]!!, servicePorts["v"]!!)
     val USER_SERVICE = buildUri(serviceHostnames["u"]!!, servicePorts["u"]!!)
-    val RIDE_SERVICE = buildUri(serviceHostnames["rs"]!!, servicePorts["rs"]!!)
+    val RIDE_SERVICE = buildUri(serviceHostnames["rs"]!!, servicePorts["rs"]!!, protocol = "ws")
     val RIDE_REGISTRY = buildUri(serviceHostnames["rr"]!!, servicePorts["rr"]!!)
 }
