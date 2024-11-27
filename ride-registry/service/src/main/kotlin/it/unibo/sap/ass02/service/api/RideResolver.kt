@@ -19,7 +19,7 @@ object RideResolver {
     ): Int? =
         this.repository.save(
             RideImpl(
-                id = this.repository.getLastId(),
+                id = this.repository.getLastId() + 1,
                 ebike = EBikeImpl(bikeId),
                 user = UserImpl(userId),
             ),
