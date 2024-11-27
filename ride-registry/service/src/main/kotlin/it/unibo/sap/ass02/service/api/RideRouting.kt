@@ -6,6 +6,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideImpl
+import it.unibo.sap.ass02.service.api.RideRoutes.HEALTH
 import it.unibo.sap.ass02.service.api.RideRoutes.ALL_RIDES
 import it.unibo.sap.ass02.service.api.RideRoutes.CREATE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.DELETE_RIDE
@@ -14,9 +15,19 @@ import it.unibo.sap.ass02.service.api.RideRoutes.RIDE_BY_ID
 import it.unibo.sap.ass02.service.api.RideRoutes.START_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.UPDATE_RIDE
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import org.slf4j.LoggerFactory
 
 object RideRouting {
+    private val logger = LoggerFactory.getLogger(RideRouting::class.java)
+
     fun Route.rideRouting() {
+        get(HEALTH) {
+            val res = JsonObject(mapOf("status" to JsonPrimitive("UP")))
+            call.respond(HttpStatusCode.OK, res.toString())
+        }
+
         get(ALL_RIDES) {
             call.respond(RideResolver.getAllRides())
         }
@@ -84,7 +95,6 @@ object RideRouting {
         dateFunc: (Ride) -> Ride,
     ) {
         val id = call.parameters["id"]?.toInt()
-
         if (id == null) {
             call.respond(HttpStatusCode.BadRequest, "Provided rideId is null")
             return
