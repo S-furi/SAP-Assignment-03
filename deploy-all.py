@@ -11,7 +11,8 @@ files = [
     "api-gateway/docker-compose.yml",
     "vehicle-service/docker-compose.yml",
     "user-service/docker-compose.yml",
-    "ride-registry/docker-compose.yml"
+    "ride-registry/docker-compose.yml",
+    "ride-service/docker-compose.yml",
 ]
 
 def build_compose(file_path) -> ComposeCLI:
