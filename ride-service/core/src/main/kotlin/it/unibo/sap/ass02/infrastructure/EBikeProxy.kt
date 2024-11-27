@@ -1,7 +1,7 @@
 package it.unibo.sap.ass02.infrastructure
 
 import io.ktor.client.request.get
-import io.ktor.client.request.put
+import io.ktor.client.request.post
 import io.ktor.client.statement.HttpResponse
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
@@ -13,7 +13,7 @@ import it.unibo.sap.ass02.infrastructure.util.JsonUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
 
-data object EbikeProxy : Proxy(
+object EbikeProxy : Proxy(
     healthcheckUri = VEHICLE_HEALTHCHECK,
 ) {
     fun getEBike(id: String): EBike? =
@@ -27,7 +27,7 @@ data object EbikeProxy : Proxy(
         p: P2d,
     ) = runBlocking {
         client
-            .put(UPDATE_LOCATION_ENDPOINT + id) {
+            .post(UPDATE_LOCATION_ENDPOINT + id) {
                 url {
                     parameters.append("x", p.x.toString())
                     parameters.append("x", p.y.toString())
@@ -63,7 +63,6 @@ data object EbikeProxy : Proxy(
 
     @Serializable
     data class P2dDTO(
-        val id: Int,
         val x: Double,
         val y: Double,
     )
@@ -94,8 +93,8 @@ data object EbikeProxy : Proxy(
 }
 
 object EBikeRoutes {
-    private val VEHICLE_ENDPOINT = "http://${EbikeProxy.gatewayHost}:${EbikeProxy.gatewayPort}/ebike"
-    const val VEHICLE_HEALTHCHECK = "actuator/health"
+    private val VEHICLE_ENDPOINT = "http://${EbikeProxy.gatewayHost}:${EbikeProxy.gatewayPort}/api/vehicles/ebike"
+    const val VEHICLE_HEALTHCHECK = "api/vehicles/actuator/health"
     val UPDATE_LOCATION_ENDPOINT = "$VEHICLE_ENDPOINT/update/location"
     val GET_EBIKE_BY_ID = "$VEHICLE_ENDPOINT/"
 }
