@@ -59,8 +59,8 @@ object RideSimulationRouting {
 private fun String.asTextFrame(fin: Boolean = true) = Frame.Text(fin, this.toByteArray())
 
 object Routes {
-    private const val BASE_PATH = "ride-service"
-    const val SUBSCRIBE_TO_SIMULATION = "$BASE_PATH/{id}"
+    private const val BASE_PATH = "/"
+    const val SUBSCRIBE_TO_SIMULATION = "$BASE_PATH{id}"
 }
 
 enum class RideCommand(
