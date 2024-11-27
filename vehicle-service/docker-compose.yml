@@ -55,4 +55,5 @@ volumes:
 
 networks:
   service-net:
-    driver: bridge
+    external:
+      true
