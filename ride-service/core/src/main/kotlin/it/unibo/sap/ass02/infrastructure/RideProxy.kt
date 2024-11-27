@@ -2,6 +2,7 @@ package it.unibo.sap.ass02.infrastructure
 
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.post
 import io.ktor.client.statement.bodyAsText
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideImpl
@@ -39,7 +40,7 @@ object RideProxy : Proxy(
         opPath: (Int) -> String,
     ) = runBlocking {
         runCatching {
-            val res = client.get(opPath(id))
+            val res = client.post(opPath(id))
 
             if (res.status.value !in 200..299) {
                 throw OperationNotSupportedException(
