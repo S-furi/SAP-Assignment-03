@@ -9,14 +9,12 @@ import io.ktor.websocket.readText
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.service.routing.Routes.SUBSCRIBE_TO_SIMULATION
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 object RideSimulationRouting {
-    private val messageResponseFlow = MutableSharedFlow<String>()
     private val logger: Logger = LoggerFactory.getLogger(RideSimulationRouting::class.java)
 
     fun Route.rideSimulation() {
@@ -26,20 +24,21 @@ object RideSimulationRouting {
                 runCatching {
                     when ((frame as Frame.Text).readText().toRideCommand()) {
                         RideCommand.START -> {
-                            RideSimulationResolver.startRide(id)
+                            RideSimulationResolver.startRide(id)?.let { send(it.toString().asTextFrame()) }
+                                ?: send("Something went wrong...".asTextFrame()).also { close() }
                         }
 
                         RideCommand.STOP -> {
-                            RideSimulationResolver.stopRide(id)
+                            RideSimulationResolver.stopRide(id)?.let { send(it.toString().asTextFrame()) }
+                                ?: send("Something went wrong...".asTextFrame())
                             close()
                         }
 
                         RideCommand.STATUS -> {
                             RideSimulationResolver.findRide(id)?.let {
-                                val res = it.toJson().toString()
-                                messageResponseFlow.emit(res)
-                                logger.debug("Sending $res")
-                            }
+                                val res = it.toJson()
+                                send(res.asTextFrame())
+                            } ?: send("Not Found".asTextFrame())
                         }
 
                         else -> {
@@ -49,12 +48,15 @@ object RideSimulationRouting {
                     }
                 }.onFailure {
                     logger.error("An error occurred: ${it.message}")
+                    logger.error(it.stackTraceToString())
                     close(CloseReason(CloseReason.Codes.INTERNAL_ERROR, "Something went wrong in the backend: ${it.message}"))
                 }
             }
         }
     }
 }
+
+private fun String.asTextFrame(fin: Boolean = true) = Frame.Text(fin, this.toByteArray())
 
 object Routes {
     private const val BASE_PATH = "ride-service"
@@ -89,4 +91,4 @@ fun Ride.toJson() =
             "endDate" to JsonPrimitive(this.endDate.toString()),
             "startedDate" to JsonPrimitive(this.startedDate.toString()),
         ),
-    )
+    ).toString()
