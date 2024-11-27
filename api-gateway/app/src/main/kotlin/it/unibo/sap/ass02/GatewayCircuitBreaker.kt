@@ -5,25 +5,40 @@ import io.github.resilience4j.circuitbreaker.CircuitBreakerConfig
 import io.github.resilience4j.kotlin.circuitbreaker.executeSuspendFunction
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.request
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
 import org.slf4j.LoggerFactory
 
 object GatewayCircuitBreaker {
     private val logger = LoggerFactory.getLogger(CircuitBreakerConfig::class.java)
-    private val client = HttpClient(CIO)
+    private val client =
+        HttpClient(CIO) {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
 
     val circuitBreaker = CircuitBreaker.ofDefaults("API-Gateway")
 
     suspend fun handleRequest(
         endpoint: String,
         method: HttpMethod,
+        body: String? = null,
     ): HttpResponse =
         circuitBreaker.executeSuspendFunction {
             client.request(endpoint) {
                 this.method = method
+                body?.let {
+                    this.setBody(it)
+                    contentType(ContentType.Application.Json)
+                }
             }
         }
 

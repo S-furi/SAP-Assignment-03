@@ -1,6 +1,6 @@
 package it.unibo.sap.ass02.api
 
-import io.ktor.http.HttpMethod
+import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
@@ -8,8 +8,8 @@ import io.ktor.server.websocket.webSocket
 import it.unibo.sap.ass02.api.ApiRoutes.RIDE_ROUTES
 import it.unibo.sap.ass02.api.ApiRoutes.USER_ROUTES
 import it.unibo.sap.ass02.api.ApiRoutes.VEHICLE_ROUTES
-import it.unibo.sap.ass02.api.RoutingCallExtensions.callWithCircuitBreaker
 import it.unibo.sap.ass02.api.RoutingCallExtensions.handleBasicGet
+import it.unibo.sap.ass02.api.RoutingCallExtensions.handleBasicPost
 import it.unibo.sap.ass02.api.RoutingCallExtensions.proxyWSRequest
 import it.unibo.sap.ass02.api.ServicesURIs.RIDE_REGISTRY
 import it.unibo.sap.ass02.api.ServicesURIs.RIDE_SERVICE
@@ -22,24 +22,29 @@ object ApiGateway {
             call.handleBasicGet(VEHICLE_SERVICE)
         }
         get(USER_ROUTES) {
-            call.handleBasicGet(USER_SERVICE, "users")
+            call.handleBasicGet(USER_SERVICE, Prefixes.USER.prefix)
         }
         get(RIDE_ROUTES) {
-            call.handleBasicGet(RIDE_REGISTRY, "rides")
+            call.handleBasicGet(RIDE_REGISTRY, Prefixes.RIDE.prefix)
         }
-
         webSocket(RIDE_ROUTES) {
             proxyWSRequest(this, RIDE_SERVICE)
         }
-
         post(VEHICLE_ROUTES) {
-            call.callWithCircuitBreaker(VEHICLE_SERVICE + VEHICLE_ROUTES, HttpMethod.Post)
+            call.handleBasicPost(VEHICLE_SERVICE)
         }
         post(USER_ROUTES) {
-            call.callWithCircuitBreaker(USER_SERVICE + USER_ROUTES, HttpMethod.Post)
+            call.handleBasicPost(USER_SERVICE, Prefixes.USER.prefix)
         }
         post(RIDE_ROUTES) {
-            call.callWithCircuitBreaker(RIDE_REGISTRY + RIDE_ROUTES, HttpMethod.Post)
+            call.respondText { "TODO: Not yet implemented" }
         }
+    }
+
+    private enum class Prefixes(
+        val prefix: String,
+    ) {
+        USER("users"),
+        RIDE("rides"),
     }
 }

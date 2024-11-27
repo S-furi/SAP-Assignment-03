@@ -5,6 +5,7 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
+import io.ktor.server.request.receiveText
 import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingCall
 import io.ktor.server.websocket.DefaultWebSocketServerSession
@@ -31,14 +32,30 @@ object RoutingCallExtensions {
         prefix: String? = null,
     ) {
         val uri = this.extractAndConcatenateURI(serviceUri, prefix)
-        logger.debug(uri)
+        this.request(uri, HttpMethod.Get)
+    }
+
+    suspend fun RoutingCall.handleBasicPost(
+        serviceUri: String,
+        prefix: String? = null,
+    ) {
+        val uri = this.extractAndConcatenateURI(serviceUri, prefix)
+        val body = this.receiveText()
+        this.request(uri, HttpMethod.Post, body)
+    }
+
+    private suspend fun RoutingCall.request(
+        uri: String,
+        method: HttpMethod,
+        body: String? = null,
+    ) {
         this
-            .callWithCircuitBreaker(uri, HttpMethod.Get)
+            .callWithCircuitBreaker(uri, method, body)
             .onSuccess {
                 this.respond(it.status, it.bodyAsText(StandardCharsets.UTF_8))
             }.onFailure {
                 this.respond(HttpStatusCode.BadRequest, "Error: ${it.message}")
-                logger.debug("calling route on: $uri")
+                logger.debug("{} -> {}", method, uri)
                 logger.error(it.stackTraceToString())
             }
     }
@@ -57,10 +74,11 @@ object RoutingCallExtensions {
     fun RoutingCall.callWithCircuitBreaker(
         endpoint: String,
         method: HttpMethod,
+        body: String? = null,
     ): Result<HttpResponse> =
         runCatching {
             runBlocking {
-                handleRequest(endpoint, method).also {
+                handleRequest(endpoint, method, body).also {
                     GatewayCircuitBreaker.circuitBreaker.logMetrics()
                 }
             }

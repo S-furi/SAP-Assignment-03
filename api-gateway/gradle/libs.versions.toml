@@ -20,7 +20,7 @@ ktor-websockets = { module = "io.ktor:ktor-server-websockets-jvm", version.ref =
 ktor-cors = { module = "io.ktor:ktor-server-cors-jvm", version.ref = "ktor" }
 ktor-serialization-jackson = { module = "io.ktor:ktor-serialization-jackson", version.ref = "ktor" }
 ktor-statuspage = { module = "io.ktor:ktor-server-status-pages-jvm", version.ref  = "ktor" }
-ktor-contentnegotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
+ktor-server-contentnegotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktor" }
 ktor-serialization-json =  { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 ktor-server-swagger = { module = "io.ktor:ktor-server-swagger", version.ref = "ktor" }
 ktor-server-websocket = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor"}
@@ -42,6 +42,7 @@ resilience4j-circuitbreaker-retry = { module = "io.github.resilience4j:resilienc
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor"}
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor"}
 ktor-client-websocket = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor"}
+ktor-client-contentnegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 
 [bundles]
 ktor-server = [
@@ -51,7 +52,7 @@ ktor-server = [
     "ktor-serialization-jackson",
     "ktor-serialization-json",
     "ktor-websockets",
-    "ktor-contentnegotiation",
+    "ktor-server-contentnegotiation",
     "ktor-statuspage",
     "ktor-server-swagger",
     "ktor-server-websocket",
@@ -69,6 +70,8 @@ ktor-client = [
     "ktor-client-cio",
     "ktor-client-core",
     "ktor-client-websocket",
+    "ktor-serialization-json",
+    "ktor-client-contentnegotiation",
 ]
 
 exposed = [
