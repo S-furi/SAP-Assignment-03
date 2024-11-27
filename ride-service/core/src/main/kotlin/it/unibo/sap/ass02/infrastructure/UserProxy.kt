@@ -5,8 +5,9 @@ import io.ktor.client.request.post
 import it.unibo.sap.ass02.domain.model.User
 import it.unibo.sap.ass02.infrastructure.util.JsonUtils
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
 
-data object UserProxy : Proxy(
+object UserProxy : Proxy(
     healthcheckUri = "api/users/health",
 ) {
     private val USER_ENDPOINT = "http://$gatewayHost:$gatewayPort/api/users"
@@ -45,6 +46,7 @@ data object UserProxy : Proxy(
         res.status.value in 200..299
     }
 
+    @Serializable
     data class UserImpl(
         override val id: Int,
         override val credit: Int,
