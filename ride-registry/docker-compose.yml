@@ -21,7 +21,7 @@ services:
       start_period: 80s
 
   ride-repository:
-    build: .
+    image: sfuri/ride-registry:0.1.1
     ports:
       - 9991:9991
     environment:
