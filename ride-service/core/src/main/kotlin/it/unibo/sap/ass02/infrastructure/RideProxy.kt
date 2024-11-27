@@ -2,15 +2,19 @@ package it.unibo.sap.ass02.infrastructure
 
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.statement.bodyAsText
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideImpl
 import it.unibo.sap.ass02.infrastructure.util.JsonUtils
 import it.unibo.sap.ass02.infrastructure.util.LocalDateSerializer
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
+import java.lang.IllegalArgumentException
+import java.lang.NumberFormatException
 import java.time.LocalDate
+import javax.naming.OperationNotSupportedException
 
-data object RideProxy : Proxy(
+object RideProxy : Proxy(
     healthcheckUri = "api/rides/health",
 ) {
     private val RIDE_ENDPOINT = "http://$gatewayHost:$gatewayPort/api/rides"
@@ -35,9 +39,21 @@ data object RideProxy : Proxy(
         opPath: (Int) -> String,
     ) = runBlocking {
         runCatching {
-            require(client.get(opPath(id)).body<Int>() == 1)
+            val res = client.get(opPath(id))
+
+            if (res.status.value !in 200..299) {
+                throw OperationNotSupportedException(
+                    "The backend returned a non zero value for the required operation. Got: ${res.status.value}, ${res.bodyAsText()}",
+                )
+            }
+            require(res.body<Int>() == 1)
         }.onFailure {
-            logger.error("Got ${it.message} from ride backend...")
+            when (it) {
+                is NumberFormatException -> logger.error("Cannot parse response body... (which means it's an error). Got: ${it.message}")
+                is IllegalArgumentException -> logger.error("Backend returned a value different from what expected.")
+                is OperationNotSupportedException -> logger.error(it.message)
+                else -> logger.error("Got ${it.message} from ride backend... \n${it.stackTraceToString()}")
+            }
         }.isSuccess
     }
 
@@ -47,14 +63,14 @@ data object RideProxy : Proxy(
         val ebike: RideEBikeDTO,
         val user: RideUserDTO,
         @Serializable(with = LocalDateSerializer::class) val endDate: LocalDate?,
-        @Serializable(with = LocalDateSerializer::class) val startDate: LocalDate?,
+        @Serializable(with = LocalDateSerializer::class) val startedDate: LocalDate?,
     ) {
         fun toRide(): Ride =
             RideImpl(
                 id = id,
                 userId = user.id,
                 ebikeId = ebike.id,
-                startedDate = startDate,
+                startedDate = startedDate,
                 endDate = endDate,
             )
     }
