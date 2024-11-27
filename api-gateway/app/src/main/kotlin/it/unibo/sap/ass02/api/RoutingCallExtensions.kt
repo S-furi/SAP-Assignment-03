@@ -9,6 +9,7 @@ import io.ktor.server.request.receiveText
 import io.ktor.server.response.respond
 import io.ktor.server.routing.RoutingCall
 import io.ktor.server.websocket.DefaultWebSocketServerSession
+import io.ktor.util.toMap
 import io.ktor.websocket.Frame
 import io.ktor.websocket.WebSocketSession
 import io.ktor.websocket.close
@@ -41,16 +42,24 @@ object RoutingCallExtensions {
     ) {
         val uri = this.extractAndConcatenateURI(serviceUri, prefix)
         val body = this.receiveText()
-        this.request(uri, HttpMethod.Post, body)
+        this.request(uri, HttpMethod.Post, body, this.queryParameters.toMap())
     }
 
     private suspend fun RoutingCall.request(
         uri: String,
         method: HttpMethod,
         body: String? = null,
+        params: Map<String, List<String>>? = null,
     ) {
+        logger.debug(
+            """
+            * $method: $uri
+              - params: $params
+              - body: $body
+            """.trimIndent(),
+        )
         this
-            .callWithCircuitBreaker(uri, method, body)
+            .callWithCircuitBreaker(uri, method, body, params)
             .onSuccess {
                 this.respond(it.status, it.bodyAsText(StandardCharsets.UTF_8))
             }.onFailure {
@@ -71,14 +80,15 @@ object RoutingCallExtensions {
         return "$servicePath/$apiRoute"
     }
 
-    fun RoutingCall.callWithCircuitBreaker(
+    private fun RoutingCall.callWithCircuitBreaker(
         endpoint: String,
         method: HttpMethod,
         body: String? = null,
+        params: Map<String, List<String>>? = null,
     ): Result<HttpResponse> =
         runCatching {
             runBlocking {
-                handleRequest(endpoint, method, body).also {
+                handleRequest(endpoint, method, body, params).also {
                     GatewayCircuitBreaker.circuitBreaker.logMetrics()
                 }
             }
@@ -96,6 +106,7 @@ object RoutingCallExtensions {
             }
         }.onFailure {
             logger.error(it.message)
+            logger.error(it.stackTraceToString())
             clientSession.close()
         }
 
