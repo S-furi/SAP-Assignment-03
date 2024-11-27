@@ -7,9 +7,9 @@ import it.unibo.sap.ass02.infrastructure.RideProxy
 import it.unibo.sap.ass02.infrastructure.UserProxy
 import java.time.LocalDate
 
-class RideImpl(
-    ebikeId: String,
-    userId: Int,
+data class RideImpl(
+    private val ebikeId: String,
+    private val userId: Int,
     override var startedDate: LocalDate? = null,
     override var endDate: LocalDate? = null,
     override val id: Int,
