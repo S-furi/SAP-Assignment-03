@@ -32,7 +32,7 @@ services:
   prometheus:
     image: prom/prometheus
     ports:
-      - "9090:9090"
+      - "9089:9090"
     depends_on:
       - vehicle-service
     volumes:
@@ -43,7 +43,7 @@ services:
   grafana:
     image: grafana/grafana
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       - vehicle-service
     networks:
