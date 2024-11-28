@@ -1,0 +1,32 @@
+[versions]
+ktor = "3.0.0"
+junit-jupiter-engine = "5.10.3"
+kotlinx-serialization = "1.7.3"
+kotlinx-coroutine = "1.9.0"
+logback = "1.4.12"
+
+[libraries]
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor"}
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor"}
+ktor-client-websocket = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor"}
+ktor-client-contentnegotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-json =  { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
+kotlinx-coroutine = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutine"}
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization"}
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
+
+[bundles]
+ktor-client = [
+    "ktor-client-contentnegotiation",
+    "ktor-client-websocket",
+    "ktor-client-cio",
+    "ktor-serialization-json",
+    "ktor-client-core",
+]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version = "2.0.0" }
+ktor-plugin = { id = "io.ktor.plugin", version.ref = "ktor" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version = "2.0.20" }
+
