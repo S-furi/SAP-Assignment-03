@@ -4,6 +4,7 @@ import argparse
 from python_on_whales import DockerClient
 from python_on_whales.components.compose.cli_wrapper import ComposeCLI
 import logging
+import subprocess
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,10 @@ def handle_compose(action: str):
         for i, compose in enumerate(map(lambda x: build_compose(x), files)):
             compose.down(remove_orphans=True, remove_images="all")
             logger.debug(f"Service ${files[i]} is deleted")
+            network_name = "service-net"
+            subprocess.Popen(f"docker network ls --format '{{.Name }} {{ .ID }}' | grep {network_name} | cut -d ' ' -f 2 | xargs docker network rm").wait()
+            logger.info(f"Network: {network_name} has been deleted.")
+        logger.info("All containers, iamges and shared network are now deleted.")
     else:
         logger.error("No command was found for: " + action)
         exit(1)
