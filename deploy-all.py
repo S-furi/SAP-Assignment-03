@@ -15,24 +15,29 @@ files = [
     "ride-service/docker-compose.yml",
 ]
 
+
 def build_compose(file_path) -> ComposeCLI:
     return DockerClient(compose_files=[file_path]).compose
 
+
 def handle_compose(action: str):
     if action == "up":
-        for i,  compose in enumerate(map(lambda x: build_compose(x), files)):
+        for i, compose in enumerate(map(lambda x: build_compose(x), files)):
             compose.up(detach=True, wait=True, quiet=False)
             logger.debug(f"Service ${files[i]} is now up and running")
         logger.info("All images are set up and running!")
     elif action == "down":
-        for i,  compose in enumerate(map(lambda x: build_compose(x), files)):
+        for i, compose in enumerate(map(lambda x: build_compose(x), files)):
             compose.down(remove_orphans=True)
             logger.debug(f"Service ${files[i]} is deleted")
-        logger.info("All images are now deleted.")
+        logger.info("All containers are now deleted.")
+    elif action == "downrmi":
+        for i, compose in enumerate(map(lambda x: build_compose(x), files)):
+            compose.down(remove_orphans=True, remove_images="all")
+            logger.debug(f"Service ${files[i]} is deleted")
     else:
         logger.error("No command was found for: " + action)
         exit(1)
-
 
 
 if __name__ == "__main__":
@@ -43,7 +48,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "action",
-        choices=["up", "down"],
+        choices=["up", "down", "downrmi"],
         help="Action to perform: 'up' to start all services, 'down' to stop all services.",
     )
 
@@ -55,5 +60,3 @@ if __name__ == "__main__":
     else:
         parser.print_help()
         exit(1)
-
-
