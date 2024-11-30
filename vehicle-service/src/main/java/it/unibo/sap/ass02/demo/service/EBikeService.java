@@ -1,5 +1,6 @@
 package it.unibo.sap.ass02.demo.service;
 
+import it.unibo.sap.ass02.demo.domain.EBike;
 import it.unibo.sap.ass02.demo.domain.EBikeImpl;
 import it.unibo.sap.ass02.demo.domain.P2d;
 import it.unibo.sap.ass02.demo.repositories.EBikeRepository;
@@ -41,6 +42,15 @@ public class EBikeService {
                                     .findByXAndY(xPos, yPos)
                                             .orElseGet(() -> this.p2dRepository.save(new P2d(xPos, yPos)));
                     ebike.updateLocation(newPosition);
+                    this.eBikeRepository.save(ebike);
+                });
+    }
+
+    public void updateState(final String ebikeId, final String state) {
+        this.eBikeRepository.findById(ebikeId)
+                .ifPresent((ebike) -> {
+                    final EBike.EBikeState newState = EBike.EBikeState.fromValue(state.toUpperCase());
+                    ebike.updateState(newState);
                     this.eBikeRepository.save(ebike);
                 });
     }
