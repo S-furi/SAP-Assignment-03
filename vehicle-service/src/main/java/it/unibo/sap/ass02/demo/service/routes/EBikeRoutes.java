@@ -8,4 +8,6 @@ public class EBikeRoutes {
     public final static String UPDATE_EBIKE = "/update/{id}";
     public final static String UPDATE_EBIKE_LOCATION = "/update/location/{id}";
     public final static String UPDATE_EBIKE_BATTERY = "/update/battery/{id}";
+    public final static String UPDATE_EBIKE_STATE = "/update/state/{id}";
+
 }
