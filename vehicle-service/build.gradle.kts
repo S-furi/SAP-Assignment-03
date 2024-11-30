@@ -1,8 +1,9 @@
 
+
 plugins {
 	java
-	id("org.springframework.boot") version "3.3.5"
-	id("io.spring.dependency-management") version "1.1.6"
+	alias(libs.plugins.spring.plugin)
+	alias(libs.plugins.spring.management)
 	id("com.avast.gradle.docker-compose") version "0.16.12"
 }
 
