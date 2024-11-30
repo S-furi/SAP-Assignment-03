@@ -91,4 +91,14 @@ public class EBikeController {
         this.eBikeService.updateBattery(id, delta);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+    @PutMapping(EBikeRoutes.UPDATE_EBIKE_STATE)
+    @Operation(summary = "Update ebike's state using the input parameters.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Everything went ok, all the input values were good"),
+            @ApiResponse(responseCode = "400", description = "If one of the parameters Its not correct") })
+    public ResponseEntity<Void> updateEbikeState(final  @PathVariable String id,
+                                                   final @RequestParam String state) {
+        this.eBikeService.updateState(id, state);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
