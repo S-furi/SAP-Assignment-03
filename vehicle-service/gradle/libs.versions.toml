@@ -10,6 +10,7 @@ reactor-test = "3.6.11"
 springdoc-ui = "2.1.0"
 validation-api = "3.0.2"
 junit-platform = "5.10.3"
+docker = "0.16.12"
 
 [libraries]
 maria-db-java-client = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mariadb" }
@@ -32,8 +33,14 @@ validation-api = { module = "jakarta.validation:jakarta.validation-api", version
 micrometer-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
 
 [bundles]
-lombok = [
-    "project-lombok"
+utils = [
+    "project-lombok",
+    "validation-api",
+    "micrometer-prometheus"
+]
+consistency = [
+    "maria-db-java-client",
+    "mysql-connector"
 ]
 java-spring = [
     "spring-boot-data-jpa",
@@ -47,3 +54,4 @@ java-spring = [
 [plugins]
 spring-plugin = { id = "org.springframework.boot", version.ref = "spring-version" }
 spring-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency" }
+docker-compose = { id = "com.avast.gradle.docker-compose", version.ref = "docker" }
