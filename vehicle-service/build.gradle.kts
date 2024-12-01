@@ -4,7 +4,7 @@ plugins {
 	java
 	alias(libs.plugins.spring.plugin)
 	alias(libs.plugins.spring.management)
-	id("com.avast.gradle.docker-compose") version "0.16.12"
+	alias(libs.plugins.docker.compose)
 }
 
 
