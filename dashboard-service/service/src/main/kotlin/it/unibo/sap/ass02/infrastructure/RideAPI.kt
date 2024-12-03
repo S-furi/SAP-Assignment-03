@@ -1,15 +1,20 @@
 package it.unibo.sap.ass02.infrastructure
 
-import it.unibo.sap.ass02.domain.EBike
-import it.unibo.sap.ass02.domain.Ride
-import it.unibo.sap.ass02.domain.User
+import it.unibo.sap.ass02.domain.RideStatus
 import kotlinx.coroutines.flow.Flow
 
-interface RideAPI{
-    suspend fun startRide(userId: Int, bikeId: String): Int?
+interface RideAPI {
+    suspend fun startRide(
+        userId: Int,
+        bikeId: String,
+    ): Int?
+
     suspend fun stopRide(rideId: Int): Int?
+
     suspend fun stopAll()
-    suspend fun subscribeToSimulation(rideId: Int, rateIntervalMillis: Long = 100): Flow<Ride>
-    suspend fun getBikes(): List<EBike>
-    suspend fun getBike(bikeId: String): EBike?
+
+    suspend fun subscribeToSimulation(
+        rideId: Int,
+        rateIntervalMillis: Long = 100,
+    ): Flow<RideStatus>
 }

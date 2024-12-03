@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDate
 
 @Serializable
-data class Ride(
-    val id: Int,
-    val bike: EBike,
-    val user: User,
-    @Serializable(with = JsonUtils.LocalDateSerializer::class)
-    val startedDate: LocalDate?,
+data class RideStatus(
+    val rideId: Int,
+    val ebikeId: String,
+    val userId: Int,
     @Serializable(with = JsonUtils.LocalDateSerializer::class)
     val endDate: LocalDate?,
+    @Serializable(with = JsonUtils.LocalDateSerializer::class)
+    val startedDate: LocalDate?,
 )
