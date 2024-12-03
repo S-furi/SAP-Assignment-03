@@ -37,4 +37,8 @@ class RideVisualPanel(
                 }
             }
     }
+
+    fun refresh() {
+        repaint()
+    }
 }

@@ -13,6 +13,9 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation(libs.junit.jupiter.engine)
+    testImplementation(libs.bundles.test.kotest)
+    testImplementation(libs.bundles.test.ktor)
+    testImplementation(libs.bundles.ktor.server)
 
     implementation(libs.bundles.ktor.client)
     implementation(libs.logback)

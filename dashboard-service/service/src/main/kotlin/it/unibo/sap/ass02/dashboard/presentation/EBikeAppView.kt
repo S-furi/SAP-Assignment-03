@@ -1,6 +1,8 @@
 package it.unibo.sap.ass02.dashboard.presentation
 
+import it.unibo.sap.ass02.domain.EBike
 import it.unibo.sap.ass02.domain.Ride
+import it.unibo.sap.ass02.domain.User
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -11,14 +13,14 @@ import javax.swing.JPanel
 
 class EBikeAppView :
     JFrame("EBike APP"),
-    RideModelListener,
+    ModelListener,
     ActionListener {
     private val width = 800
     private val height = 500
 
     private val listeners = mutableListOf<RideViewListener>()
 
-    private val centralPanel: RideVisualPanel?
+    private val centralPanel = RideVisualPanel(width, height).also { this.add(it, BorderLayout.CENTER) }
     private val topPanel = JPanel()
     private val addUserButton: JButton = JButton("Add User").also(::configureButton)
     private val addEBikeButton: JButton = JButton("Add EBike").also(::configureButton)
@@ -29,8 +31,8 @@ class EBikeAppView :
         isResizable = false
         layout = BorderLayout()
         defaultCloseOperation = EXIT_ON_CLOSE
+        defaultCloseOperation = EXIT_ON_CLOSE
         add(topPanel, BorderLayout.NORTH)
-        centralPanel = RideVisualPanel(width, height).also { this.add(it, BorderLayout.CENTER) }
     }
 
     override fun actionPerformed(e: ActionEvent): Unit =
@@ -46,7 +48,14 @@ class EBikeAppView :
     fun addRideEventListener(listener: RideViewListener) = this.listeners.add(listener)
 
     override fun notifiedRideUpdate(ride: Ride) {
-        // TODO: implement logic for refreshing gui and ride
+        this.centralPanel.refresh()
+    }
+
+    override fun notifiedUserAdded(user: User) {
+        TODO("Not yet implemented")
+    }
+
+    override fun notifiedEBikeAdded(eBike: EBike) {
         TODO("Not yet implemented")
     }
 }

@@ -8,13 +8,11 @@ import io.ktor.client.plugins.websocket.receiveDeserialized
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.get
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
-import io.ktor.serialization.kotlinx.json.json
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
 import it.unibo.sap.ass02.domain.EBike
 import it.unibo.sap.ass02.domain.Ride
-import it.unibo.sap.ass02.domain.User
 import it.unibo.sap.ass02.infrastructure.utils.JsonUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -29,21 +27,27 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
 
-object AsyncRideServiceAPI : RideServiceAPI {
+object AsyncRideServiceAPI : RideAPI {
     private val logger = LoggerFactory.getLogger(this::class.java)
     private val jobs = mutableMapOf<Int, Job>()
     private val simulations = mutableMapOf<Int, MutableSharedFlow<Ride>>()
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    private val client =
+    private val defaultClient =
         HttpClient(CIO) {
             install(WebSockets) {
                 contentConverter = KotlinxWebsocketSerializationConverter(Json)
             }
             install(ContentNegotiation) {
-                json()
+                JsonUtils.customJson
             }
         }
+
+    private var client = defaultClient
+
+    fun setCustomHttpClient(client: HttpClient) {
+        this.client = client
+    }
 
     override suspend fun startRide(
         userId: Int,
@@ -61,17 +65,6 @@ object AsyncRideServiceAPI : RideServiceAPI {
     override suspend fun getBike(bikeId: String): EBike? =
         client.get("${ServicesRoutes.EBIKE_ROUTE}/$bikeId").let {
             JsonUtils.decodeHttpPayload<EBike>(it)
-        }
-
-    override suspend fun getUsers(): List<User> =
-        client.get(ServicesRoutes.USERS_ROUTE + "/all").let {
-            JsonUtils.decodeHttpPayload<List<User>>(it)
-                ?: listOf()
-        }
-
-    override suspend fun getUser(userId: Int): User? =
-        client.get("${ServicesRoutes.USERS_ROUTE}/$userId").let {
-            JsonUtils.decodeHttpPayload<User>(it)
         }
 
     override suspend fun subscribeToSimulation(
@@ -124,15 +117,4 @@ object AsyncRideServiceAPI : RideServiceAPI {
             }
         }
     }
-}
-
-private object ServicesRoutes {
-    private val apiHost = System.getenv("GATEWAY_HOST") ?: "localhost"
-    private val apiPort = System.getenv("GATEWAY_PORT") ?: "4001"
-    private val API_ENDPOINT = "://$apiHost:$apiPort/api"
-
-    val EBIKE_ROUTE = "http$API_ENDPOINT/bikes"
-    val USERS_ROUTE = "http$API_ENDPOINT/users"
-    val RIDE_ROUTE = "http$API_ENDPOINT/rides"
-    val RIDE_SIM_ROUTE = "ws$API_ENDPOINT/rides"
 }
