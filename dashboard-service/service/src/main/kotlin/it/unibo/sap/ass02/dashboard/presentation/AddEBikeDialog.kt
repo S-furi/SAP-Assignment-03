@@ -1,7 +1,6 @@
 package it.unibo.sap.ass02.dashboard.presentation
 
 import it.unibo.sap.ass02.dashboard.controller.AsyncObserver
-import it.unibo.sap.ass02.dashboard.controller.ServiceProvider
 import it.unibo.sap.ass02.dashboard.presentation.utils.CoroutineHelper.runGuiAsyncUpdate
 import java.awt.BorderLayout
 import java.awt.GridLayout
@@ -11,7 +10,6 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
-import javax.swing.SwingUtilities
 
 class AddEBikeDialog(
     parentFrame: JFrame,
@@ -65,14 +63,5 @@ class AddEBikeDialog(
 
     override fun addObserver(obs: AsyncObserver<Map<String, Any>>) {
         this.observers.add(obs)
-    }
-}
-
-fun main() {
-    SwingUtilities.invokeLater {
-        AddEBikeDialog(JFrame()).apply {
-            addObserver(ServiceProvider.EBikeService)
-            isVisible = true
-        }
     }
 }

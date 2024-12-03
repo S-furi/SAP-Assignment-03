@@ -1,5 +1,6 @@
 package it.unibo.sap.ass02.dashboard.presentation
 
+import it.unibo.sap.ass02.dashboard.controller.ServiceProvider
 import it.unibo.sap.ass02.domain.EBike
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.User
@@ -10,6 +11,7 @@ import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JPanel
+import javax.swing.SwingUtilities
 
 class EBikeAppView :
     JFrame("EBike APP"),
@@ -17,8 +19,6 @@ class EBikeAppView :
     ActionListener {
     private val width = 800
     private val height = 500
-
-    private val listeners = mutableListOf<RideViewListener>()
 
     private val centralPanel = RideVisualPanel(width, height).also { this.add(it, BorderLayout.CENTER) }
     private val topPanel = JPanel()
@@ -35,17 +35,28 @@ class EBikeAppView :
         add(topPanel, BorderLayout.NORTH)
     }
 
-    override fun actionPerformed(e: ActionEvent): Unit =
+    override fun actionPerformed(e: ActionEvent) {
         when (e.source) {
-            (e.source == addUserButton) -> AddUserDialog(this).isVisible = true
-            (e.source == addEBikeButton) -> AddEBikeDialog(this).isVisible = true
-            (e.source == startRideButton) -> TODO("Not yet implemented")
+            addUserButton ->
+                AddUserDialog(this).apply {
+                    addObserver(ServiceProvider.UserService)
+                    display()
+                }
+            addEBikeButton ->
+                AddEBikeDialog(this).apply {
+                    addObserver(ServiceProvider.EBikeService)
+                    display()
+                }
+            startRideButton -> TODO("Not yet implemented")
             else -> JDialog(this, "Command not recognized").isVisible = true
         }
+    }
 
-    private fun configureButton(btn: JButton) = btn.addActionListener(this).apply { topPanel.add(btn) }
-
-    fun addRideEventListener(listener: RideViewListener) = this.listeners.add(listener)
+    private fun configureButton(btn: JButton) =
+        btn.let {
+            it.addActionListener(this)
+            topPanel.add(it)
+        }
 
     override fun notifiedRideUpdate(ride: Ride) {
         this.centralPanel.refresh()
@@ -57,5 +68,15 @@ class EBikeAppView :
 
     override fun notifiedEBikeAdded(eBike: EBike) {
         TODO("Not yet implemented")
+    }
+
+    fun display() {
+        isVisible = true
+    }
+}
+
+fun main() {
+    SwingUtilities.invokeLater {
+        EBikeAppView().display()
     }
 }

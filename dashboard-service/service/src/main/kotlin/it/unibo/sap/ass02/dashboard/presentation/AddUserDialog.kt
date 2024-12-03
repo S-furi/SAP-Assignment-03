@@ -1,7 +1,6 @@
 package it.unibo.sap.ass02.dashboard.presentation
 
 import it.unibo.sap.ass02.dashboard.controller.AsyncObserver
-import it.unibo.sap.ass02.dashboard.controller.ServiceProvider
 import it.unibo.sap.ass02.dashboard.presentation.utils.CoroutineHelper.runGuiAsyncUpdate
 import java.awt.BorderLayout
 import java.awt.GridLayout
@@ -11,7 +10,6 @@ import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JTextField
-import javax.swing.SwingUtilities
 
 class AddUserDialog(
     parentFrame: JFrame,
@@ -25,7 +23,6 @@ class AddUserDialog(
         JButton("OK").apply {
             addActionListener { _ ->
                 runGuiAsyncUpdate {
-                    println("BHO")
                     observers.forEach { it.notifiedUpdateRequested(idField.text.toInt()) }
                     dispose()
                 }
@@ -57,13 +54,8 @@ class AddUserDialog(
     override fun addObserver(obs: AsyncObserver<Int>) {
         this.observers.add(obs)
     }
-}
 
-fun main() {
-    SwingUtilities.invokeLater {
-        AddUserDialog(JFrame()).apply {
-            addObserver(ServiceProvider.UserService)
-            isVisible = true
-        }
+    fun display() {
+        isVisible = true
     }
 }
