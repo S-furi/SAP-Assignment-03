@@ -64,4 +64,8 @@ class AddEBikeDialog(
     override fun addObserver(obs: AsyncObserver<Map<String, Any>>) {
         this.observers.add(obs)
     }
+
+    fun display() {
+        isVisible = true
+    }
 }

@@ -11,7 +11,6 @@ import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JPanel
-import javax.swing.SwingUtilities
 
 class EBikeAppView :
     JFrame("EBike APP"),
@@ -33,6 +32,7 @@ class EBikeAppView :
         defaultCloseOperation = EXIT_ON_CLOSE
         defaultCloseOperation = EXIT_ON_CLOSE
         add(topPanel, BorderLayout.NORTH)
+        add(centralPanel, BorderLayout.CENTER)
     }
 
     override fun actionPerformed(e: ActionEvent) {
@@ -59,24 +59,18 @@ class EBikeAppView :
         }
 
     override fun notifiedRideUpdate(ride: Ride) {
-        this.centralPanel.refresh()
+        this.centralPanel.refresh() // TODO: implement actual logic
     }
 
     override fun notifiedUserAdded(user: User) {
-        TODO("Not yet implemented")
+        this.centralPanel.notifiedUserAdded(user)
     }
 
     override fun notifiedEBikeAdded(eBike: EBike) {
-        TODO("Not yet implemented")
+        this.centralPanel.notifiedEBikeAdded(eBike)
     }
 
     fun display() {
         isVisible = true
-    }
-}
-
-fun main() {
-    SwingUtilities.invokeLater {
-        EBikeAppView().display()
     }
 }

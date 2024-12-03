@@ -1,9 +1,11 @@
 package it.unibo.sap.ass02.dashboard.presentation
 
-import it.unibo.sap.ass02.dashboard.controller.ServiceProvider
+import it.unibo.sap.ass02.domain.EBike
+import it.unibo.sap.ass02.domain.User
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.RenderingHints
+import java.util.concurrent.CopyOnWriteArrayList
 import javax.swing.JPanel
 
 class RideVisualPanel(
@@ -13,6 +15,13 @@ class RideVisualPanel(
     private val dx: Long = (w / 2 - 20).toLong()
     private val dy: Long = (h / 2 - 20).toLong()
 
+    private var ebikes = CopyOnWriteArrayList<EBike>()
+    private var users = CopyOnWriteArrayList<User>()
+
+    init {
+        refresh()
+    }
+
     override fun paint(g: Graphics?) {
         (g as? Graphics2D)
             ?.apply {
@@ -20,7 +29,7 @@ class RideVisualPanel(
                 setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
                 clearRect(0, 0, width, height)
             }?.also { graphics2D ->
-                ServiceProvider.EBikeService.getAll().forEach { bike ->
+                ebikes.forEach { bike ->
                     val p = bike.location
                     val x0 = (dx + p.x).toInt()
                     val y0 = (dy - p.y).toInt()
@@ -30,7 +39,7 @@ class RideVisualPanel(
                 }
             }?.also { graphics2D ->
                 var y = 20
-                ServiceProvider.UserService.getAll().forEach { user ->
+                users.forEach { user ->
                     graphics2D.drawRect(10, y, 20, 20)
                     graphics2D.drawString("${user.id} - balance: ${user.credit}", 35, y + 15)
                     y += 25
@@ -41,4 +50,19 @@ class RideVisualPanel(
     fun refresh() {
         repaint()
     }
+
+    fun notifiedUserAdded(user: User) {
+        this.users.addOrReplaceFirst(user) { it.id == user.id }
+        this.refresh()
+    }
+
+    fun notifiedEBikeAdded(eBike: EBike) {
+        this.ebikes.addOrReplaceFirst(eBike) { it.id == eBike.id }
+        this.refresh()
+    }
+
+    private fun <T> CopyOnWriteArrayList<T>.addOrReplaceFirst(
+        elem: T,
+        eqCheck: (T) -> Boolean,
+    ): CopyOnWriteArrayList<T> = CopyOnWriteArrayList(filter(eqCheck).apply { addFirst(elem) })
 }

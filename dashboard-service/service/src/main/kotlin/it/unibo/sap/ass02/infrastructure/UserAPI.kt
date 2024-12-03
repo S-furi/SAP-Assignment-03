@@ -15,7 +15,7 @@ class UserAPI : AbstractAPI<User, Int, Int>() {
         client
             .post(ServicesRoutes.USERS_ROUTE + "/new") {
                 this.contentType(ContentType.Application.Json)
-                this.setBody(JsonObject(mapOf("id" to JsonPrimitive(config), "credit" to JsonPrimitive(100))).toString())
+                this.setBody(JsonObject(mapOf("id" to JsonPrimitive(config), "credit" to JsonPrimitive(1000))).toString())
             }.status.value == 200
 
     override suspend fun getAll(): List<User> =
