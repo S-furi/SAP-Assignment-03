@@ -33,7 +33,7 @@ object RoutingCallExtensions {
         prefix: String? = null,
     ) {
         val uri = this.extractAndConcatenateURI(serviceUri, prefix)
-        this.request(uri, HttpMethod.Get)
+        this.request(uri, HttpMethod.Get, params = queryParameters.toMap())
     }
 
     suspend fun RoutingCall.handleBasicPost(
