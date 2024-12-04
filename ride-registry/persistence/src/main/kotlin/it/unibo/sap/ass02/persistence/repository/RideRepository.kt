@@ -93,10 +93,9 @@ class RideRepository(
         dbQuery {
             Rides
                 .selectAll()
-                .where { Rides.user eq userId }
-                .where { Rides.ebike eq ebikeId }
-                .where { Rides.endingDate eq null }
-                .map {
+                .where {
+                    (Rides.user eq userId) and (Rides.ebike eq ebikeId) and Rides.endingDate.isNull()
+                }.map {
                     RideImpl(
                         EBikeImpl(it[Rides.ebike]),
                         UserImpl(it[Rides.user]),
