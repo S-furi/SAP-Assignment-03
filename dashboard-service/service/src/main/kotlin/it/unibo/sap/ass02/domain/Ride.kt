@@ -6,9 +6,9 @@ import java.time.LocalDate
 
 @Serializable
 data class Ride(
-    val id: Int,
-    val bike: EBike,
-    val user: User,
+    val rideId: Int,
+    val ebike: String,
+    val user: Int,
     @Serializable(with = JsonUtils.LocalDateSerializer::class)
     val startedDate: LocalDate?,
     @Serializable(with = JsonUtils.LocalDateSerializer::class)

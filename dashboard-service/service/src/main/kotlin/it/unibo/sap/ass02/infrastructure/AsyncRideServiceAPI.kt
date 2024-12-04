@@ -9,11 +9,11 @@ import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.parameters
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
+import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideStatus
 import it.unibo.sap.ass02.infrastructure.utils.JsonUtils
 import kotlinx.coroutines.CoroutineScope
@@ -50,19 +50,42 @@ object AsyncRideServiceAPI : RideAPI {
         this.client = client
     }
 
+    suspend fun getRideFromUserAndEBike(
+        userId: Int,
+        ebikeId: String,
+    ): Ride? =
+        client
+            .get(ServicesRoutes.RIDE_ROUTE + "/find") {
+                url {
+                    parameters.append("userId", userId.toString())
+                    parameters.append("ebikeId", ebikeId)
+                }
+            }.let { JsonUtils.decodeHttpPayload<Ride>(it) }
+
     override suspend fun startRide(
         userId: Int,
         bikeId: String,
-    ): Int? =
+    ) {
         client
             .post(ServicesRoutes.RIDE_ROUTE + "/create") {
                 url {
                     parameters.append("ebikeId", bikeId)
                     parameters.append("userId", userId.toString())
                 }
-            }.bodyAsText()
-            .takeIf(String::isNotEmpty)
-            ?.toInt()
+            }.takeIf { it.status.value !in 200..299 }
+            ?.let { logger.error("Got: ${it.status.value} with message: ${it.bodyAsText()}") }
+    }
+
+    override suspend fun subscribeToSimulation(
+        userId: Int,
+        ebikeId: String,
+        rateIntervalMillis: Long,
+    ): Flow<RideStatus> {
+        scope.launch { startRide(userId, ebikeId) }.join()
+        getRideFromUserAndEBike(userId, ebikeId)?.let {
+            return subscribeToSimulation(it.rideId)
+        } ?: throw IllegalArgumentException("Simulation with user=$userId and ebike=$ebikeId does not exists!")
+    }
 
     override suspend fun subscribeToSimulation(
         rideId: Int,
@@ -78,16 +101,20 @@ object AsyncRideServiceAPI : RideAPI {
         return rideFlow
     }
 
-    override suspend fun stopRide(rideId: Int): Int {
+    override suspend fun stopRide(
+        userId: Int,
+        ebikeId: String,
+    ) = this.getRideFromUserAndEBike(userId, ebikeId)?.let { stopRide(it.rideId) }
+        ?: logger.error("Cannot retrieve given rideId")
+
+    override suspend fun stopRide(rideId: Int) {
         jobs.remove(rideId)?.cancel()
         simulations.remove(rideId)
-        return rideId
     }
 
     override suspend fun stopAll() {
         jobs.values.forEach(Job::cancel)
-        jobs.clear()
-        simulations.clear()
+        listOf(jobs, simulations).forEach { it.clear() }
     }
 
     private fun getRideSimulationStatusJob(
@@ -109,6 +136,7 @@ object AsyncRideServiceAPI : RideAPI {
                     simulations[rideId]?.emit(ride)
                 }
             } finally {
+                send(Frame.Text("stop"))
                 senderJob.cancelAndJoin()
                 close(CloseReason(CloseReason.Codes.NORMAL, "Stopped monitoring $rideId"))
             }

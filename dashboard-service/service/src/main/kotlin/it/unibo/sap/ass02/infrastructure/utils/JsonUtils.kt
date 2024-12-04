@@ -33,16 +33,19 @@ object JsonUtils {
 
     @OptIn(ExperimentalSerializationApi::class)
     @Serializer(forClass = LocalDate::class)
-    object LocalDateSerializer : KSerializer<LocalDate> {
+    object LocalDateSerializer : KSerializer<LocalDate?> {
         private val formatter = DateTimeFormatter.ISO_LOCAL_DATE
 
         override fun serialize(
             encoder: Encoder,
-            value: LocalDate,
+            value: LocalDate?,
         ) {
-            encoder.encodeString(value.format(formatter))
+            if (value != null) encoder.encodeString(value.format(formatter))
         }
 
-        override fun deserialize(decoder: Decoder): LocalDate = LocalDate.parse(decoder.decodeString(), formatter)
+        override fun deserialize(decoder: Decoder): LocalDate? =
+            runCatching {
+                LocalDate.parse(decoder.decodeString(), formatter)
+            }.getOrNull()
     }
 }

@@ -11,14 +11,14 @@ import javax.swing.SwingUtilities
 
 class RideSimulationControlPanel(
     ride: Ride,
-) : JFrame("Ride ${ride.id}- Control Panel") {
+) : JFrame("Ride ${ride.rideId}- Control Panel") {
     private val listeners = mutableListOf<RideViewListener>()
 
     init {
         val stopButton =
             JButton("Stop Riding").apply {
                 addActionListener { _ ->
-                    listeners.forEach { it.stopRide(ride.id) }
+                    listeners.forEach { it.stopRide(ride.rideId) }
                     dispose()
                 }
             }
@@ -26,7 +26,7 @@ class RideSimulationControlPanel(
             JPanel(GridLayout(3, 2, 10, 10))
                 .apply {
                     add(JLabel("Rider name: ${ride.user}"))
-                    add(JLabel("Riding ebike: ${ride.bike}"))
+                    add(JLabel("Riding ebike: ${ride.ebike}"))
                 }
         val btnPanel = JPanel().apply { add(stopButton) }
 
