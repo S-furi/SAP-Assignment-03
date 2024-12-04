@@ -1,6 +1,7 @@
-package it.unibo.sap.ass02.dashboard.presentation
+package it.unibo.sap.ass02.dashboard.presentation.dialogs
 
 import it.unibo.sap.ass02.dashboard.controller.AsyncObserver
+import it.unibo.sap.ass02.dashboard.presentation.ObservableView
 import it.unibo.sap.ass02.dashboard.presentation.utils.CoroutineHelper.runGuiAsyncUpdate
 import java.awt.BorderLayout
 import java.awt.GridLayout

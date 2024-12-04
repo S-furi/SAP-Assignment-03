@@ -8,7 +8,6 @@ import io.ktor.client.plugins.websocket.receiveDeserialized
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.client.request.get
 import io.ktor.client.request.post
-import io.ktor.client.statement.bodyAsText
 import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
@@ -20,6 +19,7 @@ import it.unibo.sap.ass02.infrastructure.utils.JsonUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.delay
@@ -66,26 +66,28 @@ object AsyncRideServiceAPI : RideAPI {
     override suspend fun startRide(
         userId: Int,
         bikeId: String,
-    ) {
-        client
-            .post(ServicesRoutes.RIDE_ROUTE + "/create") {
-                url {
-                    parameters.append("ebikeId", bikeId)
-                    parameters.append("userId", userId.toString())
-                }
-            }.takeIf { it.status.value !in 200..299 }
-            ?.let { logger.error("Got: ${it.status.value} with message: ${it.bodyAsText()}") }
-    }
+    ) = client
+        .post(ServicesRoutes.RIDE_ROUTE + "/create") {
+            url {
+                parameters.append("ebikeId", bikeId)
+                parameters.append("userId", userId.toString())
+            }
+        }.takeIf { it.status.value !in 200..299 }
+        ?.let {
+            JsonUtils.decodeHttpPayload<Ride>(it)
+        }?.rideId
 
     override suspend fun subscribeToSimulation(
         userId: Int,
         ebikeId: String,
         rateIntervalMillis: Long,
     ): Flow<RideStatus> {
-        scope.launch { startRide(userId, ebikeId) }.join()
-        getRideFromUserAndEBike(userId, ebikeId)?.let {
-            return subscribeToSimulation(it.rideId)
-        } ?: throw IllegalArgumentException("Simulation with user=$userId and ebike=$ebikeId does not exists!")
+        val rideId =
+            getRideFromUserAndEBike(userId, ebikeId)?.rideId
+                ?: scope.async { startRide(userId, ebikeId) }.await()
+                ?: throw IllegalArgumentException("Cannot create ride...")
+
+        return subscribeToSimulation(rideId)
     }
 
     override suspend fun subscribeToSimulation(

@@ -1,6 +1,9 @@
 package it.unibo.sap.ass02.dashboard.presentation
 
 import it.unibo.sap.ass02.dashboard.controller.ServiceProvider
+import it.unibo.sap.ass02.dashboard.presentation.dialogs.AddEBikeDialog
+import it.unibo.sap.ass02.dashboard.presentation.dialogs.AddRideDialog
+import it.unibo.sap.ass02.dashboard.presentation.dialogs.AddUserDialog
 import it.unibo.sap.ass02.domain.EBike
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.User
@@ -47,7 +50,11 @@ class EBikeAppView :
                     addObserver(ServiceProvider.EBikeService)
                     display()
                 }
-            startRideButton -> TODO("Not yet implemented")
+            startRideButton ->
+                AddRideDialog(this).apply {
+                    addObserver(ServiceProvider.RideService)
+                    display()
+                }
             else -> JDialog(this, "Command not recognized").isVisible = true
         }
     }

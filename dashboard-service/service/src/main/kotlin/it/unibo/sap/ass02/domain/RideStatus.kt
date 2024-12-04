@@ -13,4 +13,6 @@ data class RideStatus(
     val endDate: LocalDate?,
     @Serializable(with = JsonUtils.LocalDateSerializer::class)
     val startedDate: LocalDate?,
-)
+) {
+    fun toRide(): Ride = Ride(rideId, ebikeId, userId, startedDate, endDate)
+}

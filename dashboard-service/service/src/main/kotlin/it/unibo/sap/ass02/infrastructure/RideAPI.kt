@@ -7,7 +7,7 @@ interface RideAPI {
     suspend fun startRide(
         userId: Int,
         bikeId: String,
-    )
+    ): Int?
 
     suspend fun stopRide(
         userId: Int,
