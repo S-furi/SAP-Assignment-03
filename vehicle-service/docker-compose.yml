@@ -1,0 +1,59 @@
+services:
+  mariadb:
+    image: mariadb:10.6
+    environment:
+      - MARIADB_ROOT_PASSWORD=EBikePassword
+      - MARIADB_DATABASE=ebikedb
+      - MARIADB_USER=EBikeApplication
+      - MARIADB_PASSWORD=EBikePassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_prod:/var/lib/mysql
+    networks:
+      service-net:
+
+  vehicle-service:
+    image: matteoiorio/vehicle-service:1.0.5
+    ports:
+      - "1926:1926"
+    networks:
+      service-net:
+    depends_on:
+     - mariadb
+    healthcheck:
+      test: curl --fail http://vehicle-service:1926/actuator/health/ping || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9089:9090"
+    depends_on:
+      - vehicle-service
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    networks:
+      service-net:
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3001:3000"
+    depends_on:
+      - vehicle-service
+    networks:
+      service-net:
+
+volumes:
+  mariadb_prod:
+  ebike-service:
+
+networks:
+  service-net:
+    external:
+      true

@@ -1,0 +1,35 @@
+services:
+  api-gateway:
+    build: .
+    ports:
+      - 4001:4001
+    environment:
+      PORT: 4001
+    env_file: ../.env
+    networks:
+      service-net:
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    depends_on:
+      - api-gateway
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    networks:
+      service-net:
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api-gateway
+    networks:
+      service-net:
+
+networks:
+  service-net:
+    name: service-net
+    driver: bridge

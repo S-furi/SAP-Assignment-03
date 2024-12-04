@@ -1,0 +1,57 @@
+[versions]
+spring-version = "3.3.4"
+spring-dependency = "1.1.6"
+mariadb = "3.1.2"
+netty-resolver = "4.1.73.Final:osx-aarch_64"
+lombok = "1.18.34"
+mysql-connector = "8.3.0"
+prometheus = "1.2.1"
+reactor-test = "3.6.11"
+springdoc-ui = "2.1.0"
+validation-api = "3.0.2"
+junit-platform = "5.10.3"
+docker = "0.16.12"
+
+[libraries]
+maria-db-java-client = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "mariadb" }
+netty-dns = { module = "io.netty:netty-resolver-dns-native-macos", version.ref = "netty-resolver" }
+
+spring-boot-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-version" }
+spring-boot-webflux = { module = "org.springframework.boot:spring-boot-starter-webflux", version.ref = "spring-version" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-version" }
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-version" }
+spring-boot-config-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-version" }
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-version" }
+
+mysql-connector = { module = "com.mysql:mysql-connector-j", version.ref = "mysql-connector" }
+project-lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+reactor-test = { module = "io.projectreactor:reactor-test", version.ref = "reactor-test" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+
+springdoc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc-ui" }
+validation-api = { module = "jakarta.validation:jakarta.validation-api", version.ref = "validation-api" }
+micrometer-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "prometheus" }
+
+[bundles]
+utils = [
+    "project-lombok",
+    "validation-api",
+    "micrometer-prometheus"
+]
+consistency = [
+    "maria-db-java-client",
+    "mysql-connector"
+]
+java-spring = [
+    "spring-boot-data-jpa",
+    "spring-boot-webflux",
+    "spring-boot-starter-web",
+    "spring-boot-config-processor",
+    "springdoc-ui"
+]
+
+
+[plugins]
+spring-plugin = { id = "org.springframework.boot", version.ref = "spring-version" }
+spring-management = { id = "io.spring.dependency-management", version.ref = "spring-dependency" }
+docker-compose = { id = "com.avast.gradle.docker-compose", version.ref = "docker" }

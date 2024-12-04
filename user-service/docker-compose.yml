@@ -1,0 +1,43 @@
+services:
+  pg-user:
+    image: postgres
+    hostname: ${PG_HOST}
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      PG_USER: ${PG_USER}
+
+    networks:
+      - service-net
+
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+
+  user-service:
+    image: sfuri/user-service:0.1.2
+    ports:
+      - 11000:11000
+    environment:
+      PORT: 11000
+      POSTGRES_HOST: ${PG_HOST}
+
+    networks:
+      - service-net
+
+    depends_on:
+      pg-user:
+        condition: service_healthy
+networks:
+  service-net:
+    external:
+      true

@@ -1,0 +1,139 @@
+openapi: "3.0.3"
+info:
+  title: "user_service API"
+  description: "user_service API"
+  version: "1.0.0"
+servers:
+- url: "https://user_service"
+paths:
+  /users/{id}:
+    delete:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Provided userId cannot be deleted."
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+    get:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: "Not Found"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Specified id does not correspond to a user"
+  /users/all:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/User"
+  /users/decrease-credit:
+    post:
+      description: ""
+    parameters:
+      - name: "id"
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: "amount"
+        in: query
+        required: true
+        schema:
+          type: integer
+
+
+  /users/health:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+  /users/increase-credit:
+    post:
+      description: ""
+    parameters:
+      - name: "id"
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: "amount"
+        in: query
+        required: true
+        schema:
+          type: integer
+  /users/new:
+    post:
+      description: ""
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+                Example#2:
+                  value: ""
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "object"
+components:
+  schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: integer
+        credit:
+          type: integer
