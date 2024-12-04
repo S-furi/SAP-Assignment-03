@@ -13,6 +13,7 @@ import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
 import io.ktor.websocket.close
+import io.ktor.websocket.readBytes
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideStatus
 import it.unibo.sap.ass02.infrastructure.utils.JsonUtils
@@ -124,16 +125,21 @@ object AsyncRideServiceAPI : RideAPI {
         client.webSocket("${ServicesRoutes.RIDE_SIM_ROUTE}/$rideId") {
             val senderJob =
                 launch {
+                    send(Frame.Text("start"))
                     while (isActive) {
                         send(Frame.Text("status"))
                         delay(rate)
                     }
                 }
             try {
-                incoming.consumeEach {
-                    val ride = receiveDeserialized<RideStatus>()
-                    logger.debug("Got ride from websocket: {}", ride)
-                    simulations[rideId]?.emit(ride)
+                incoming.consumeEach { frame ->
+                    runCatching {
+                        val ride = receiveDeserialized<RideStatus>()
+                        logger.debug("Got ride from websocket: {}", ride)
+                        simulations[rideId]?.emit(ride)
+                    }.getOrElse {
+                        logger.warn("Incoming frame wasn't a ride, got: ${String(frame.readBytes())}")
+                    }
                 }
             } finally {
                 send(Frame.Text("stop"))
