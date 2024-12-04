@@ -8,4 +8,6 @@ data class EBike(
     val location: P2d,
     val available: Boolean,
     val battery: Int,
-)
+) {
+    override fun equals(other: Any?): Boolean = this.id == (other as? EBike)?.id
+}

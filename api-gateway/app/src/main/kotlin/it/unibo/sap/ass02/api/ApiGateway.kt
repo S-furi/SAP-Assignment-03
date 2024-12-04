@@ -5,12 +5,14 @@ import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.websocket.webSocket
 import it.unibo.sap.ass02.api.ApiRoutes.RIDE_ROUTES
 import it.unibo.sap.ass02.api.ApiRoutes.USER_ROUTES
 import it.unibo.sap.ass02.api.ApiRoutes.VEHICLE_ROUTES
 import it.unibo.sap.ass02.api.RoutingCallExtensions.handleBasicGet
 import it.unibo.sap.ass02.api.RoutingCallExtensions.handleBasicPost
+import it.unibo.sap.ass02.api.RoutingCallExtensions.handleBasicPut
 import it.unibo.sap.ass02.api.RoutingCallExtensions.proxyWSRequest
 import it.unibo.sap.ass02.api.ServicesURIs.RIDE_REGISTRY
 import it.unibo.sap.ass02.api.ServicesURIs.RIDE_SERVICE
@@ -41,6 +43,9 @@ object ApiGateway {
         }
         post(RIDE_ROUTES) {
             call.handleBasicPost(RIDE_REGISTRY, Prefixes.RIDE.prefix)
+        }
+        put(VEHICLE_ROUTES) {
+            call.handleBasicPut(VEHICLE_SERVICE)
         }
     }
 

@@ -6,4 +6,6 @@ import kotlinx.serialization.Serializable
 data class User(
     val id: Int,
     val credit: Int,
-)
+) {
+    override fun equals(other: Any?): Boolean = this.id == (other as? User)?.id
+}

@@ -2,7 +2,10 @@ package it.unibo.sap.ass02.dashboard.presentation.dialogs
 
 import it.unibo.sap.ass02.dashboard.controller.AsyncObserver
 import it.unibo.sap.ass02.dashboard.controller.RideCommand
+import it.unibo.sap.ass02.dashboard.controller.ServiceProvider
 import it.unibo.sap.ass02.dashboard.presentation.ObservableView
+import it.unibo.sap.ass02.dashboard.presentation.RideSimulationControlPanel
+import it.unibo.sap.ass02.dashboard.presentation.RideViewListener
 import it.unibo.sap.ass02.dashboard.presentation.utils.CoroutineHelper
 import java.awt.BorderLayout
 import java.awt.GridLayout
@@ -44,6 +47,12 @@ class AddRideDialog(
                     val userId = userIdField.text.toInt()
                     val ebikeId = ebikeIdField.text
                     observers.forEach { it.notifiedUpdateRequested(RideCommand.start(userId, ebikeId)) }
+                    ServiceProvider.RideService.getRideFromUserIdAndBikeId(userId, ebikeId)?.let {
+                        RideSimulationControlPanel(it).apply {
+                            observers.filterIsInstance<RideViewListener>().forEach(this::addRideEventListener)
+                            display()
+                        }
+                    }
                     observers.forEach { it.notifiedUpdateRequested(RideCommand.subscribe(userId, ebikeId)) }
                 }
                 dispose()

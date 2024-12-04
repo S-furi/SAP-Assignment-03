@@ -45,6 +45,15 @@ object RoutingCallExtensions {
         this.request(uri, HttpMethod.Post, body, this.queryParameters.toMap())
     }
 
+    suspend fun RoutingCall.handleBasicPut(
+        serviceUri: String,
+        prefix: String? = null,
+    ) {
+        val uri = this.extractAndConcatenateURI(serviceUri, prefix)
+        val body = this.receiveText()
+        this.request(uri, HttpMethod.Put, body, this.queryParameters.toMap())
+    }
+
     private suspend fun RoutingCall.request(
         uri: String,
         method: HttpMethod,

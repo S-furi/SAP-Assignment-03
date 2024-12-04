@@ -4,6 +4,7 @@ import it.unibo.sap.ass02.dashboard.controller.ServiceProvider
 import it.unibo.sap.ass02.dashboard.presentation.dialogs.AddEBikeDialog
 import it.unibo.sap.ass02.dashboard.presentation.dialogs.AddRideDialog
 import it.unibo.sap.ass02.dashboard.presentation.dialogs.AddUserDialog
+import it.unibo.sap.ass02.dashboard.presentation.utils.CoroutineHelper
 import it.unibo.sap.ass02.domain.EBike
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.User
@@ -32,7 +33,6 @@ class EBikeAppView :
         setSize(width, height)
         isResizable = false
         layout = BorderLayout()
-        defaultCloseOperation = EXIT_ON_CLOSE
         defaultCloseOperation = EXIT_ON_CLOSE
         add(topPanel, BorderLayout.NORTH)
         add(centralPanel, BorderLayout.CENTER)
@@ -66,7 +66,14 @@ class EBikeAppView :
         }
 
     override fun notifiedRideUpdate(ride: Ride) {
-        this.centralPanel.refresh() // TODO: implement actual logic
+        CoroutineHelper.runGuiAsyncUpdate {
+            val user = ServiceProvider.UserService.find(ride.user)
+            val ebike = ServiceProvider.EBikeService.find(ride.ebike)
+            if (user != null && ebike != null) {
+                this.centralPanel.notifiedRideUpdated(user, ebike)
+            }
+            this.centralPanel.refresh()
+        }
     }
 
     override fun notifiedUserAdded(user: User) {
@@ -79,5 +86,9 @@ class EBikeAppView :
 
     fun display() {
         isVisible = true
+    }
+
+    fun refresh() {
+        this.centralPanel.refresh()
     }
 }

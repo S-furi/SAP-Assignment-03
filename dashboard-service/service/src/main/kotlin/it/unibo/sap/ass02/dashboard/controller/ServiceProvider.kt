@@ -1,6 +1,7 @@
 package it.unibo.sap.ass02.dashboard.controller
 
 import it.unibo.sap.ass02.dashboard.presentation.EBikeAppView
+import it.unibo.sap.ass02.dashboard.presentation.RideViewListener
 import it.unibo.sap.ass02.domain.EBike
 import it.unibo.sap.ass02.domain.P2d
 import it.unibo.sap.ass02.domain.User
@@ -12,7 +13,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 import javax.swing.SwingUtilities
@@ -50,8 +50,9 @@ object ServiceProvider {
         }
     }
 
-    object RideService : AsyncObserver<RideCommand> {
+    object RideService : AsyncObserver<RideCommand>, RideViewListener {
         private val apis = AsyncRideServiceAPI
+        private val controller = RideController()
 
         override suspend fun notifiedUpdateRequested(update: RideCommand) {
             val userId = update.userId
@@ -61,16 +62,41 @@ object ServiceProvider {
                 RideCommand.Command.STOP -> apis.stopRide(userId, ebikeId)
                 RideCommand.Command.SUBSCRIBE -> return handleSubscription(userId, ebikeId)
             }
+            dashboard.refresh()
         }
 
         private suspend fun handleSubscription(
             userId: Int,
             ebikeId: String,
         ) {
-            apis.subscribeToSimulation(userId, ebikeId).onEach {
+            logger.debug("Subscribed to simulation")
+            apis.subscribeToSimulation(userId, ebikeId).collect {
                 logger.debug("Ride status: {}", it)
                 dashboard.notifiedRideUpdate(it.toRide())
             }
+        }
+
+        suspend fun getRideFromUserIdAndBikeId(
+            userId: Int,
+            ebikeId: String,
+        ) = apis.getRideFromUserAndEBike(userId, ebikeId)
+
+        override fun startRide(
+            userId: Int,
+            bikeId: String,
+        ) {
+            controller.startRide(userId, bikeId)
+        }
+
+        override fun stopRide(rideId: Int) {
+            controller.stopRide(rideId)
+        }
+
+        override fun stopRide(
+            userId: Int,
+            ebikeId: String,
+        ) {
+            controller.stopRide(userId, ebikeId)
         }
     }
 
@@ -78,6 +104,8 @@ object ServiceProvider {
         val apis: AbstractAPI<T, C, I>,
     ) {
         suspend fun getAll(): List<T> = apis.getAll()
+
+        suspend fun find(id: I): T? = apis.get(id)
 
         suspend fun updateRequested(
             update: C,

@@ -1,8 +1,9 @@
 package it.unibo.sap.ass02.infrastructure
 
 import io.ktor.client.request.get
-import io.ktor.client.request.post
+import io.ktor.client.request.put
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.V2d
@@ -12,6 +13,7 @@ import it.unibo.sap.ass02.infrastructure.EBikeRoutes.VEHICLE_HEALTHCHECK
 import it.unibo.sap.ass02.infrastructure.util.JsonUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
+import java.nio.charset.StandardCharsets
 
 object EbikeProxy : Proxy(
     healthcheckUri = VEHICLE_HEALTHCHECK,
@@ -27,17 +29,24 @@ object EbikeProxy : Proxy(
         p: P2d,
     ) = runBlocking {
         client
-            .post(UPDATE_LOCATION_ENDPOINT + id) {
+            .put(UPDATE_LOCATION_ENDPOINT + id) {
                 url {
                     parameters.append("x", p.x.toString())
-                    parameters.append("x", p.y.toString())
+                    parameters.append("y", p.y.toString())
                 }
+            }.also {
+                logger.debug(
+                    """
+                    code: ${it.status.value}
+                    message: ${it.bodyAsText(StandardCharsets.UTF_8)}
+                    """.trimIndent(),
+                )
             }.checkStatusCode()
     }
 
-    private fun HttpResponse.checkStatusCode() =
+    private fun HttpResponse.checkStatusCode(errMsg: (HttpResponse) -> String = { "An error occurred" }) =
         (this.status.value in 200..299).also {
-            if (!it) logger.warn("An error occurred, got status code: $it")
+            if (!it) logger.error("An error occurred")
         }
 
     @Serializable
@@ -95,6 +104,6 @@ object EbikeProxy : Proxy(
 object EBikeRoutes {
     private val VEHICLE_ENDPOINT = "http://${EbikeProxy.gatewayHost}:${EbikeProxy.gatewayPort}/api/vehicles/ebike"
     const val VEHICLE_HEALTHCHECK = "api/vehicles/actuator/health"
-    val UPDATE_LOCATION_ENDPOINT = "$VEHICLE_ENDPOINT/update/location"
+    val UPDATE_LOCATION_ENDPOINT = "$VEHICLE_ENDPOINT/update/location/"
     val GET_EBIKE_BY_ID = "$VEHICLE_ENDPOINT/"
 }

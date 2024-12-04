@@ -5,7 +5,7 @@ import it.unibo.sap.ass02.domain.User
 import java.awt.Graphics
 import java.awt.Graphics2D
 import java.awt.RenderingHints
-import java.util.concurrent.CopyOnWriteArrayList
+import java.util.concurrent.ConcurrentHashMap
 import javax.swing.JPanel
 
 class RideVisualPanel(
@@ -15,8 +15,8 @@ class RideVisualPanel(
     private val dx: Long = (w / 2 - 20).toLong()
     private val dy: Long = (h / 2 - 20).toLong()
 
-    private var ebikes = CopyOnWriteArrayList<EBike>()
-    private var users = CopyOnWriteArrayList<User>()
+    private var ebikes = ConcurrentHashMap<String, EBike>()
+    private var users = ConcurrentHashMap<Int, User>()
 
     init {
         refresh()
@@ -29,7 +29,7 @@ class RideVisualPanel(
                 setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY)
                 clearRect(0, 0, width, height)
             }?.also { graphics2D ->
-                ebikes.forEach { bike ->
+                ebikes.forEach { (_, bike) ->
                     val p = bike.location
                     val x0 = (dx + p.x).toInt()
                     val y0 = (dy - p.y).toInt()
@@ -39,7 +39,7 @@ class RideVisualPanel(
                 }
             }?.also { graphics2D ->
                 var y = 20
-                users.forEach { user ->
+                users.forEach { (_, user) ->
                     graphics2D.drawRect(10, y, 20, 20)
                     graphics2D.drawString("${user.id} - balance: ${user.credit}", 35, y + 15)
                     y += 25
@@ -52,17 +52,20 @@ class RideVisualPanel(
     }
 
     fun notifiedUserAdded(user: User) {
-        this.users.addOrReplaceFirst(user) { it.id == user.id }
+        this.users[user.id] = user
         this.refresh()
     }
 
     fun notifiedEBikeAdded(eBike: EBike) {
-        this.ebikes.addOrReplaceFirst(eBike) { it.id == eBike.id }
+        this.ebikes[eBike.id] = eBike
         this.refresh()
     }
 
-    private fun <T> CopyOnWriteArrayList<T>.addOrReplaceFirst(
-        elem: T,
-        eqCheck: (T) -> Boolean,
-    ): CopyOnWriteArrayList<T> = CopyOnWriteArrayList(filter(eqCheck).apply { addFirst(elem) })
+    fun notifiedRideUpdated(
+        user: User,
+        ebike: EBike,
+    ) {
+        this.users[user.id] = user
+        this.ebikes[ebike.id] = ebike
+    }
 }
