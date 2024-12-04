@@ -52,7 +52,8 @@ object RideRouting {
                 return@get
             }
             RideResolver.getRideByUserAndEbike(userId, ebikeId)?.let {
-            }
+                call.respond(HttpStatusCode.OK, it)
+            } ?: call.respond(HttpStatusCode.NotFound, "Cannot retrieve any active ride with provided userId and ebikeId")
         }
 
         delete(DELETE_RIDE) {
