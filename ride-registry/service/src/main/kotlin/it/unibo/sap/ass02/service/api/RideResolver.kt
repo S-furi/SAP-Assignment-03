@@ -13,6 +13,11 @@ object RideResolver {
 
     suspend fun getRideByID(id: Int): Ride? = this.repository.findByID(id)
 
+    suspend fun getRideByUserAndEbike(
+        userId: Int,
+        bikeId: String,
+    ) = this.repository.findByUserAndBike(userId, bikeId)
+
     suspend fun addNewRide(
         bikeId: String,
         userId: Int,

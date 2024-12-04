@@ -31,25 +31,21 @@ class RideRepository(
 
     override suspend fun save(entity: Ride): Int? =
         dbQuery {
-            if (this.findByID(entity.id) == null) {
-                Rides.insert {
-                    it[id] = entity.id
-                    it[ebike] = entity.ebike.id
-                    it[user] = entity.user.id
-                }[Rides.id]
-            } else {
-                null
-            }
+            Rides.insert {
+                it[id] = entity.id
+                it[ebike] = entity.ebike.id
+                it[user] = entity.user.id
+            }[Rides.id]
         }
 
     override suspend fun update(entity: Ride): Int? =
         dbQuery {
-            this.findByID(entity.id)?.let { _ -> 
+            this.findByID(entity.id)?.let { _ ->
                 Rides.update({ Rides.id eq entity.id }) {
                     it[startDate] = entity.startedDate
                     it[endingDate] = entity.endDate
                 }
-            } 
+            }
         }
 
     override suspend fun findAll(): Iterable<Ride> =
@@ -90,13 +86,26 @@ class RideRepository(
                 }.singleOrNull()
         }
 
-    suspend fun getLastId(): Int =
+    suspend fun findByUserAndBike(
+        userId: Int,
+        ebikeId: String,
+    ): Ride? =
         dbQuery {
             Rides
-                .select(Rides.id)
-                .sortedByDescending { Rides.id }
+                .selectAll()
+                .where { Rides.user eq userId }
+                .where { Rides.ebike eq ebikeId }
+                .where { Rides.endingDate eq null }
                 .map {
-                    it[Rides.id]
-                }.firstOrNull()
-        } ?: 0
+                    RideImpl(
+                        EBikeImpl(it[Rides.ebike]),
+                        UserImpl(it[Rides.user]),
+                        it[Rides.startDate],
+                        it[Rides.endingDate],
+                        it[Rides.id],
+                    )
+                }.singleOrNull()
+        }
+
+    suspend fun getLastId(): Int = findAll().maxByOrNull { it.id }?.id ?: 0
 }

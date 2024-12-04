@@ -6,7 +6,7 @@ info:
 servers:
 - url: "https://ride_registry"
 paths:
-  /api/rides/{id}:
+  /rides/{id}:
     delete:
       description: ""
       parameters:
@@ -34,92 +34,6 @@ paths:
                   value: "The input parameter is null"
                 Example#2:
                   value: "The input ID does not exist."
-    put:
-      description: ""
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Ride"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "string"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "Error during the Ride parsing"
-                Example#2:
-                  value: "The Input Ride does not exist"
-  /api/rides/all:
-    get:
-      description: ""
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Ride"
-  /api/rides/create:
-    post:
-      description: ""
-      parameters:
-      - name: "ebikeId"
-        in: "query"
-        required: false
-        schema:
-          type: "string"
-      - name: "userId"
-        in: "query"
-        required: false
-        schema:
-          type: "integer"
-      responses:
-        "400":
-          description: "Bad Request"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: ""
-        "409":
-          description: "Conflict"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-              examples:
-                Example#1:
-                  value: "This ride already exists"
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                type: "string"
-                format: number
-
-  /api/rides/find/{id}:
     get:
       description: ""
       parameters:
@@ -146,30 +60,139 @@ paths:
                   value: "The input parameter is null."
                 Example#2:
                   value: "The input ID does not exist."
+    put:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "integer"
+                format: "int32"
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Error during the Ride parsing"
+                Example#2:
+                  value: "The Input Ride does not exist"
+  /rides/{id}/start:
+    post:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+  /rides/{id}/stop:
+    post:
+      description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+  /rides/all:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Ride"
+  /rides/create:
+    post:
+      description: ""
+      parameters:
+      - name: "ebikeId"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      - name: "userId"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                type: "integer"
+                format: "int32"
+        "409":
+          description: "Conflict"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "This ride already exists"
+  /rides/find:
+    get:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "query"
+        required: false
+        schema:
+          type: "integer"
+      - name: "ebikeId"
+        in: "query"
+        required: false
+        schema:
+          type: "string"
+      responses:
+        "400":
+          description: "Bad Request"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+  /rides/health:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "string"
 components:
   schemas:
-    EBike:
-      type: object
-      properties:
-        id:
-          type: string
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
     Ride:
       type: "object"
-      properties:
-        id:
-          type: string
-        ebike:
-          $ref: "#/components/schemas/EBike"
-        user:
-          $ref: "#/components/schemas/User"
-        startedDate:
-          type: string
-          format: date
-        endDate:
-          type: string
-          format: date
+      properties: {}

@@ -6,12 +6,13 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import it.unibo.sap.ass02.domain.Ride
 import it.unibo.sap.ass02.domain.RideImpl
-import it.unibo.sap.ass02.service.api.RideRoutes.HEALTH
 import it.unibo.sap.ass02.service.api.RideRoutes.ALL_RIDES
 import it.unibo.sap.ass02.service.api.RideRoutes.CREATE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.DELETE_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.END_RIDE
+import it.unibo.sap.ass02.service.api.RideRoutes.HEALTH
 import it.unibo.sap.ass02.service.api.RideRoutes.RIDE_BY_ID
+import it.unibo.sap.ass02.service.api.RideRoutes.RIDE_BY_USER_AND_BIKE
 import it.unibo.sap.ass02.service.api.RideRoutes.START_RIDE
 import it.unibo.sap.ass02.service.api.RideRoutes.UPDATE_RIDE
 import kotlinx.serialization.json.Json
@@ -40,6 +41,18 @@ object RideRouting {
                 errorQuery = { call.respond(HttpStatusCode.BadRequest, "The input ID does not exist.") },
                 errorNotFound = { call.respond(HttpStatusCode.BadRequest, "The input parameter is null.") },
             )
+        }
+
+        get(RIDE_BY_USER_AND_BIKE) {
+            val userId = call.queryParameters["userId"]?.toInt()
+            val ebikeId = call.queryParameters["ebikeId"]
+
+            if (userId == null || ebikeId == null) {
+                call.respond(HttpStatusCode.BadRequest, "Given input parameters are null. Got: {userId=$userId} and {ebikeId=$ebikeId}")
+                return@get
+            }
+            RideResolver.getRideByUserAndEbike(userId, ebikeId)?.let {
+            }
         }
 
         delete(DELETE_RIDE) {
