@@ -60,29 +60,19 @@ object RideProxy : Proxy(
 
     @Serializable
     private data class RideDTO(
-        val id: Int,
-        val ebike: RideEBikeDTO,
-        val user: RideUserDTO,
+        val rideId: Int,
+        val ebike: String,
+        val user: Int,
         @Serializable(with = LocalDateSerializer::class) val endDate: LocalDate?,
         @Serializable(with = LocalDateSerializer::class) val startedDate: LocalDate?,
     ) {
         fun toRide(): Ride =
             RideImpl(
-                id = id,
-                userId = user.id,
-                ebikeId = ebike.id,
+                id = rideId,
+                userId = user,
+                ebikeId = ebike,
                 startedDate = startedDate,
                 endDate = endDate,
             )
     }
-
-    @Serializable
-    private data class RideEBikeDTO(
-        val id: String,
-    )
-
-    @Serializable
-    private data class RideUserDTO(
-        val id: Int,
-    )
 }
