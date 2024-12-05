@@ -29,7 +29,7 @@ interface RideAPI {
     suspend fun subscribeToSimulation(
         userId: Int,
         ebikeId: String,
-        rateIntervalMillis: Long = 100,
+        rateIntervalMillis: Long = 20,
     ): Flow<RideStatus>
 
     /**
