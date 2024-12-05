@@ -32,7 +32,7 @@ class CoroutineRideSimulation(
                     updateBike()
                     if (System.currentTimeMillis() - lastTimeChangeDir > 500) {
                         bike.updateDirection(bike.direction.rotate(Math.random() * 60 - 30))
-                        bike.battery -= 100
+                        bike.drainBattery()
                         lastTimeChangeDir = System.currentTimeMillis()
                     }
 

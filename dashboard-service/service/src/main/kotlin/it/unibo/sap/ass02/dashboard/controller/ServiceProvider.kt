@@ -52,7 +52,7 @@ object ServiceProvider {
 
     object RideService : AsyncObserver<RideCommand>, RideViewListener {
         private val apis = AsyncRideServiceAPI
-        private val controller = RideController()
+        private val scope = CoroutineScope(Dispatchers.IO)
 
         override suspend fun notifiedUpdateRequested(update: RideCommand) {
             val userId = update.userId
@@ -85,18 +85,24 @@ object ServiceProvider {
             userId: Int,
             bikeId: String,
         ) {
-            controller.startRide(userId, bikeId)
+            scope.launch {
+                AsyncRideServiceAPI.subscribeToSimulation(userId, bikeId).collect { }
+            }
         }
 
         override fun stopRide(rideId: Int) {
-            controller.stopRide(rideId)
+            scope.launch {
+                AsyncRideServiceAPI.stopRide(rideId)
+            }
         }
 
         override fun stopRide(
             userId: Int,
             ebikeId: String,
         ) {
-            controller.stopRide(userId, ebikeId)
+            scope.launch {
+                AsyncRideServiceAPI.stopRide(userId, ebikeId)
+            }
         }
     }
 

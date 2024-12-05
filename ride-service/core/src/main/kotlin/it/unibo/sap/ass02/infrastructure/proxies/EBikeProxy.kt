@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.infrastructure
+package it.unibo.sap.ass02.infrastructure.proxies
 
 import io.ktor.client.request.get
 import io.ktor.client.request.put
@@ -7,9 +7,10 @@ import io.ktor.client.statement.bodyAsText
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.P2d
 import it.unibo.sap.ass02.domain.model.V2d
-import it.unibo.sap.ass02.infrastructure.EBikeRoutes.GET_EBIKE_BY_ID
-import it.unibo.sap.ass02.infrastructure.EBikeRoutes.UPDATE_LOCATION_ENDPOINT
-import it.unibo.sap.ass02.infrastructure.EBikeRoutes.VEHICLE_HEALTHCHECK
+import it.unibo.sap.ass02.infrastructure.proxies.EBikeRoutes.GET_EBIKE_BY_ID
+import it.unibo.sap.ass02.infrastructure.proxies.EBikeRoutes.UPDATE_BATTERY_ENDPOINT
+import it.unibo.sap.ass02.infrastructure.proxies.EBikeRoutes.UPDATE_LOCATION_ENDPOINT
+import it.unibo.sap.ass02.infrastructure.proxies.EBikeRoutes.VEHICLE_HEALTHCHECK
 import it.unibo.sap.ass02.infrastructure.util.JsonUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
@@ -44,10 +45,31 @@ object EbikeProxy : Proxy(
             }.checkStatusCode()
     }
 
+    fun drainBattery(
+        id: String,
+        delta: Int,
+    ): Boolean =
+        runBlocking {
+            client
+                .put(UPDATE_BATTERY_ENDPOINT + id) {
+                    url {
+                        parameters.append("delta", delta.toString())
+                    }
+                }.checkStatusCode()
+        }
+
     private fun HttpResponse.checkStatusCode(errMsg: (HttpResponse) -> String = { "An error occurred" }) =
         (this.status.value in 200..299).also {
             if (!it) logger.error("An error occurred")
         }
+
+    fun location(id: String): P2d? = this.getEBike(id)?.location
+
+    fun state(id: String): String? = this.getEBike(id)?.state
+
+    fun isAvailable(id: String): Boolean? = this.getEBike(id)?.available
+
+    fun battery(id: String): Int? = this.getEBike(id)?.battery
 
     @Serializable
     data class EBikeDTO(
@@ -95,6 +117,12 @@ object EbikeProxy : Proxy(
             }
         }
 
+        override fun drainBattery(delta: Int) {
+            if (EbikeProxy.drainBattery(id, delta)) {
+                this.battery -= delta
+            }
+        }
+
         override fun updateDirection(dir: V2d) {
             this.direction = dir
         }
@@ -105,5 +133,6 @@ object EBikeRoutes {
     private val VEHICLE_ENDPOINT = "http://${EbikeProxy.gatewayHost}:${EbikeProxy.gatewayPort}/api/vehicles/ebike"
     const val VEHICLE_HEALTHCHECK = "api/vehicles/actuator/health"
     val UPDATE_LOCATION_ENDPOINT = "$VEHICLE_ENDPOINT/update/location/"
+    val UPDATE_BATTERY_ENDPOINT = "$VEHICLE_ENDPOINT/update/battery/"
     val GET_EBIKE_BY_ID = "$VEHICLE_ENDPOINT/"
 }
