@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.infrastructure.stub
+package it.unibo.sap.ass02.infrastructure.proxies
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO

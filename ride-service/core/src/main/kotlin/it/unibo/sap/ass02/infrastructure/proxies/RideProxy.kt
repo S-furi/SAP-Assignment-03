@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.infrastructure
+package it.unibo.sap.ass02.infrastructure.proxies
 
 import io.ktor.client.call.body
 import io.ktor.client.request.get

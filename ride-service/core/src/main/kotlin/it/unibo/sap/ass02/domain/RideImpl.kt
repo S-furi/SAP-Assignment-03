@@ -2,9 +2,9 @@ package it.unibo.sap.ass02.domain
 
 import it.unibo.sap.ass02.domain.model.EBike
 import it.unibo.sap.ass02.domain.model.User
-import it.unibo.sap.ass02.infrastructure.EbikeProxy
-import it.unibo.sap.ass02.infrastructure.RideProxy
-import it.unibo.sap.ass02.infrastructure.UserProxy
+import it.unibo.sap.ass02.infrastructure.proxies.EbikeProxy
+import it.unibo.sap.ass02.infrastructure.proxies.RideProxy
+import it.unibo.sap.ass02.infrastructure.proxies.UserProxy
 import java.time.LocalDate
 
 data class RideImpl(

@@ -15,4 +15,6 @@ interface EBike : Entity<String> {
     fun updateLocation(pos: P2d)
 
     fun updateDirection(dir: V2d)
+
+    fun drainBattery(delta: Int = 1)
 }

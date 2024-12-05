@@ -1,12 +1,13 @@
-package it.unibo.sap.ass02.infrastructure.stub
+package it.unibo.sap.ass02.infrastructure.proxies
 
-import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import it.unibo.sap.ass02.domain.model.User
+import it.unibo.sap.ass02.infrastructure.util.JsonUtils
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.Serializable
 
-data object UserProxy : Proxy(
+object UserProxy : Proxy(
     healthcheckUri = "api/users/health",
 ) {
     private val USER_ENDPOINT = "http://$gatewayHost:$gatewayPort/api/users"
@@ -17,7 +18,7 @@ data object UserProxy : Proxy(
     fun getUser(id: Int): User? =
         runBlocking {
             val res = client.get(GET_USER_BY_ID + id)
-            if (res.status.value in 200..299) res.body() else null
+            JsonUtils.decodeHttpPayload<UserImpl>(res)
         }
 
     fun increaseCredit(
@@ -43,5 +44,19 @@ data object UserProxy : Proxy(
                 }
             }
         res.status.value in 200..299
+    }
+
+    @Serializable
+    data class UserImpl(
+        override val id: Int,
+        override val credit: Int,
+    ) : User {
+        override fun increaseCredit(amount: Int) {
+            increaseCredit(this.id, amount)
+        }
+
+        override fun decreaseCredit(amount: Int) {
+            decreaseCredit(this.id, amount)
+        }
     }
 }

@@ -1,7 +1,7 @@
 package it.unibo.sap.ass02.service.routing
 
 import it.unibo.sap.ass02.domain.Ride
-import it.unibo.sap.ass02.infrastructure.RideProxy
+import it.unibo.sap.ass02.infrastructure.proxies.RideProxy
 import org.slf4j.LoggerFactory
 
 object RideSimulationResolver {
