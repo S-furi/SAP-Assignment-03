@@ -30,7 +30,7 @@ java {
 }
 
 application {
-    mainClass = "it.unibo.sap.ass02.dashboard.ServerKt"
+    mainClass = "it.unibo.sap.ass02.dashboard.LauncherKt"
 }
 
 tasks.named<Test>("test") {
