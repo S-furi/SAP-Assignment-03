@@ -35,7 +35,7 @@ class RideVisualPanel(
                     val y0 = (dy - p.y).toInt()
                     graphics2D.drawOval(x0, y0, 20, 20)
                     graphics2D.drawString(bike.id, x0, y0 + 35)
-                    graphics2D.drawString("(${p.x.toInt()}, ${p.y.toInt()})", x0, y0 + 50)
+                    graphics2D.drawString("(${p.x.toInt()}, ${p.y.toInt()}) - (${bike.battery}%)", x0, y0 + 50)
                 }
             }?.also { graphics2D ->
                 var y = 20
