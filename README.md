@@ -14,3 +14,7 @@
 3. Run
   - `./deploy-all.py down` for tearing down all services
   - `./deploy-all.py downrmi` for stopping all containers, and remove all related images and volumes
+
+
+NOTE: it may happen when `./deploy-all.py up` that `vehicle-service` fails. Try re-run the script and
+all should build properly (there's a problem in the healthcheck for MariaDB).
