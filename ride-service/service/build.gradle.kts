@@ -8,6 +8,8 @@ dependencies {
     implementation(project(":core"))
     implementation(libs.bundles.ktor.server)
     implementation(libs.ktor.server.websocket)
+    implementation(libs.ktor.metrics)
+    implementation(libs.registry.prometheus)
     implementation(libs.logback)
 }
 
