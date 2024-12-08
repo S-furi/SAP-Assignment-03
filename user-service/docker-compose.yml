@@ -28,7 +28,7 @@ services:
     ports:
       - ${SERVICE_PORT}:${SERVICE_PORT}
     environment:
-      PORT: 11000
+      PORT: ${SERVICE_PORT}
       POSTGRES_HOST: ${PG_HOST}
 
     networks:
