@@ -35,6 +35,15 @@ services:
       pg-ride:
         condition: service_healthy
 
+  ride-registry-metrics:
+    image: prom/prometheus
+    depends_on:
+      - ride-repository
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    networks:
+      service-net:
+
 networks:
   service-net:
     external: true

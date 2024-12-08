@@ -8,6 +8,8 @@ dependencies {
     implementation(libs.bundles.ktor.server)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.bundles.exposed)
+    implementation(libs.registry.prometheus)
+    implementation(libs.ktor.metrics)
     implementation(project(":core"))
     implementation(project(":persistence"))
 }

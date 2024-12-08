@@ -1,0 +1,7 @@
+scrape_configs:
+  - job_name: 'ride-registry'
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['ride-repository:9991']
+
