@@ -26,7 +26,7 @@ services:
   user-service:
     image: sfuri/user-service:0.1.2
     ports:
-      - 11000:11000
+      - ${SERVICE_PORT}:${SERVICE_PORT}
     environment:
       PORT: 11000
       POSTGRES_HOST: ${PG_HOST}
@@ -37,6 +37,16 @@ services:
     depends_on:
       pg-user:
         condition: service_healthy
+
+  user-metrics:
+    image: prom/prometheus
+    depends_on:
+      - vehicle-service
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    networks:
+      service-net:
+
 networks:
   service-net:
     external:

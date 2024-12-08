@@ -15,5 +15,7 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.bundles.ktor.server)
     implementation(libs.bundles.exposed)
+    implementation(libs.registry.prometheus)
+    implementation(libs.ktor.metrics)
     testImplementation(libs.bundles.test.kotest)
 }
