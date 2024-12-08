@@ -41,7 +41,7 @@ services:
   user-metrics:
     image: prom/prometheus
     depends_on:
-      - vehicle-service
+      - user-service
     volumes:
       - "./prometheus.yml:/etc/prometheus/prometheus.yml"
     networks:
