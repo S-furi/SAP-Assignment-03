@@ -29,23 +29,12 @@ services:
       start_period: 40s
       start_interval: 5s
 
-  prometheus:
+  vehicle-metrics:
     image: prom/prometheus
-    ports:
-      - "9089:9090"
     depends_on:
       - vehicle-service
     volumes:
       - "./prometheus.yml:/etc/prometheus/prometheus.yml"
-    networks:
-      service-net:
-
-  grafana:
-    image: grafana/grafana
-    ports:
-      - "3001:3000"
-    depends_on:
-      - vehicle-service
     networks:
       service-net:
 

@@ -9,10 +9,8 @@ services:
     networks:
       service-net:
 
-  prometheus:
+  gateway-metrics:
     image: prom/prometheus
-    ports:
-      - "9090:9090"
     depends_on:
       - api-gateway
     volumes:
