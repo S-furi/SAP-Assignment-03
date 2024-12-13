@@ -1,12 +1,9 @@
-package it.unibo.sap.ass02.demo.controller.event;
+package it.unibo.sap.ass02.demo.controller.event.dto;
 
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,6 +22,15 @@ public class Deserializers {
                     }
                 }));
         }
-        return Collections.emptyMap();
+        throw new IllegalArgumentException("Message formatted in a wrong way, some of the input keys are not present inside the JSON message.");
+    }
+
+    public static Optional<UpdateLocationMessageDTO> deserializeUpdateLocationMessage(final String msg, final String objectKey, final String xKey, final String yKey) {
+        try {
+            final Map<String, String> map = Deserializers.deserializeMessage(msg, objectKey, xKey, yKey);
+            return Optional.of(new UpdateLocationMessageDTO(map.get(objectKey), Double.valueOf(map.get(xKey)), Double.valueOf(map.get(yKey))));
+        }catch (JSONException exception ) {
+            return Optional.empty();
+        }
     }
 }
