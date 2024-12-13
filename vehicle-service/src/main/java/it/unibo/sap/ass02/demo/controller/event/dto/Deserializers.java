@@ -33,4 +33,13 @@ public class Deserializers {
             return Optional.empty();
         }
     }
+
+    public static Optional<UpdateBatteryMessageDTO> deserializeUpdateBatteryMessage(final String msg, final String objectKey, final String deltaKey) {
+        try {
+            final Map<String, String> map = Deserializers.deserializeMessage(msg, objectKey, deltaKey);
+            return Optional.of(new UpdateBatteryMessageDTO(map.get(objectKey), Integer.valueOf(map.get(deltaKey))));
+        } catch (JSONException e) {
+            return Optional.empty();
+        }
+    }
 }
