@@ -13,6 +13,7 @@ public class MessageConsumer {
     private final static String EBIKEID_KEY= "ebikeId";
     private final static  String X_POS_KEY = "x";
     private final static  String Y_POS_KEY = "y";
+    private final static String DELTA_KEY = "delta";
 
     public MessageConsumer(final EBikeService eBikeService){
         this.eBikeService = eBikeService;
@@ -28,6 +29,15 @@ public class MessageConsumer {
                     messageDto.ebikeId(),
                     messageDto.x(),
                     messageDto.y());
+        });
+    }
+
+    @KafkaListener(topics = "update-battery")
+    public void listenUpdateBatteryLevel(final String message) {
+        Deserializers.deserializeUpdateBatteryMessage(message,
+                MessageConsumer.EBIKEID_KEY,
+                MessageConsumer.DELTA_KEY).ifPresent(messageDto -> {
+                    this.eBikeService.updateBattery(messageDto.ebikeId(), messageDto.delta());
         });
     }
 }
