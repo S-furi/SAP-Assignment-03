@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.demo.controller;
+package it.unibo.sap.ass02.demo.controller.rest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
