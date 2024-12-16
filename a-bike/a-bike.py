@@ -41,7 +41,7 @@ class World:
 
 
 
-class AutonomousBike:
+class AutonomousBike(Bike):
     def __init__(self, x: int, y: int, battery: int):
         print(f"Initialize a new a-bike at position: ({x}, {y}) with {battery} as battery level.")
         self.x = x
