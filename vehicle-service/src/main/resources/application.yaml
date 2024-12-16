@@ -4,7 +4,6 @@ spring:
   config:
     import:
       - classpath:database.yaml
-      - classpath:system-health.yaml
       - classpath:kafka.yaml
       - classpath:swagger-openapi.yaml
       - classpath:system-health.yaml
