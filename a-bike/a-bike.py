@@ -8,7 +8,9 @@ class Distance:
         return abs(x1 - x2) + abs(y1 - y2)
 
 class World:
+    # station graph
     stations = defaultdict(list)
+
     @staticmethod
     def add_station(station):
         # a list is an object with 4 informations:
@@ -17,8 +19,8 @@ class World:
         # y
         # province
         # model all the stations as a graph, Union all the province with the same root
-
-        self.stations[station['province']].append(station)
+        # save the also inside a database
+        print("save the station inside the database")
     def __find_relations_between_provice(self):
         # some logic in order to find some relations between the different provinces
         print("Very hard logic, finding all the relations between the provinces in a distributed way")
@@ -31,7 +33,11 @@ class World:
     def get_stations(x: int, y: int, radius: int):
         # return all the available stations near x-y with a input radius
         # in this way we can return all the available stations
-        return self.stations.values()
+        # get all stations near the input station
+        def find_neighbours():
+            print("Find neighbours of the input position with the given radius")
+            return False
+        return list(filter(find_neigh, self.stations))
 
 
 
