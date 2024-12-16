@@ -1,0 +1,12 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - env
+          - info
+          - health
+          - prometheus
+  endpoint:
+    health:
+      show-details: always
