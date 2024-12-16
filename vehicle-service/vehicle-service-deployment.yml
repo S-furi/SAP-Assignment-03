@@ -17,3 +17,13 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 1926
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicle-service
+spec:
+  selector:
+    app: vehicle-service
+  ports:
+    - port: 1926
