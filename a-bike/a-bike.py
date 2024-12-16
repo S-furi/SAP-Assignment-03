@@ -11,19 +11,27 @@ class World:
     stations = defaultdict(list)
     @staticmethod
     def add_station(station):
-        # a list is an object with 3 informations:
+        # a list is an object with 4 informations:
         # name
         # x
         # y
         # province
+        # model all the stations as a graph, Union all the province with the same root
+
         self.stations[station['province']].append(station)
+    def __find_relations_between_provice(self):
+        # some logic in order to find some relations between the different provinces
+        print("Very hard logic, finding all the relations between the provinces in a distributed way")
+        print("Please wait...")
+        print("Done it, all the relations are found")
+
 
     @staticmethod(f)
     @lru_cache(200)
     def get_stations(x: int, y: int, radius: int):
         # return all the available stations near x-y with a input radius
         # in this way we can return all the available stations
-        return self.stations
+        return self.stations.values()
 
 
 
