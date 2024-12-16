@@ -4,6 +4,7 @@ from functools import lru_cache
 class Distance:
     @staticmethod(m_distance)
     def manatthan_distance(x1, x2, y1, y2):
+        # compute the manatthan distance between two points
         return abs(x1 - x2) + abs(y1 - y2)
 
 class World:
