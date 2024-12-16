@@ -64,5 +64,5 @@ public interface EBikeRESTController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Everything went ok, all the input values were good"),
             @ApiResponse(responseCode = "400", description = "If one of the parameters Its not correct") })
-    public ResponseEntity<Void> updateEbikeState(final  @PathVariable String id, final @RequestParam String state)
+    public ResponseEntity<Void> updateEbikeState(final  @PathVariable String id, final @RequestParam String state);
 }
