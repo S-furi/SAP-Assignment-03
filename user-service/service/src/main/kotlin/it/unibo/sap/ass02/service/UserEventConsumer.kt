@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.service.eventutils
+package it.unibo.sap.ass02.service
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
