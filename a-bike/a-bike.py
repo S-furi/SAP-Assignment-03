@@ -54,7 +54,6 @@ class AutonomousBike(Bike):
 
     def get_stations(self):
         # Query the system and get the informations of all the stations available
-        # in the 30km range by using the a-bike position
         # check all the available stations with a radius from 0 to 100km
         for radius in range(0, 101, 5):
             possible_stations = World.get_stations(self.x, self.y, radius)
