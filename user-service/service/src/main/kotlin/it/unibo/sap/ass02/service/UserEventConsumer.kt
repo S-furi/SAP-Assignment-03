@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 class UserEventConsumer(
     private val host: String = System.getenv("KAFKA_HOST") ?: "localhost",
-    private val port: Int = System.getenv("KAFKA_+PORT")?.toInt() ?: 29092,
+    private val port: Int = System.getenv("KAFKA_PORT")?.toInt() ?: 29092,
     private val topicName: String = System.getenv("UPDATE_USER_CREDIT_TOPIC_NAME") ?: "update-credit",
 ) : Closeable {
     private val logger = LoggerFactory.getLogger(UserEventConsumer::class.java)
