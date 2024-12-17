@@ -27,12 +27,16 @@
       </state>
     </system>
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "node.js.selected.package.tslint": "(autodetect)"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
   }
-}]]></component>
+}</component>
   <component name="TaskManager">
     <servers />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

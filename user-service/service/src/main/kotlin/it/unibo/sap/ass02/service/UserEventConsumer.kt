@@ -1,19 +1,15 @@
 package it.unibo.sap.ass02.service
 
+import io.ktor.utils.io.core.Closeable
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
-import org.apache.kafka.clients.producer.KafkaProducer
-import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.clients.producer.ProducerRecord
+import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -28,7 +24,8 @@ class UserEventConsumer(
     private val host: String = System.getenv("KAFKA_HOST") ?: "localhost",
     private val port: Int = System.getenv("KAFKA_+PORT")?.toInt() ?: 29092,
     private val topicName: String = System.getenv("UPDATE_USER_CREDIT_TOPIC_NAME") ?: "update-credit",
-) {
+) : Closeable {
+    private val logger = LoggerFactory.getLogger(UserEventConsumer::class.java)
     private val isPolling: AtomicBoolean = AtomicBoolean(false)
 
     private fun getConsumer() =
@@ -46,12 +43,13 @@ class UserEventConsumer(
             ),
         )
 
-    suspend fun asyncUnlimitedConsume(callback: (Pair<Int, Int>) -> Unit) =
+    suspend fun asyncUnlimitedConsume(callback: suspend (UserEvent) -> Unit) =
         withContext(Dispatchers.IO) {
             coroutineScope {
                 getConsumer().use { kConsumer ->
                     kConsumer.subscribe(listOf(topicName))
                     isPolling.set(true)
+                    logger.info("Listening events on: $host:$port on topic \"$topicName\"")
                     kConsumer
                         .consumeAsFlow()
                         .cancellable()
@@ -70,29 +68,11 @@ class UserEventConsumer(
             }
         }
 
-    fun stopPolling() { this.isPolling.set(false) }
-}
-
-val producer =
-    KafkaProducer<Int, Int>(
-        mapOf(
-            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:29092",
-            ProducerConfig.ACKS_CONFIG to "all",
-            ProducerConfig.RETRIES_CONFIG to 0,
-            ProducerConfig.BATCH_SIZE_CONFIG to 16384,
-            ProducerConfig.LINGER_MS_CONFIG to 1,
-            ProducerConfig.BUFFER_MEMORY_CONFIG to 33554432,
-            ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG to "org.apache.kafka.common.serialization.IntegerSerializer",
-            ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG to "org.apache.kafka.common.serialization.IntegerSerializer",
-        ),
-    )
-
-fun main() =
-    runBlocking {
-        repeat(10) { producer.send(ProducerRecord("update-credit", it, System.currentTimeMillis().toInt())) }
-        val consumer = UserEventConsumer()
-        val job = launch { consumer.asyncUnlimitedConsume(::println) }
-        delay(10_000)
-        println("Finished waiting")
-        consumer.stopPolling()
+    fun stopPolling() {
+        this.isPolling.set(false)
     }
+
+    override fun close() {
+        this.stopPolling()
+    }
+}
