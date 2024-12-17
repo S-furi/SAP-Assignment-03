@@ -17,5 +17,6 @@ dependencies {
     implementation(libs.bundles.exposed)
     implementation(libs.registry.prometheus)
     implementation(libs.ktor.metrics)
+    implementation(libs.kafka.clients)
     testImplementation(libs.bundles.test.kotest)
 }
