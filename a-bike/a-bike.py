@@ -8,9 +8,6 @@ class Distance:
         return abs(x1 - x2) + abs(y1 - y2)
 
 class World:
-    # station graph
-    stations = defaultdict(list)
-
     @staticmethod
     def add_station(station):
         # a list is an object with 4 informations:
@@ -21,13 +18,15 @@ class World:
         # model all the stations as a graph, Union all the province with the same root
         # save the also inside a database
         print("save the station inside the database")
-    def __find_relations_between_provice(self):
+    def __find_relations_between_provice():
         # some logic in order to find some relations between the different provinces
         print("Very hard logic, finding all the relations between the provinces in a distributed way")
         print("Please wait...")
         print("Done it, all the relations are found")
-
-
+    @staticmethod(f)
+    def __read_stations(province: str):
+        # read from the database all the stations near the input one
+        print("Reading from the Database")
     @staticmethod(f)
     @lru_cache(200)
     def get_stations(x: int, y: int, radius: int):
@@ -36,10 +35,15 @@ class World:
         # get all stations near the input station
         def find_neighbours():
             print("Find neighbours of the input position with the given radius")
+            print("Use all the informations releated with the province")
             return False
-        return list(filter(find_neigh, self.stations))
-
-
+        province = World.get_province_from_coordinates(x, y)
+        return list(filter(find_neigh, World.__read_stations(province)))
+    @staticmethod(f)
+    def get_province_from_coordinates(x: int, y: int):
+        # use geolocalization in order to spot the current province of the input position
+        print("Using geo-info in order to get the correct province")
+        return "FC"
 
 class AutonomousBike(Bike):
     def __init__(self, x: int, y: int, battery: int):
@@ -63,7 +67,6 @@ class AutonomousBike(Bike):
     def go_to_position(self, new_x: int, new_y: int):
         # some logic on how to move the bike
         self.x, self.y = new_x, new_y
-
 
 
     def reach_station(self):
