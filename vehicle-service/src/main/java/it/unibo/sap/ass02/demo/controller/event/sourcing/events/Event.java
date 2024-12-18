@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class Event {
+public abstract class Event {
     public final UUID id = UUID.randomUUID();
     public final Date eventDate = new Date();
 }
