@@ -5,13 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3777b3e2-02b7-40d1-b814-fa2151642c56" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/ktlint-plugin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../.env" beforeDir="false" afterPath="$PROJECT_DIR$/../.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ride-service/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../ride-service/gradle/libs.versions.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ride-service/service/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../ride-service/service/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/persistence/src/main/kotlin/it/unibo/sap/ass02/persistence/AsyncRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/persistence/src/main/kotlin/it/unibo/sap/ass02/persistence/DatabaseRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/persistence/src/main/kotlin/it/unibo/sap/ass02/persistence/UserRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/persistence/src/main/kotlin/it/unibo/sap/ass02/persistence/utils/DatabaseUtils.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/persistence/src/test/kotlin/it/unibo/sap/ass02/persistence/utls/DumbUserDB.kt" beforeDir="false" afterPath="$PROJECT_DIR$/persistence/src/test/kotlin/it/unibo/sap/ass02/persistence/utls/DumbUserDB.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/Launcher.kt" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/UserEventConsumer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/UserEventConsumer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/UserResolver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/UserResolver.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +39,15 @@
       </state>
     </system>
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Kotlin Interface" />
+        <option value="Kotlin Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -52,13 +65,31 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "feat/event-driven-ride",
     "ktor.last.update.timestamp": "1734454300789",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.ktlint-plugin",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration name="ServerKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="it.unibo.sap.ass02.service.ServerKt" />
+      <module name="user-service.service.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Kotlin.ServerKt" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -67,7 +98,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734454280468</updated>
-      <workItem from="1734454281685" duration="80000" />
+      <workItem from="1734454281685" duration="740000" />
+      <workItem from="1734514156784" duration="5341000" />
     </task>
     <servers />
   </component>

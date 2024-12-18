@@ -1,7 +1,6 @@
 package it.unibo.sap.ass02.persistence.utls
 
 import it.unibo.sap.ass02.domain.User
-import it.unibo.sap.ass02.persistence.AsyncRepository
 
 class DumbUserDB : AsyncRepository<Int, User> {
     private val users = mutableSetOf<User>()
