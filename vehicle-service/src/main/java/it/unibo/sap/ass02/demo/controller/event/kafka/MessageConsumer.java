@@ -1,6 +1,6 @@
-package it.unibo.sap.ass02.demo.controller.event;
+package it.unibo.sap.ass02.demo.controller.event.kafka;
 
-import it.unibo.sap.ass02.demo.controller.event.dto.Deserializers;
+import it.unibo.sap.ass02.demo.controller.event.kafka.dto.Deserializers;
 import it.unibo.sap.ass02.demo.service.EBikeService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;

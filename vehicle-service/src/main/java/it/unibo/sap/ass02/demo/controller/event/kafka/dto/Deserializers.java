@@ -1,10 +1,9 @@
-package it.unibo.sap.ass02.demo.controller.event.dto;
+package it.unibo.sap.ass02.demo.controller.event.kafka.dto;
 
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Deserializers {

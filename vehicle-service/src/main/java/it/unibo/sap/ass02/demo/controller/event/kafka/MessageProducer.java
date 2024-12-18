@@ -1,4 +1,4 @@
-package it.unibo.sap.ass02.demo.controller.event;
+package it.unibo.sap.ass02.demo.controller.event.kafka;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
