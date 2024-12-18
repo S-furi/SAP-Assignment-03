@@ -5,15 +5,20 @@ import it.unibo.sap.ass02.persistence.UserCreditEventImpl
 import it.unibo.sap.ass02.persistence.UserRepository
 import it.unibo.sap.ass02.persistence.UserRepositoryImpl
 import org.slf4j.LoggerFactory
+import java.time.LocalDateTime
 
-typealias UserEvent = Pair<Int, Int>
+typealias UserEvent = Triple<Int, Int, LocalDateTime>
 
 object UserResolver {
     private val repo: UserRepository = UserRepositoryImpl()
     private val logger = LoggerFactory.getLogger(UserResolver::class.java)
 
     fun handleEvent(event: UserEvent) {
-        repo.appendEvent(UserCreditEventImpl.of(event.first, event.second))
+        logger.info("Serving request for userId=${event.first}, amount=${event.second}")
+        repo.appendEvent(UserCreditEventImpl(event))
+//        runCatching {
+//            repo.collectUser(event.first)?.also { logger.info("\tAnd i can also collect the user") }
+//        }.onFailure { logger.warn(it.message) }
     }
 
     fun getUser(userId: Int): User? = repo.collectUser(userId)

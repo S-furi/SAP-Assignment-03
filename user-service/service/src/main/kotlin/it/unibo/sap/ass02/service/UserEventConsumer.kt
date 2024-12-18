@@ -11,6 +11,9 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.slf4j.LoggerFactory
 import java.time.Duration
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -58,12 +61,15 @@ class UserEventConsumer(
             }
         }
 
-    private fun <K, V> KafkaConsumer<K, V>.consumeAsFlow(): Flow<Pair<K, V>> =
+    private fun <K, V> KafkaConsumer<K, V>.consumeAsFlow(): Flow<Triple<K, V, LocalDateTime>> =
         flow {
             use {
                 while (isPolling.get()) {
                     val records = poll(Duration.ofMillis(500))
-                    if (!records.isEmpty) records.map { (it.key() to it.value()) }.forEach { emit(it) }
+                    if (!records.isEmpty) records.map {
+                        val localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(it.timestamp()), ZoneId.systemDefault())
+                        Triple(it.key(), it.value(), localDateTime)
+                    }.forEach { emit(it) }
                 }
             }
         }

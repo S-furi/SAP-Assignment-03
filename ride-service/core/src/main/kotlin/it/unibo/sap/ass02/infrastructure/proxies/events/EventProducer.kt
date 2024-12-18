@@ -1,10 +1,15 @@
 package it.unibo.sap.ass02.infrastructure.proxies.events
 
+import io.ktor.http.headers
 import io.ktor.utils.io.core.Closeable
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.clients.producer.RecordMetadata
+import org.apache.kafka.common.header.internals.RecordHeader
+import java.nio.charset.StandardCharsets
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.concurrent.Future
 
 abstract class EventProducer(
@@ -27,6 +32,6 @@ fun <K, V> KafkaProducer<K, V>.send(
     key: K,
     value: V,
 ): Future<RecordMetadata> {
-    val record = ProducerRecord(topicName, key, value)
+    val record = ProducerRecord(topicName, 0, System.currentTimeMillis(), key, value, listOf())
     return send(record)
 }

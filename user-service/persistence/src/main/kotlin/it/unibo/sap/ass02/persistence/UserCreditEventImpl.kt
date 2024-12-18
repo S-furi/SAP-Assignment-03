@@ -7,6 +7,8 @@ data class UserCreditEventImpl(
     override val timestamp: LocalDateTime,
     override val creditUpdate: Int,
 ) : UserCreditEvent {
+    constructor(params: Triple<Int, Int, LocalDateTime>): this(params.first, params.third, params.second)
+
     companion object {
         fun of(
             userId: Int,
