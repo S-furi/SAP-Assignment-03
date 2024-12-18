@@ -9,4 +9,5 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutine)
     testImplementation(libs.bundles.test.kotest)
+    implementation(libs.kafka.clients)
 }
