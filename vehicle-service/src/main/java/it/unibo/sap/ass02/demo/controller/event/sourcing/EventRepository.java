@@ -21,7 +21,6 @@ public class EventRepository {
 
     public void updateEBikePosition(final String id, final P2d newPosition) {
         if (this.repository.containsKey(id)) {
-            System.out.println("UPDATE POSITION");
             this.repository.get(id).add(new NewEBikePositionEvent(id, newPosition));
         }
     }
