@@ -1,6 +1,6 @@
 package it.unibo.sap.ass02.demo.controller.event.kafka;
 
-import it.unibo.sap.ass02.demo.controller.event.kafka.dto.Deserializers;
+import it.unibo.sap.ass02.demo.controller.event.kafka.dto.Deserializer;
 import it.unibo.sap.ass02.demo.service.EBikeService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class MessageConsumer {
     }
     @KafkaListener(topics = "update-location")
     public void listenUpdateLocation(final String message) {
-        Deserializers.deserializeUpdateLocationMessage(message,
+        Deserializer.deserializeUpdateLocationMessage(message,
                 MessageConsumer.EBIKEID_KEY,
                 MessageConsumer.X_POS_KEY,
                 MessageConsumer.Y_POS_KEY).ifPresent(messageDto-> {
@@ -34,7 +34,7 @@ public class MessageConsumer {
 
     @KafkaListener(topics = "update-battery")
     public void listenUpdateBatteryLevel(final String message) {
-        Deserializers.deserializeUpdateBatteryMessage(message,
+        Deserializer.deserializeUpdateBatteryMessage(message,
                 MessageConsumer.EBIKEID_KEY,
                 MessageConsumer.DELTA_KEY).ifPresent(messageDto -> {
                     this.eBikeService.updateBattery(messageDto.ebikeId(), messageDto.delta());
