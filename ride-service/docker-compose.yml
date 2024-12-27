@@ -1,6 +1,7 @@
 services:
   ride-service:
-    image: sfuri/ride-service:0.1.0
+    # image: sfuri/ride-service:0.1.0
+    build: .
     hostname: ride-service
     ports:
       - 9990:9990

@@ -1,8 +1,8 @@
 package it.unibo.sap.ass02.infrastructure.proxies
 
 import io.ktor.client.request.get
-import io.ktor.client.request.post
 import it.unibo.sap.ass02.domain.model.User
+import it.unibo.sap.ass02.infrastructure.proxies.events.UserEventProducer
 import it.unibo.sap.ass02.infrastructure.util.JsonUtils
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.Serializable
@@ -12,8 +12,7 @@ object UserProxy : Proxy(
 ) {
     private val USER_ENDPOINT = "http://$gatewayHost:$gatewayPort/api/users"
     private val GET_USER_BY_ID = "$USER_ENDPOINT/"
-    private val INCREASE_CREDIT = "$USER_ENDPOINT/increase-credit"
-    private val DECREASE_CREDIT = "$USER_ENDPOINT/decrease-credit"
+    private val eventProducer = UserEventProducer()
 
     fun getUser(id: Int): User? =
         runBlocking {
@@ -24,27 +23,12 @@ object UserProxy : Proxy(
     fun increaseCredit(
         id: Int,
         amount: Int,
-    ) = handleCredit(INCREASE_CREDIT, id, amount)
+    ) = eventProducer.increaseUserCredit(id, amount)
 
     fun decreaseCredit(
         id: Int,
         amount: Int,
-    ) = handleCredit(DECREASE_CREDIT, id, amount)
-
-    private fun handleCredit(
-        route: String,
-        id: Int,
-        amount: Int,
-    ) = runBlocking {
-        val res =
-            client.post(route) {
-                url {
-                    parameters.append("id", id.toString())
-                    parameters.append("amount", amount.toString())
-                }
-            }
-        res.status.value in 200..299
-    }
+    ) = eventProducer.decreaseUserCredit(id, amount)
 
     @Serializable
     data class UserImpl(
