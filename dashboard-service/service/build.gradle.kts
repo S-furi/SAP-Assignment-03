@@ -21,6 +21,7 @@ dependencies {
     implementation(libs.logback)
     implementation(libs.kotlinx.coroutine)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kafka.clients)
 }
 
 java {
