@@ -14,7 +14,8 @@ services:
       service-net:
 
   vehicle-service:
-    image: matteoiorio/vehicle-service:2.0.0
+    # image: matteoiorio/vehicle-service:2.0.0
+    build: .
     ports:
       - "1926:1926"
     networks:
