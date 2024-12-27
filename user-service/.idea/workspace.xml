@@ -5,12 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3777b3e2-02b7-40d1-b814-fa2151642c56" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.env" beforeDir="false" afterPath="$PROJECT_DIR$/../.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/detekt.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/ktor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dashboard-service/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/../dashboard-service/gradle/libs.versions.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dashboard-service/service/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/../dashboard-service/service/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dashboard-service/service/src/main/kotlin/it/unibo/sap/ass02/infrastructure/UserAPI.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../dashboard-service/service/src/main/kotlin/it/unibo/sap/ass02/infrastructure/UserAPI.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ride-service/core/src/main/kotlin/it/unibo/sap/ass02/infrastructure/proxies/UserProxy.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../ride-service/core/src/main/kotlin/it/unibo/sap/ass02/infrastructure/proxies/UserProxy.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ride-service/core/src/main/kotlin/it/unibo/sap/ass02/infrastructure/proxies/events/EventProducer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../ride-service/core/src/main/kotlin/it/unibo/sap/ass02/infrastructure/proxies/events/EventProducer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ride-service/core/src/main/kotlin/it/unibo/sap/ass02/infrastructure/proxies/events/UserEventProducer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/../ride-service/core/src/main/kotlin/it/unibo/sap/ass02/infrastructure/proxies/events/UserEventProducer.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ride-service/core/src/main/kotlin/it/unibo/sap/ass02/infrastructure/proxies/events/EventUserImpl.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ride-service/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../ride-service/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/persistence/src/main/kotlin/it/unibo/sap/ass02/persistence/UserCreditEventImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/persistence/src/main/kotlin/it/unibo/sap/ass02/persistence/UserCreditEventImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/persistence/src/main/kotlin/it/unibo/sap/ass02/persistence/UserRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/persistence/src/main/kotlin/it/unibo/sap/ass02/persistence/UserRepositoryImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/Server.kt" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/Server.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/UserEventConsumer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/UserEventConsumer.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/UserResolver.kt" beforeDir="false" afterPath="$PROJECT_DIR$/service/src/main/kotlin/it/unibo/sap/ass02/service/UserResolver.kt" afterDir="false" />
     </list>
@@ -64,8 +71,8 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "feat/event-driven-ride",
-    "ktor.last.update.timestamp": "1734454300789",
+    "git-widget-placeholder": "dev",
+    "ktor.last.update.timestamp": "1735294149669",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
@@ -97,6 +104,7 @@
       <updated>1734454280468</updated>
       <workItem from="1734454281685" duration="740000" />
       <workItem from="1734514156784" duration="9323000" />
+      <workItem from="1734883031466" duration="8345000" />
     </task>
     <servers />
   </component>

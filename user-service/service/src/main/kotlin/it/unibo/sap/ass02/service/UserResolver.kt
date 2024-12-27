@@ -16,9 +16,9 @@ object UserResolver {
     fun handleEvent(event: UserEvent) {
         logger.info("Serving request for userId=${event.first}, amount=${event.second}")
         repo.appendEvent(UserCreditEventImpl(event))
-//        runCatching {
-//            repo.collectUser(event.first)?.also { logger.info("\tAnd i can also collect the user") }
-//        }.onFailure { logger.warn(it.message) }
+        runCatching {
+            repo.collectUser(event.first)?.also { logger.info("Got user $it") }
+        }.onFailure { logger.warn(it.message) }
     }
 
     fun getUser(userId: Int): User? = repo.collectUser(userId)

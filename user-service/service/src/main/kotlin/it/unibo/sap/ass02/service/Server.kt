@@ -43,5 +43,8 @@ fun Application.module() {
                 } ?: call.respond(HttpStatusCode.NotFound, "No user was found for id: $id")
             } ?: call.respond(HttpStatusCode.BadRequest, "No id was passed as parameter!")
         }
+        get("health") {
+            call.respond(HttpStatusCode.OK, "User service is healthy")
+        }
     }
 }
