@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    scrape_configs:
+      - job_name: 'api-gateway'
+        metrics_path: '/metrics'
+        scrape_interval: 15s
+        static_configs:
+          - targets: ['api-gateway:4001']
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-metrics
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-metrics
+  template:
+    metadata:
+      labels:
+        app: gateway-metrics
+    spec:
+      containers:
+      - name: prometheus
+        image: prom/prometheus
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - name: prometheus-config
+          mountPath: /etc/prometheus/prometheus.yml
+          subPath: prometheus.yml
+      volumes:
+      - name: prometheus-config
+        configMap:
+          name: prometheus-config
+
+

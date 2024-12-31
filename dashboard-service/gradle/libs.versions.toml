@@ -6,6 +6,7 @@ kotlinx-coroutine = "1.9.0"
 kotest = "5.9.1"
 kotlin = "2.0"
 logback = "1.4.12"
+kafka = "3.9.0"
 
 [libraries]
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
@@ -36,6 +37,9 @@ kotest-framework-engine = { module = "io.kotest:kotest-framework-engine", versio
 kotest-framework-datatest = { module = "io.kotest:kotest-framework-datatest", version.ref = "kotest" }
 kotest-runner = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
 junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit-jupiter-engine" }
+
+kafka-clients = { module = "org.apache.kafka:kafka-clients", version.ref = "kafka" }
+
 
 [bundles]
 ktor-client = [

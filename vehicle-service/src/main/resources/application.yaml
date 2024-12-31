@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: vehicle-service
+  config:
+    import:
+      - classpath:database.yaml
+      - classpath:kafka.yaml
+      - classpath:swagger-openapi.yaml
+      - classpath:system-health.yaml
+server:
+  port: 1926
+  address: 0.0.0.0

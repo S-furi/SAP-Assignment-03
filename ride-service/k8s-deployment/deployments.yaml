@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ride-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ride-service
+  template:
+    metadata:
+      labels:
+        app: ride-service
+    spec:
+      containers:
+      - name: ride-service
+        image: sfuri/ride-service:0.2.0
+        ports:
+        - containerPort: 9990
+        envFrom:
+        - configMapRef:
+            name: ride-service-config
+

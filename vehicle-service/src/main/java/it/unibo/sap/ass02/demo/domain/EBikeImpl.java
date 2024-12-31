@@ -29,7 +29,7 @@ public class EBikeImpl implements EBike<String>{
     private EBikeState state;
     @JsonProperty("location")
     @Schema(description = "Global ebike's position", example = "x:0, y:0")
-    @ManyToOne
+    @Transient
     private P2d loc = null;
     @JsonIgnore()
     @Transient

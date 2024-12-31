@@ -1,0 +1,85 @@
+# Configuring the actual deployments. While `user-service`
+# is pretty straightforward, postgress needs a little more
+# configuration.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: sfuri/user-service:0.2.0
+        ports:
+        - containerPort: 11000
+        envFrom:
+        - configMapRef:
+            name: user-service-config
+        - secretRef:
+            name: user-service-secrets
+
+---
+
+# Postgress is a little more complicated because it requires
+# volumes to be mapped correclty and also sets the correct
+# readiness/liveness probes used by kubernetes (not enabled
+# due to some problems on minikube).
+# Note that by default postgres could offer a more suitable
+# command to run to check correct system liveness, but
+# for the sake of simplicity we just use the same command
+# used for checking the readiness.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-user
+  template:
+    metadata:
+      labels:
+        app: pg-user
+    spec:
+      containers:
+      - name: postgres
+        image: postgres
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - configMapRef:
+            name: user-service-config
+        - secretRef:
+            name: user-service-secrets
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+        resources:
+          limits:
+            memory: "256Mi"
+          requests:
+            memory: "128Mi"
+        # readinessProbe:
+        #   exec:
+        #     command: ["pg_isready"]
+        #   initialDelaySeconds: 5
+        #   periodSeconds: 10
+        # livenessProbe:
+        #   exec:
+        #     command: ["pg_isready"]
+        #   initialDelaySeconds: 30
+        #   periodSeconds: 10
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-user-pvc
+

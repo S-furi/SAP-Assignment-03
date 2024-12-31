@@ -24,13 +24,13 @@ services:
       start_period: 80s
 
   user-service:
-    image: sfuri/user-service:0.1.2
+    image: sfuri/user-service:0.2.0
     ports:
       - ${SERVICE_PORT}:${SERVICE_PORT}
     environment:
       PORT: ${SERVICE_PORT}
       POSTGRES_HOST: ${PG_HOST}
-
+    env_file: .env
     networks:
       - service-net
 
