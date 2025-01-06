@@ -1,7 +1,7 @@
 package it.unibo.sap.ass02.demo.service;
 
 import it.unibo.sap.ass02.demo.controller.event.sourcing.EventRepository;
-import it.unibo.sap.ass02.demo.domain.EBike;
+import it.unibo.sap.ass02.demo.domain.Bike;
 import it.unibo.sap.ass02.demo.domain.EBikeImpl;
 import it.unibo.sap.ass02.demo.domain.P2d;
 import it.unibo.sap.ass02.demo.repositories.EBikeRepository;
@@ -9,7 +9,6 @@ import it.unibo.sap.ass02.demo.repositories.P2dRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 
 @Service
@@ -55,7 +54,7 @@ public class EBikeService {
     public void updateState(final String ebikeId, final String state) {
         this.eBikeRepository.findById(ebikeId)
                 .ifPresent((ebike) -> {
-                    final EBike.EBikeState newState = EBike.EBikeState.fromValue(state.toUpperCase());
+                    final Bike.EBikeState newState = Bike.EBikeState.fromValue(state.toUpperCase());
                     ebike.updateState(newState);
                     this.eBikeRepository.save(ebike);
                 });

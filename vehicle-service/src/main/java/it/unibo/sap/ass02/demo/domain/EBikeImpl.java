@@ -6,11 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +18,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Schema(description = "Ebike class, used to represent a generic ebike, this ebikes can be used for multiple purpose such as rides")
-public class EBikeImpl implements EBike<String>{
+public class EBikeImpl implements Bike<String> {
     @Id
     @Schema(description = "Unique identifier for the ebike", example = "UU1")
     private String id;

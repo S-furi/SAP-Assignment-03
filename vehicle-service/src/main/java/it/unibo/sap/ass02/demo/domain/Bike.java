@@ -1,9 +1,7 @@
 package it.unibo.sap.ass02.demo.domain;
 
 
-import lombok.Data;
-
-public interface EBike<K> extends Entity<K>{
+public interface Bike<K> extends Entity<K>{
     EBikeState getState();
 
     void rechargeBattery();
