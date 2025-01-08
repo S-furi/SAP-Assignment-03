@@ -8,7 +8,9 @@ kube_scripts=( \
 	"./ride-registry/k8s-deployment/deploy-ride-registry.sh" \
 	"./ride-service/k8s-deployment/deploy-ride-service.sh" \
 	"./user-service/k8s-deployment/deploy-user-service.sh" \
-	"./api-gateway/k8s-deployment/deploy-api-gateway.sh")
+	"./api-gateway/k8s-deployment/deploy-api-gateway.sh" \
+	"./vehicle-service/k8s/k8s-deployment/deploy-vehicle-service.sh"
+)
 
 for script in ${kube_scripts[@]}; do
 	echo "Deploying: $script"
