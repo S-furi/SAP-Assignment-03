@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vehicle-service
+  template:
+    metadata:
+      labels:
+        app: vehicle-service
+    spec:
+      containers:
+      - name: vehicle-service
+        image: matteoiorio/vehicle-service:2.0.0
+        ports:
+        - containerPort: 12000
+        envFrom:
+        - configMapRef:
+            name: vehicle-service-config
+        - secretRef:
+            name: vehicle-service-secrets
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pg-vehicle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pg-vehicle
+  template:
+    metadata:
+      labels:
+        app: pg-vehicle
+    spec:
+      containers:
+      - name: postgres
+        image: postgres
+        ports:
+        - containerPort: 5432
+        envFrom:
+        - configMapRef:
+            name: vehicle-service-config
+        - secretRef:
+            name: vehicle-service-secrets
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data
+        resources:
+          limits:
+            memory: "256Mi"
+          requests:
+            memory: "128Mi"
+      volumes:
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-vehicle-pvc
