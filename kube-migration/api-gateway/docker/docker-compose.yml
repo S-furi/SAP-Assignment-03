@@ -1,0 +1,15 @@
+services:
+  api-gateway:
+    image: sfuri/api-gateway:0.1.0
+    ports:
+      - 4001:4001
+    environment:
+      PORT: 4001
+    env_file: .env
+    networks:
+      service-net:
+
+networks:
+  service-net:
+    name: service-net
+    driver: bridge

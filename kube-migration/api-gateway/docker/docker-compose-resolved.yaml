@@ -1,0 +1,43 @@
+name: docker
+services:
+  api-gateway:
+    environment:
+      GATEWAY_HOST: api-gateway
+      GATEWAY_METRICS_HOST: gateway-metrics
+      GATEWAY_METRICS_PORT: "9090"
+      GATEWAY_PORT: "4001"
+      KAFKA_HOST: kafka
+      KAFKA_PORT: "29092"
+      PORT: "4001"
+      PROD: "true"
+      RIDE_REG_METRICS_HOST: ride-registry-metrics
+      RIDE_REG_METRICS_PORT: "9093"
+      RIDE_REGISTRY_HOST: ride-repository
+      RIDE_REGISTRY_PORT: "9991"
+      RIDE_SER_METRICS_HOST: ride-metrics
+      RIDE_SER_METRICS_PORT: "9094"
+      RIDE_SERVICE_HOST: ride-service
+      RIDE_SERVICE_PORT: "9990"
+      UPDATE_EBIKE_BATTERY_TOPIC_NAME: update-battery
+      UPDATE_EBIKE_LOCATION_TOPIC_NAME: update-location
+      UPDATE_USER_CREDIT_TOPIC_NAME: update-credit
+      USER_METRICS_HOST: user-metrics
+      USER_METRICS_PORT: "9092"
+      USER_SERVICE_HOST: user-service
+      USER_SERVICE_PORT: "11000"
+      VEHICLE_METRICS_HOST: vehicle-metrics
+      VEHICLE_METRICS_PORT: "9091"
+      VEHICLE_SERVICE_HOST: vehicle-service
+      VEHICLE_SERVICE_PORT: "1926"
+    image: sfuri/api-gateway:0.1.0
+    networks:
+      service-net: null
+    ports:
+      - mode: ingress
+        target: 4001
+        published: "4001"
+        protocol: tcp
+networks:
+  service-net:
+    name: service-net
+    driver: bridge
