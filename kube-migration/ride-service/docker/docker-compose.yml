@@ -1,0 +1,15 @@
+services:
+  ride-service:
+    image: sfuri/ride-service:0.2.0
+    hostname: ride-service
+    ports:
+      - 9990:9990
+    env_file:
+      .env
+    networks:
+      service-net:
+
+networks:
+  service-net:
+    external: true
+

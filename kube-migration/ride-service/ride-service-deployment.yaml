@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker/docker-compose-resolved.yaml
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: ride-service
+  name: ride-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ride-service
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker/docker-compose-resolved.yaml
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: ride-service
+    spec:
+      containers:
+        - env:
+            - name: GATEWAY_HOST
+              value: api-gateway
+            - name: GATEWAY_METRICS_HOST
+              value: gateway-metrics
+            - name: GATEWAY_METRICS_PORT
+              value: "9090"
+            - name: GATEWAY_PORT
+              value: "4001"
+            - name: KAFKA_HOST
+              value: kafka
+            - name: KAFKA_PORT
+              value: "29092"
+            - name: PROD
+              value: "true"
+            - name: RIDE_REGISTRY_HOST
+              value: ride-repository
+            - name: RIDE_REGISTRY_PORT
+              value: "9991"
+            - name: RIDE_REG_METRICS_HOST
+              value: ride-registry-metrics
+            - name: RIDE_REG_METRICS_PORT
+              value: "9093"
+            - name: RIDE_SERVICE_HOST
+              value: ride-service
+            - name: RIDE_SERVICE_PORT
+              value: "9990"
+            - name: RIDE_SER_METRICS_HOST
+              value: ride-metrics
+            - name: RIDE_SER_METRICS_PORT
+              value: "9094"
+            - name: UPDATE_EBIKE_BATTERY_TOPIC_NAME
+              value: update-battery
+            - name: UPDATE_EBIKE_LOCATION_TOPIC_NAME
+              value: update-location
+            - name: UPDATE_USER_CREDIT_TOPIC_NAME
+              value: update-credit
+            - name: USER_METRICS_HOST
+              value: user-metrics
+            - name: USER_METRICS_PORT
+              value: "9092"
+            - name: USER_SERVICE_HOST
+              value: user-service
+            - name: USER_SERVICE_PORT
+              value: "11000"
+            - name: VEHICLE_METRICS_HOST
+              value: vehicle-metrics
+            - name: VEHICLE_METRICS_PORT
+              value: "9091"
+            - name: VEHICLE_SERVICE_HOST
+              value: vehicle-service
+            - name: VEHICLE_SERVICE_PORT
+              value: "1926"
+          image: sfuri/ride-service:0.2.0
+          name: ride-service
+          ports:
+            - containerPort: 9990
+              protocol: TCP
+      hostname: ride-service
+      restartPolicy: Always
