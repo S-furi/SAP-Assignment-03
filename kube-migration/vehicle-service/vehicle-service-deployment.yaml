@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: vehicle-service
+  name: vehicle-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: vehicle-service
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: vehicle-service
+    spec:
+      containers:
+        - image: sfuri/vehicle-service:0.1.0
+          livenessProbe:
+            exec:
+              command:
+                - curl --fail http://vehicle-service:1926/actuator/health/ping || exit 1
+            failureThreshold: 3
+            initialDelaySeconds: 40
+            periodSeconds: 90
+            timeoutSeconds: 10
+          name: vehicle-service
+          ports:
+            - containerPort: 1926
+              protocol: TCP
+      restartPolicy: Always

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: vehicle-service
+  name: vehicle-service
+spec:
+  ports:
+    - name: "1926"
+      port: 1926
+      targetPort: 1926
+  selector:
+    io.kompose.service: vehicle-service

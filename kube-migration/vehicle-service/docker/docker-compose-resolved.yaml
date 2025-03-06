@@ -1,0 +1,50 @@
+name: docker
+services:
+  mariadb:
+    environment:
+      MARIADB_DATABASE: ebikedb
+      MARIADB_PASSWORD: EBikePassword
+      MARIADB_ROOT_PASSWORD: EBikePassword
+      MARIADB_USER: EBikeApplication
+    image: mariadb:10.6
+    networks:
+      service-net: null
+    ports:
+      - mode: ingress
+        target: 3306
+        published: "3306"
+        protocol: tcp
+    volumes:
+      - type: volume
+        source: mariadb_prod
+        target: /var/lib/mysql
+        volume: {}
+  vehicle-service:
+    depends_on:
+      mariadb:
+        condition: service_started
+        required: true
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - curl --fail http://vehicle-service:1926/actuator/health/ping || exit 1
+      timeout: 10s
+      interval: 1m30s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
+    image: sfuri/vehicle-service:0.1.0
+    networks:
+      service-net: null
+    ports:
+      - mode: ingress
+        target: 1926
+        published: "1926"
+        protocol: tcp
+networks:
+  service-net:
+    name: service-net
+    external: true
+volumes:
+  mariadb_prod:
+    name: docker_mariadb_prod

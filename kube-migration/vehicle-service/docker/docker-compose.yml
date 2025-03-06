@@ -1,0 +1,39 @@
+services:
+  mariadb:
+    image: mariadb:10.6
+    environment:
+      - MARIADB_ROOT_PASSWORD=EBikePassword
+      - MARIADB_DATABASE=ebikedb
+      - MARIADB_USER=EBikeApplication
+      - MARIADB_PASSWORD=EBikePassword
+    ports:
+      - 3306:3306
+    volumes:
+      - mariadb_prod:/var/lib/mysql
+    networks:
+      service-net:
+
+  vehicle-service:
+    image: sfuri/vehicle-service:0.1.0
+    ports:
+      - 1926:1926
+    networks:
+      service-net:
+    depends_on:
+     - mariadb
+    healthcheck:
+      test: curl --fail http://vehicle-service:1926/actuator/health/ping || exit 1
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      start_interval: 5s
+
+volumes:
+  mariadb_prod:
+  ebike-service:
+
+networks:
+  service-net:
+    external:
+      true

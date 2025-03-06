@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: mariadb
+  name: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: mariadb
+    spec:
+      containers:
+        - env:
+            - name: MARIADB_DATABASE
+              value: ebikedb
+            - name: MARIADB_PASSWORD
+              value: EBikePassword
+            - name: MARIADB_ROOT_PASSWORD
+              value: EBikePassword
+            - name: MARIADB_USER
+              value: EBikeApplication
+          image: mariadb:10.6
+          name: mariadb
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: mariadb-prod
+      restartPolicy: Always
+      volumes:
+        - hostPath:
+            path: /Users/stefanofuri/Desktop/sap-assignments/Assignment-03-Iorio-Furi/SAP-Assignment-03/kube-migration/vehicle-service/docker
+          name: mariadb-prod
