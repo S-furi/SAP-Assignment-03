@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: ride-repository
+  name: ride-repository
+spec:
+  ports:
+    - name: "9991"
+      port: 9991
+      targetPort: 9991
+  selector:
+    io.kompose.service: ride-repository

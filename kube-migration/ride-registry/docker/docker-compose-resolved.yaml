@@ -1,0 +1,60 @@
+name: docker
+services:
+  pg-ride:
+    environment:
+      PG_USER: postgres
+      POSTGRES_DB: ride-repo
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    hostname: pg-ride
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready
+      timeout: 1m0s
+      interval: 30s
+      retries: 5
+      start_period: 1m20s
+    image: postgres
+    networks:
+      service-net: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    restart: always
+    shm_size: "134217728"
+    volumes:
+      - type: bind
+        source: /Users/stefanofuri/Desktop/sap-assignments/Assignment-03-Iorio-Furi/SAP-Assignment-03/kube-migration/ride-registry/docker/pg_data
+        target: /var/lib/postgresql/data
+        bind:
+          create_host_path: true
+  ride-repository:
+    depends_on:
+      pg-ride:
+        condition: service_healthy
+        required: true
+    environment:
+      DB_NAME: ride-repo
+      DB_PASSWORD: postgres
+      DB_USER: postgres
+      GATEWAY_HOST: api-gateway
+      GATEWAY_PORT: "4001"
+      PG_HOST: pg-ride
+      PG_USER: postgres
+      PORT: "9991"
+      POSTGRES_HOST: pg-ride
+    image: sfuri/ride-registry:0.2.0
+    networks:
+      service-net: null
+    ports:
+      - mode: ingress
+        target: 9991
+        published: "9991"
+        protocol: tcp
+networks:
+  service-net:
+    name: service-net
+    external: true

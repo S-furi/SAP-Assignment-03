@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: ride-repository
+  name: ride-repository
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ride-repository
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: ride-repository
+    spec:
+      containers:
+        - env:
+            - name: DB_NAME
+              value: ride-repo
+            - name: DB_PASSWORD
+              value: postgres
+            - name: DB_USER
+              value: postgres
+            - name: GATEWAY_HOST
+              value: api-gateway
+            - name: GATEWAY_PORT
+              value: "4001"
+            - name: PG_HOST
+              value: pg-ride
+            - name: PG_USER
+              value: postgres
+            - name: PORT
+              value: "9991"
+            - name: POSTGRES_HOST
+              value: pg-ride
+          image: sfuri/ride-registry:0.2.0
+          name: ride-repository
+          ports:
+            - containerPort: 9991
+              protocol: TCP
+      restartPolicy: Always
