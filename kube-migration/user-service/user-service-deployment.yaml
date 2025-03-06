@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: user-service
+  name: user-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: user-service
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: user-service
+    spec:
+      containers:
+        - env:
+            - name: DB_NAME
+              value: user-service
+            - name: DB_PASSWORD
+              value: postgres
+            - name: DB_USER
+              value: postgres
+            - name: KAFKA_HOST
+              value: kafka
+            - name: KAFKA_PORT
+              value: "9092"
+            - name: PG_HOST
+              value: pg-user
+            - name: PG_USER
+              value: postgres
+            - name: PORT
+              value: "11000"
+            - name: POSTGRES_HOST
+              value: pg-user
+            - name: SERVICE_PORT
+              value: "11000"
+            - name: USER_SERVICE_HOST
+              value: 127.0.0.1
+            - name: USER_SERVICE_PORT
+              value: "11000"
+          image: sfuri/user-service:0.2.0
+          name: user-service
+          ports:
+            - containerPort: 11000
+              protocol: TCP
+      restartPolicy: Always

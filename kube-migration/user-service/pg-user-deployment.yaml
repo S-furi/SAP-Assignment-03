@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+    kompose.version: 1.35.0 (HEAD)
+  labels:
+    io.kompose.service: pg-user
+  name: pg-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: pg-user
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath -f docker/docker-compose-resolved.yaml
+        kompose.version: 1.35.0 (HEAD)
+      labels:
+        io.kompose.service: pg-user
+    spec:
+      containers:
+        - env:
+            - name: PG_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: user-service
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_USER
+              value: postgres
+          image: postgres
+          livenessProbe:
+            exec:
+              command:
+                - pg_isready
+            failureThreshold: 5
+            initialDelaySeconds: 80
+            periodSeconds: 30
+            timeoutSeconds: 60
+          name: pg-user
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: pg-user-hostpath0
+      hostname: pg-user
+      restartPolicy: Always
+      volumes:
+        - hostPath:
+            path: /Users/stefanofuri/Desktop/sap-assignments/Assignment-03-Iorio-Furi/SAP-Assignment-03/kube-migration/user-service/docker/pg_data
+          name: pg-user-hostpath0

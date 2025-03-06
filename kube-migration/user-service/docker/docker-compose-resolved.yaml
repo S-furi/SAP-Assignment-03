@@ -1,0 +1,63 @@
+name: docker
+services:
+  pg-user:
+    environment:
+      PG_USER: postgres
+      POSTGRES_DB: user-service
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    hostname: pg-user
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready
+      timeout: 1m0s
+      interval: 30s
+      retries: 5
+      start_period: 1m20s
+    image: postgres
+    networks:
+      service-net: null
+    ports:
+      - mode: ingress
+        target: 5432
+        published: "5432"
+        protocol: tcp
+    restart: always
+    shm_size: "134217728"
+    volumes:
+      - type: bind
+        source: /Users/stefanofuri/Desktop/sap-assignments/Assignment-03-Iorio-Furi/SAP-Assignment-03/kube-migration/user-service/docker/pg_data
+        target: /var/lib/postgresql/data
+        bind:
+          create_host_path: true
+  user-service:
+    depends_on:
+      pg-user:
+        condition: service_healthy
+        required: true
+    environment:
+      DB_NAME: user-service
+      DB_PASSWORD: postgres
+      DB_USER: postgres
+      KAFKA_HOST: kafka
+      KAFKA_PORT: "9092"
+      PG_HOST: pg-user
+      PG_USER: postgres
+      PORT: "11000"
+      POSTGRES_HOST: pg-user
+      SERVICE_PORT: "11000"
+      USER_SERVICE_HOST: 127.0.0.1
+      USER_SERVICE_PORT: "11000"
+    image: sfuri/user-service:0.2.0
+    networks:
+      service-net: null
+    ports:
+      - mode: ingress
+        target: 11000
+        published: "11000"
+        protocol: tcp
+networks:
+  service-net:
+    name: service-net
+    external: true
