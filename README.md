@@ -26,7 +26,17 @@ A GitHub repo including sources and documentation. The link to the repo must be 
 No deadlines.
 
 ---
-## Running the application
+## Running the application through Kubernetes
 
-1. Deploy all services throgh the script `./deploy-all.sh`
-2.  Go to `dashboard-service` and run `./gradlew run`
+1. Go to `kube-migration/` directory
+2. Make sure you're in a kubernetes cluster (or minikube is up and running)
+3. Run all kubernetes manifests in subdirectories with `./run_all.sh apply` for applying all of them
+4. Check deployments with `kubectl get pods` or through `minikube dashboard` if deployed on minikube
+5. When all services are up and running, port forward api-gateway service and kafka service with:
+
+```bash
+kubectl port-forward svc/kafka 9092:9092
+kubectl port-forward svc/api-gateway 4001:4001
+```
+
+6. Go to back to project root and move to `dashboard-service` and run `./gradlew run` in order to run the application
