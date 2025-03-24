@@ -11,7 +11,7 @@ import java.util.concurrent.Future
 
 class UserAPI : AbstractAPI<User, Int, Int>() {
     private val kafkaHost: String = System.getenv("KAFKA_HOST") ?: "localhost"
-    private val kafkaPort: Int = System.getenv("KAFKA_PORT")?.toInt() ?: 29092
+    private val kafkaPort: Int = System.getenv("KAFKA_PORT")?.toInt() ?: 9092
     private val topicName = System.getenv("UPDATE_USER_CREDIT_TOPIC_NAME") ?: "update-credit"
 
     private val userEventProducer =
