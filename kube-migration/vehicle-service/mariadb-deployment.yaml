@@ -43,5 +43,5 @@ spec:
       restartPolicy: Always
       volumes:
         - hostPath:
-            path: /Users/stefanofuri/Desktop/sap-assignments/Assignment-03-Iorio-Furi/SAP-Assignment-03/kube-migration/vehicle-service/docker
+            path: ./mariadb_data
           name: mariadb-prod

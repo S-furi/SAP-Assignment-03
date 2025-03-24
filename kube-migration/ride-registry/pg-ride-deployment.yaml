@@ -52,5 +52,5 @@ spec:
       restartPolicy: Always
       volumes:
         - hostPath:
-            path: /Users/stefanofuri/Desktop/sap-assignments/Assignment-03-Iorio-Furi/SAP-Assignment-03/kube-migration/ride-registry/docker/pg_data
+            path: ./pg_data
           name: pg-ride-hostpath0
