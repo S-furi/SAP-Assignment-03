@@ -52,5 +52,5 @@ spec:
       restartPolicy: Always
       volumes:
         - hostPath:
-            path: ./pg_data
+            path: /tmp/ride_pg_data
           name: pg-ride-hostpath0

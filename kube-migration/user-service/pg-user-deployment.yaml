@@ -52,5 +52,5 @@ spec:
       restartPolicy: Always
       volumes:
         - hostPath:
-            path: ./pg_data
+            path: /tmp/user_pg_data
           name: pg-user-hostpath0

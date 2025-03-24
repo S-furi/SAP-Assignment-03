@@ -43,5 +43,5 @@ spec:
       restartPolicy: Always
       volumes:
         - hostPath:
-            path: ./mariadb_data
+            path: /tmp/mariadb_data/
           name: mariadb-prod
