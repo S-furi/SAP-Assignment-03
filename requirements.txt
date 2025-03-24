@@ -1,2 +1,0 @@
-argparse
-python_on_whales
